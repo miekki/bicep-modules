@@ -23,6 +23,10 @@ module minvnet '../main.bicep' = {
     location: location
     tags: {
       virtualNetworks: 'dev'
+      env: 'dev'
+      SLA: '24hours'
+      department: 'cloud'
+      businessprocess: 'support'
     }
   }
 }
