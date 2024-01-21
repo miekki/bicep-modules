@@ -12,7 +12,7 @@ param location string = resourceGroup().location
 param addressPrefixes array
 
 @description('Optional. An Array of subnets to deploy to the Virtual Network.')
-param subnets array = []
+param subnets array
 
 @allowed([
   'CanNotDelete'
