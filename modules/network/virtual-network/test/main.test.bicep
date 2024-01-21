@@ -22,8 +22,7 @@ module minvnet '../main.bicep' = {
     name: '${serviceShort}-az-vnet-min-01'
     location: location
     tags: {
-      environment: 'dev'
-      costCode: '349921'
+      virtualNetworks: 'dev'
     }
   }
 }
