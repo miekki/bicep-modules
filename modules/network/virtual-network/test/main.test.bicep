@@ -21,5 +21,8 @@ module minvnet '../main.bicep' = {
     ]
     name: '${serviceShort}-az-vnet-min-01'
     location: location
+    tags: {
+      env: 'dev'
+    }
   }
 }
