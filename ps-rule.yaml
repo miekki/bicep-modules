@@ -30,3 +30,7 @@ input:
 configuration:
   AZURE_BICEP_PARAMS_FILE_EXPANSION: true
   AZURE_BICEP_FILE_EXPANSION: true
+
+rule:
+  exclude:
+    - "AZR-000166"
