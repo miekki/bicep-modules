@@ -27,7 +27,8 @@ jobs:
       module_file_path: modules/network/virtual-network/main.bicep
       module_metadata_file_path: modules/network/virtual-network/metadata.json
       module_parameters: name=test-vnet addressPrefixes=['10.0.0.0/16']
-
+    secrets:
+      inherit
       # module_name: "${{ env.MODULE_NAME }}"
       # module_file_path: "${{ env.MODULE_FILE_PATH }}"
       # module_metadata_file_path: "${{ env.MODULE_METADATA_FILE_PATH }}"
