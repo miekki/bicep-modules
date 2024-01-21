@@ -29,9 +29,10 @@ jobs:
       - name: Run Bicep linter
         run: az bicep build --file ${{ env.MODULE_FILE_PATH }}
 
-      - uses: azure/arm-deploy@1
+      - uses: Azure/arm-deploy@v1.0.9
         name: Run preflight validation
         with:
+          scope: "resourcegroup"
           resourceGroupName: ${{ vars.AZURE_TEST_RESOURCEGROUP_NAME }}
           template: ${{ env.MODULE_FILE_PATH }}
           deploymentMode: Validate
