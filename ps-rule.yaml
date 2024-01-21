@@ -19,7 +19,15 @@ input:
   pathIgnore:
     - "**"
     - "!**/*.bicepparam"
+    # Exclude bicepconfig.json
+    - "bicepconfig.json"
+    # Exclude module files
+    - "modules/**/*.bicep"
+    # Include test files from modules
+    - "!modules/**/*.tests.bicep"
 
 # Enable expansion of Azure .bicepparam files.
 configuration:
   AZURE_BICEP_PARAMS_FILE_EXPANSION: true
+  # Enable expansion for Bicep module from parameter files.
+  # AZURE_PARAMETER_FILE_EXPANSION: true
