@@ -17,7 +17,7 @@ env:
   MODULE_NAME: virtual-network
   MODULE_FILE_PATH: modules/network/virtual-network/main.bicep
   MODULE_METADATA_FILE_PATH: modules/network/virtual-network/metadata.json
-  MODULE_REGISTRY_SERVER: ${{ var.AZURE_REGISTRY_URL }}
+  MODULE_REGISTRY_SERVER: mmbicepmoduleregistry.azurecr.io
 
 jobs:
   lint:
