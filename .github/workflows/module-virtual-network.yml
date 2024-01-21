@@ -23,10 +23,16 @@ jobs:
     name: Run
     uses: ./.github/workflows/template-module.yml
     with:
-      module_name: "${{ env.MODULE_NAME }}"
-      module_file_path: "${{ env.MODULE_FILE_PATH }}"
-      module_metadata_file_path: "${{ env.MODULE_METADATA_FILE_PATH }}"
-      module_parameters: "name=test-vnet addressPrefixes=['10.0.0.0/16']"
+      module_name: virtual-network
+      module_file_path: modules/network/virtual-network/main.bicep
+      module_metadata_file_path: modules/network/virtual-network/metadata.json
+      module_parameters: name=test-vnet addressPrefixes=['10.0.0.0/16']
+
+      # module_name: "${{ env.MODULE_NAME }}"
+      # module_file_path: "${{ env.MODULE_FILE_PATH }}"
+      # module_metadata_file_path: "${{ env.MODULE_METADATA_FILE_PATH }}"
+      # module_parameters: "name=test-vnet addressPrefixes=['10.0.0.0/16']"
+
   # lint:
   #   runs-on: ubuntu-latest
   #   steps:
