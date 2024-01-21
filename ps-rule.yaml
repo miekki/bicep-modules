@@ -24,7 +24,7 @@ input:
     # Exclude module files
     #- "modules/**/*.bicep"
     # Include test files from modules
-    - "!modules/**/*.tests.bicep"
+    #- "!modules/**/*.tests.bicep"
 
 # Enable expansion of Azure .bicepparam files.
 configuration:
