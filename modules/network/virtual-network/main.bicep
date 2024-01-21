@@ -23,7 +23,7 @@ param subnets array = []
 param lock string = 'NotSpecified'
 
 @description('Optional. Tags of the resource.')
-param tags object = {}
+param tags object = { env: 'test' }
 
 @allowed([ 'new', 'existing', 'none' ])
 @description('Create a new, use an existing, or provide no default NSG.')
