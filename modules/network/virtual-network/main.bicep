@@ -1,5 +1,5 @@
 metadata name = 'Virtual Networks'
-metadata description = 'This modules deploy Virtual Networks'
+metadata description = 'This module deploy Virtual Networks'
 metadata owner = 'MM'
 
 @description('Required. The Virtual Network (vNet) Name.')
