@@ -14,6 +14,7 @@ on:
       module_metadata_file_path:
         type: string
         description: "Provide path including file name for the metadata file"
+        required: true
       module_parameters:
         type: string
         description: "Provide a list with required parameters for preflight test in Azure"

@@ -21,11 +21,11 @@ env:
 jobs:
   call-shared-workflow:
     name: Run
-    uses: ./.github/worflows/template-module.yml
+    uses: ./.github/workflows/template-module.yml
     with:
-      module_name: ${{ env.MODULE_NAME }}
-      module_file_path: ${{ env.MODULE_FILE_PATH }}
-      module_metadata_file_path: ${{ env.MODULE_METADATA_FILE_PATH }}
+      module_name: "${{ env.MODULE_NAME }}"
+      module_file_path: "${{ env.MODULE_FILE_PATH }}"
+      module_metadata_file_path: "${{ env.MODULE_METADATA_FILE_PATH }}"
       module_parameters: "name=test-vnet addressPrefixes=['10.0.0.0/16']"
   # lint:
   #   runs-on: ubuntu-latest
