@@ -1,5 +1,5 @@
 metadata name = 'Virtual Networks'
-metadata description = 'This module deploy Virtual Networks'
+metadata description = 'This modules deploy Virtual Networks'
 metadata owner = 'MM'
 
 @description('Required. The Virtual Network (vNet) Name.')
@@ -23,7 +23,7 @@ param subnets array = []
 param lock string = 'NotSpecified'
 
 @description('Optional. Tags of the resource.')
-param tags object = { env: 'test' }
+param tags object = { default: 'not specify' }
 
 @allowed([ 'new', 'existing', 'none' ])
 @description('Create a new, use an existing, or provide no default NSG.')

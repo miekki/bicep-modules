@@ -21,12 +21,12 @@ module minvnet '../main.bicep' = {
     ]
     name: '${serviceShort}-az-vnet-min-01'
     location: location
-    tags: {
-      virtualNetworks: 'dev'
-      env: 'dev'
-      SLA: '24hours'
-      department: 'cloud'
-      businessprocess: 'support'
-    }
+    // tags: {
+    //   virtualNetworks: 'dev'
+    //   env: 'dev'
+    //   SLA: '24hours'
+    //   department: 'cloud'
+    //   businessprocess: 'support'
+    // }
   }
 }
