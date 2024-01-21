@@ -7,14 +7,17 @@ on:
         type: string
         description: "Provide name for the module"
         required: true
+
       module_file_path:
         type: string
         description: "Provide path including file name for the module"
         required: true
+
       module_metadata_file_path:
         type: string
         description: "Provide path including file name for the metadata file"
         required: true
+
       module_parameters:
         type: string
         description: "Provide a list with required parameters for preflight test in Azure"
@@ -35,6 +38,11 @@ jobs:
 
       - name: Run Bicep linter
         run: az bicep build --file ${{ inputs.module_file_path }}
+
+      - name: Run PSRule analysis
+        uses: microsoft/ps-rule@v2.9.0
+        with:
+          modules: PSRule.Rules.Azure
 
       - name: Sign in to Azure
         uses: azure/login@v1
