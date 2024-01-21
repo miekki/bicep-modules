@@ -22,7 +22,7 @@ input:
     # Exclude bicepconfig.json
     - "bicepconfig.json"
     # Exclude module files
-    - "modules/**/*.bicep"
+    #- "modules/**/*.bicep"
     # Include test files from modules
     - "!modules/**/*.tests.bicep"
 
