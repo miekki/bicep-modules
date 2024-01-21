@@ -23,6 +23,7 @@ module minvnet '../main.bicep' = {
     location: location
     tags: {
       environment: 'dev'
+      costCode: '349921'
     }
   }
 }
