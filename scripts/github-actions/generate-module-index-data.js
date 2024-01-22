@@ -146,15 +146,15 @@ async function generateModuleIndexData({ require, github, context, core }) {
       for (const moduleName of moduleNames) {
         const modulePath = `${moduleGroupPath}/${moduleName}`;
         const mainJsonPath = `${modulePath}/main.json`;
-        const tagListUrl = `https://mcr.microsoft.com/v2/bicep/${modulePath}/tags/list`;
+        //const tagListUrl = `https://mcr.microsoft.com/v2/bicep/${modulePath}/tags/list`;
 
         try {
           core.info(`Processing Module "${modulePath}"...`);
-          core.info(`  Getting available tags at "${tagListUrl}"...`);
+          //core.info(`  Getting available tags at "${tagListUrl}"...`);
 
-          const tagListResponse = await axios.get(tagListUrl);
-          const tags = tagListResponse.data.tags.sort();
-
+          //const tagListResponse = await axios.get(tagListUrl);
+          //const tags = tagListResponse.data.tags.sort();
+          const tags = 'main'
           const properties = {};
           for (const tag of tags) {
             const gitTag = `${modulePath}/${tag}`;
