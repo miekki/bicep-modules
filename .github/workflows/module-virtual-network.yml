@@ -22,5 +22,5 @@ jobs:
       module_name: virtual-network
       module_file_path: modules/network/virtual-network/main.bicep
       module_metadata_file_path: modules/network/virtual-network/metadata.json
-      module_parameters: name=test-vnet addressPrefixes=['10.0.0.0/16'] tags={'env':'dev'}
+      module_parameters: name=test-vnet addressPrefixes=['10.0.0.0/16'] tags={'env':'dev'} location='uksouth'
     secrets: inherit

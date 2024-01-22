@@ -36,11 +36,11 @@ Example of how to deploy a virtual network using the minimum required parameters
 
 ```bicep
 module vNet 'br/mmbicepmoduleregistry.azurecr.io/virtual-network:1.0.35' = {
-  name: '${uniqueString(deployment().name, location)}-vnet'
+  name: '${uniqueString(deployment().name, 'uksouth')}-vnet'
   params: {
     name: 'az-vnet-01'
     addressPrefixes: [ '10.0.0.0/16' ]
-    location: location
+    location: 'uksouth'
     tags: {
         environment: 'production'
     }
@@ -54,7 +54,7 @@ Example of how to deploy a virtual network with subnets, network security groups
 
 ```bicep
 module vNet 'br/mmbicepmoduleregistry.azurecr.io/virtual-network:1.0.35' = {
-  name: '${uniqueString(deployment().name, location)}-vnet'
+  name: '${uniqueString(deployment().name, 'uksouth')}-vnet'
   params: {
     name: 'az-vnet-01'
     addressPrefixes: [ '10.0.0.0/16' ]
@@ -80,7 +80,7 @@ module vNet 'br/mmbicepmoduleregistry.azurecr.io/virtual-network:1.0.35' = {
       }
 
     ]
-    location: location
+    location: 'uksouth'
     tags: {
       environment: 'production'
     }
