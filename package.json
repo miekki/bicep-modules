@@ -12,9 +12,7 @@
   "homepage": "https://github.com/miekki/bicep-modules#readme",
   "scripts": {
     "lint": "eslint",
-    "lint:fix": "eslint --fix",
-    "prettier:check": "prettier --check .",
-    "prettier": "prettier --write ."
+    "lint:fix": "eslint --fix"
   },
   "devDependencies": {
     "@actions/core": "^1.9.1",
