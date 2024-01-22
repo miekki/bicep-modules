@@ -5,11 +5,14 @@ metadata owner = 'MM'
 @description('Required. The Virtual Network (vNet) Name.')
 param name string
 
-@description('Optional. Location for all resources.')
-param location string = resourceGroup().location
-
 @description('Required. An Array of 1 or more IP Address Prefixes for the Virtual Network.')
 param addressPrefixes array
+
+@description('Required. Tags of the resource.')
+param tags object
+
+@description('Optional. Location for all resources.')
+param location string = resourceGroup().location
 
 @description('Optional. An Array of subnets to deploy to the Virtual Network.')
 param subnets array = []
@@ -21,10 +24,6 @@ param subnets array = []
 ])
 @description('Optional. Specify the type of lock.')
 param lock string = 'NotSpecified'
-
-@description('Optional. Tags of the resource.')
-param tags object
-//  = { default: 'not specify' }
 
 @allowed([ 'new', 'existing', 'none' ])
 @description('Create a new, use an existing, or provide no default NSG.')

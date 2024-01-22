@@ -18,7 +18,9 @@ include:
 input:
   pathIgnore:
     - "**"
-    - "!**/*.bicepparam"
+    # Include test files from modules
+    - "!modules/**/*.tests.bicep"
+    #- "!**/*.bicepparam"
     # Exclude bicepconfig.json
     - "bicepconfig.json"
     # Exclude module files
