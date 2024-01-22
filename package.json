@@ -1,0 +1,29 @@
+{
+  "name": "bicep-registry-modules",
+  "version": "1.0.0",
+  "description": "Bicep registry modules",
+  "private": true,
+  "repository": "miekki/bicep-modules",
+  "keywords": [
+    "Bicep"
+  ],
+  "author": "MM",
+  "license": "MIT",
+  "homepage": "https://github.com/miekki/bicep-modules#readme",
+  "scripts": {
+    "lint": "eslint",
+    "lint:fix": "eslint --fix",
+    "prettier:check": "prettier --check .",
+    "prettier": "prettier --write ."
+  },
+  "devDependencies": {
+    "@actions/core": "^1.9.1",
+    "@actions/github": "^5.0.0",
+    "axios": "^0.27.2",
+    "eslint": "^8.9.0",
+    "eslint-config-prettier": "^8.3.0",
+    "markdown-table": "^3.0.2",
+    "prettier": "2.8.6",
+    "semver": "^7.3.5"
+  }
+}
