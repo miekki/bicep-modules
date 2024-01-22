@@ -110,14 +110,14 @@ async function generateModuleIndexData({ require, github, context, core }) {
             //const gitTag = `${mcrModulePath}/${tag}`;
             
           const documentationUri = `https://github.com/miekki/bicep-modules/tree/${tag}/${modulePath}/README.md`;
-          const description = await getModuleDescription(
-            github,
-            core,
-            mainJsonPath,
-            tag,
-            context
-          );
-
+        //   const description = await getModuleDescription(
+        //     github,
+        //     core,
+        //     mainJsonPath,
+        //     tag,
+        //     context
+        //   );
+          const description = 'Module description'
           properties[tag] = { description, documentationUri };
         }
 
