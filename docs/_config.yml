@@ -1,9 +1,5 @@
 title: Bicep Registry
 
-url: https://just-the-docs.github.io
-
-aux_links:
-  Bicep Registry Repository: https://github.com/miekki/bicep-modules
 lsi: false
 safe: true
 source: https://github.com/miekki/bicep-modules
