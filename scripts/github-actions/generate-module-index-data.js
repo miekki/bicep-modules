@@ -91,7 +91,8 @@ async function generateModuleIndexData({ require, github, context, core }) {
 
     for (const moduleName of moduleNames) {
       const modulePath = `${moduleGroupPath}/${moduleName}`;
-      const mainJsonPath = `${modulePath}/main.json`;
+        //const mainJsonPath = `${modulePath}/main.json`;
+        const mainJsonPath = `${modulePath}/main.bicep`;
       // BRM module git tags do not include the modules/ prefix.
       const mcrModulePath = modulePath.slice(8);
       const tagListUrl = `https://mcr.microsoft.com/v2/bicep/${mcrModulePath}/tags/list`;
