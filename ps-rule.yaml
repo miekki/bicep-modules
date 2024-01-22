@@ -19,10 +19,10 @@ input:
   pathIgnore:
     - "**"
     # Include test files from modules
-    - "!modules/**/*.tests.bicep"
-    - "!**/*.bicepparam"
+    - "!modules/**/*.test.bicep"
+    #- "!**/*.bicepparam"
     # Exclude bicepconfig.json
-    - "bicepconfig.json"
+    #- "bicepconfig.json"
     # Exclude module files
     #- "modules/**/*.bicep"
     # Include test files from modules
@@ -32,6 +32,8 @@ input:
 configuration:
   AZURE_BICEP_PARAMS_FILE_EXPANSION: true
   AZURE_BICEP_FILE_EXPANSION: true
+  AZURE_BICEP_CHECK_TOOL: true
+  PSRULE_AZURE_BICEP_PAT: "/usr/local/bin/"
 # rule:
 #   exclude:
 #     - "AZR-000166"

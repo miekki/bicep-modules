@@ -5,14 +5,14 @@ metadata owner = 'MM'
 @description('Required. The Virtual Network (vNet) Name.')
 param name string
 
-@description('Required. An Array of 1 or more IP Address Prefixes for the Virtual Network.')
-param addressPrefixes array
+@description('Required. Location for all resources.')
+param location string
 
 @description('Required. Tags of the resource.')
 param tags object
 
-@description('Optional. Location for all resources.')
-param location string = resourceGroup().location
+@description('Required. An Array of 1 or more IP Address Prefixes for the Virtual Network.')
+param addressPrefixes array
 
 @description('Optional. An Array of subnets to deploy to the Virtual Network.')
 param subnets array = []
@@ -35,6 +35,7 @@ param networkSecurityGroupName string = uniqueString(resourceGroup().name, locat
 resource networkSecurityGroup 'Microsoft.Network/networkSecurityGroups@2023-06-01' = if (newOrExistingNSG == 'new') {
   name: networkSecurityGroupName
   location: location
+  tags: tags
 }
 
 resource existingNetworkSecurityGroup 'Microsoft.Network/networkSecurityGroups@2023-06-01' existing = if (newOrExistingNSG == 'existing') {
@@ -82,3 +83,15 @@ resource virtualNetwork_lock 'Microsoft.Authorization/locks@2020-05-01' = if (lo
   }
   scope: virtualNetwork
 }
+
+@description('The resorce ID of the virtual network')
+output resourceId string = virtualNetwork.id
+
+@description('The name of the virtual network')
+output name string = virtualNetwork.name
+
+@description('The names of yhe deployed subnets')
+output subnetNames array = [for subnet in subnets: subnet.name]
+
+@description('The resource IDs of the deployed subnets')
+output subnetResourceIds array = [for subnet in subnets: az.resourceId('Microsoft.Network/virtualNetworks/subnets', name, subnet.name)]
