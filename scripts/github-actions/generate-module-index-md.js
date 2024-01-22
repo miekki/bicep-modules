@@ -83,7 +83,7 @@ async function generateModuleGroupTable(github, context, modules, prettier) {
       module.properties &&
       module.properties[latestVersion]?.description?.replace(/\n|\r/g, " ");
 
-    const moduleRootUrl = `https://github.com/Azure/bicep-registry-modules/tree/main/modules/${module.moduleName}`;
+    const moduleRootUrl = `https://github.com/miekki/bicep-modules/tree/main/modules/${module.moduleName}`;
     const sourceCodeButton = `[🦾 Source code](${moduleRootUrl}/main.bicep){: .btn}`;
     const readmeButton = `[📃 Readme](${moduleRootUrl}/README.md){: .btn .btn-purple}`;
 
@@ -156,7 +156,7 @@ permalink: /
   );
 
   for (const [moduleGroup, modules] of moduleGroups) {
-    if (moduleGroup.includes("avm")) {
+    if (moduleGroup.includes("modules")) {
       continue;
     }
     core.debug(`Generating ${moduleGroup}...`);

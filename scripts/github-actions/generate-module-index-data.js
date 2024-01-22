@@ -106,8 +106,9 @@ async function generateModuleIndexData({ require, github, context, core }) {
         const properties = {};
         for (const tag of tags) {
           // Using mcrModulePath because BRM module git tags do not include the modules/ prefix
-          const gitTag = `${mcrModulePath}/${tag}`;
-          const documentationUri = `https://github.com/Azure/bicep-registry-modules/tree/${gitTag}/${modulePath}/README.md`;
+            const gitTag = `${mcrModulePath}/${tag}`;
+            
+          const documentationUri = `https://github.com/miekki/bicep-modules/tree/${gitTag}/${modulePath}/README.md`;
           const description = await getModuleDescription(
             github,
             core,
@@ -132,7 +133,7 @@ async function generateModuleIndexData({ require, github, context, core }) {
     numberOfModuleGroupsProcessed++;
   }
 
-  for (const avmModuleRoot of ["avm/res", "avm/ptn"]) {
+  for (const avmModuleRoot of ["modules"]) {
     // Resource module path pattern: `avm/res/${moduleGroup}/${moduleName}`
     // Pattern module path pattern: `avm/ptn/${moduleGroup}/${moduleName}`
     const avmModuleGroups = await getSubdirNames(fs, avmModuleRoot);
@@ -147,7 +148,7 @@ async function generateModuleIndexData({ require, github, context, core }) {
         const tagListUrl = `https://mcr.microsoft.com/v2/bicep/${modulePath}/tags/list`;
 
         try {
-          core.info(`Processing AVM Module "${modulePath}"...`);
+          core.info(`Processing Module "${modulePath}"...`);
           core.info(`  Getting available tags at "${tagListUrl}"...`);
 
           const tagListResponse = await axios.get(tagListUrl);
@@ -156,7 +157,7 @@ async function generateModuleIndexData({ require, github, context, core }) {
           const properties = {};
           for (const tag of tags) {
             const gitTag = `${modulePath}/${tag}`;
-            const documentationUri = `https://github.com/Azure/bicep-registry-modules/tree/${gitTag}/${modulePath}/README.md`;
+            const documentationUri = `https://github.com/miekki/bicep-modules/tree/${gitTag}/${modulePath}/README.md`;
             const description = await getModuleDescription(
               github,
               core,
