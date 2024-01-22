@@ -127,20 +127,6 @@ permalink: /
 ---
 
 # Module Index
-{: .fs-9}
-
----
-
-{: .note-title }
-> Azure Verified Modules (AVM) - Module Indexes
->
-> The [Azure Verified Modules (AVM)](https://aka.ms/avm) module indexes are located over on the AVM website. You can find them here for:
->
-> - [Resource Modules](https://aka.ms/avm/index/bicep/res)
-> - [Pattern Modules](https://aka.ms/avm/index/bicep/ptn)
-
----
-
 `;
 
   const moduleIndexDataContent = await fs.readFile("moduleIndex.json", {
@@ -174,7 +160,7 @@ permalink: /
     moduleIndexMarkdown += "\n\n";
   }
 
-  await fs.writeFile("docs/index.md", moduleIndexMarkdown);
+  await fs.writeFile("docs/jekyll/index.md", moduleIndexMarkdown);
 }
 
 module.exports = generateModuleIndexMarkdown;
