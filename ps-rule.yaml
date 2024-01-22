@@ -20,7 +20,7 @@ input:
     - "**"
     # Include test files from modules
     - "!modules/**/*.tests.bicep"
-    #- "!**/*.bicepparam"
+    - "!**/*.bicepparam"
     # Exclude bicepconfig.json
     - "bicepconfig.json"
     # Exclude module files
