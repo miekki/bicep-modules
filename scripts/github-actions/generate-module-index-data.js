@@ -16,7 +16,7 @@ async function getModuleDescription(
 ) {
   const gitTagRef = `tags/${gitTag}`;
 
-  core.info(`  Retrieving main.json at Git tag ref ${gitTagRef}`);
+  core.info(`  Retrieving main.bicep at Git tag ref ${gitTagRef}`);
 
   // Get the SHA of the commit
   const {
@@ -107,14 +107,14 @@ async function generateModuleIndexData({ require, github, context, core }) {
         const properties = {};
         for (const tag of tags) {
           // Using mcrModulePath because BRM module git tags do not include the modules/ prefix
-            const gitTag = `${mcrModulePath}/${tag}`;
+            //const gitTag = `${mcrModulePath}/${tag}`;
             
-          const documentationUri = `https://github.com/miekki/bicep-modules/tree/${gitTag}/${modulePath}/README.md`;
+          const documentationUri = `https://github.com/miekki/bicep-modules/tree/${tag}/${modulePath}/README.md`;
           const description = await getModuleDescription(
             github,
             core,
             mainJsonPath,
-            gitTag,
+            tag,
             context
           );
 
