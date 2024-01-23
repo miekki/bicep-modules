@@ -36,7 +36,6 @@ async function getModuleDescription(
 
   // Find the file in the tree
   const file = tree.find((f) => f.path === mainJsonPath);
-  core.info(`after file search`)
   if (!file) {
     throw new Error(`File ${mainJsonPath} not found in repository`);
   }
@@ -51,7 +50,6 @@ async function getModuleDescription(
 
   // content is base64 encoded, so decode it
   const fileContent = Buffer.from(content, "base64").toString("utf8");
-  core.info(`file content = ${fileContent}`);
 
   // Parse the main.json file
   if (fileContent !== "") {
@@ -61,8 +59,6 @@ async function getModuleDescription(
     const firstquote = cutStr.indexOf("'") + 1;
     const secondquote = cutStr.indexOf("'", firstquote);
     const description = cutStr.substring(firstquote, secondquote);
-
-    core.info(`File description is  = ${description}`);
 
     return description;
   } else {
@@ -121,7 +117,7 @@ async function generateModuleIndexData({ require, github, context, core }) {
           tag,
           context
         );
-        //const description = 'Module description'
+  
         properties[tag] = { description, documentationUri };
         //}
 

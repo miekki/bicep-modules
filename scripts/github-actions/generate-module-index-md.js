@@ -135,6 +135,7 @@ permalink: /
   if (!moduleIndexDataContent) {
     throw "Could not read moduleIndex.json";
   }
+  core.info(`ModuleInsex content = ${JSON.parse(moduleIndexDataContent)}`);
 
   const moduleIndexData = JSON.parse(moduleIndexDataContent);
   const moduleGroups = groupBy(
@@ -146,7 +147,7 @@ permalink: /
     if (moduleGroup.includes("modules")) {
       continue;
     }
-    core.debug(`Generating ${moduleGroup}...`);
+    core.info(`Generating ${moduleGroup}...`);
 
     const moduleGroupTable = await generateModuleGroupTable(
       github,
