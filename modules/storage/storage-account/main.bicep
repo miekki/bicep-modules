@@ -54,7 +54,7 @@ param accessTier string = 'Hot'
 param allowBlobPublicAccess bool = false
 
 @description('Required. Properties object for a Blob service of a Storage Account.')
-param blobServiceProperties blobServicePropertiesType
+param blobServiceProperties blobServicePropertiesType = {}
 
 @description('Optional. Array of blob containers to be created for blobServices of Storage Account.')
 param blobContainers blobContainerType[] = []
