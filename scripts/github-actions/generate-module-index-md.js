@@ -59,7 +59,7 @@ async function generateModuleGroupTable(github, context, modules, prettier) {
   const moduleGroupTableData = [
     [
       "Module",
-      //"Latest version",
+      "Latest version",
       "Published on",
       "Source code",
       "Readme",
@@ -72,25 +72,25 @@ async function generateModuleGroupTable(github, context, modules, prettier) {
 
     // module.tags is an sorted array.
     const latestVersion = module.tags.slice(-1)[0];
-    // const versionListUrl = `https://mcr.microsoft.com/v2/bicep/${module.moduleName}/tags/list`;
+    //const versionListUrl = `https://mcr.microsoft.com/v2/bicep/${module.moduleName}/tags/list`;
     // const versionBadgeUrl = `https://img.shields.io/badge/mcr-${latestVersion}-blue`;
-    // const versionBadge = `<a href="${versionListUrl}"><image src="${versionBadgeUrl}"/></a>`;
+    //const versionBadge = `<a href="${versionListUrl}"><image src="${versionBadgeUrl}"/></a>`;
 
     const tag = `${module.moduleName}/${latestVersion}`;
-    //const publishDate = await getPublishDate(github, context, tag);
-    const publishDate = '2024-01-01'
-    const description = `Module ${module.moduleName} description`;
-    // const description =
-    //   module.properties &&
-    //   module.properties[latestVersion]?.description?.replace(/\n|\r/g, " ");
+    const publishDate = await getPublishDate(github, context, tag);
+    //const publishDate = '2024-01-01'
+    //const description = `Module ${module.moduleName} description`;
+     const description =
+       module.properties &&
+       module.properties[latestVersion]?.description?.replace(/\n|\r/g, " ");
 
     const moduleRootUrl = `https://github.com/miekki/bicep-modules/tree/main/modules/${module.moduleName}`;
-    const sourceCodeButton = `[🦾 Source code](${moduleRootUrl}/main.bicep){: .btn}`;
-    const readmeButton = `[📃 Readme](${moduleRootUrl}/README.md){: .btn .btn-purple}`;
+    const sourceCodeButton = `[Source code](${moduleRootUrl}/main.bicep){: .btn}`;
+    const readmeButton = `[Readme](${moduleRootUrl}/README.md){: .btn .btn-purple}`;
 
     moduleGroupTableData.push([
       modulePath,
-      //versionBadge,
+      latestVersion,
       publishDate,
       sourceCodeButton,
       readmeButton,
@@ -160,7 +160,7 @@ permalink: /
     moduleIndexMarkdown += "\n\n";
   }
 
-  await fs.writeFile("docs/jekyll/index.md", moduleIndexMarkdown);
+  await fs.writeFile("docs/index.md", moduleIndexMarkdown);
 }
 
 module.exports = generateModuleIndexMarkdown;

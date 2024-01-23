@@ -92,13 +92,13 @@ async function generateModuleIndexData({ require, github, context, core }) {
     for (const moduleName of moduleNames) {
       const modulePath = `${moduleGroupPath}/${moduleName}`;
         //const mainJsonPath = `${modulePath}/main.json`;
-        const mainJsonPath = `${modulePath}/main.bicep`;
+      const mainJsonPath = `${modulePath}/main.bicep`;
       // BRM module git tags do not include the modules/ prefix.
       const mcrModulePath = modulePath.slice(8);
       //const tagListUrl = `https://mcr.microsoft.com/v2/bicep/${mcrModulePath}/tags/list`;
 
       try {
-        core.info(`Processing BRM Module "${modulePath}"...`);
+        core.info(`Processing Module "${modulePath}"...`);
         //core.info(`  Getting available tags at "${tagListUrl}"...`);
 
         //const tagListResponse = await axios.get(tagListUrl);
@@ -110,14 +110,14 @@ async function generateModuleIndexData({ require, github, context, core }) {
             //const gitTag = `${mcrModulePath}/${tag}`;
             
           const documentationUri = `https://github.com/miekki/bicep-modules/tree/${tag}/${modulePath}/README.md`;
-        //   const description = await getModuleDescription(
-        //     github,
-        //     core,
-        //     mainJsonPath,
-        //     tag,
-        //     context
-        //   );
-          const description = 'Module description'
+          const description = await getModuleDescription(
+            github,
+            core,
+            mainJsonPath,
+            tag,
+            context
+          );
+          //const description = 'Module description'
           properties[tag] = { description, documentationUri };
         }
 
@@ -134,55 +134,6 @@ async function generateModuleIndexData({ require, github, context, core }) {
     numberOfModuleGroupsProcessed++;
   }
 
-//   for (const avmModuleRoot of ["modules"]) {
-//     // Resource module path pattern: `avm/res/${moduleGroup}/${moduleName}`
-//     // Pattern module path pattern: `avm/ptn/${moduleGroup}/${moduleName}`
-//     const avmModuleGroups = await getSubdirNames(fs, avmModuleRoot);
-
-//     for (const moduleGroup of avmModuleGroups) {
-//       const moduleGroupPath = `${avmModuleRoot}/${moduleGroup}`;
-//       const moduleNames = await getSubdirNames(fs, moduleGroupPath);
-
-//       for (const moduleName of moduleNames) {
-//         const modulePath = `${moduleGroupPath}/${moduleName}`;
-//         const mainJsonPath = `${modulePath}/main.json`;
-//         //const tagListUrl = `https://mcr.microsoft.com/v2/bicep/${modulePath}/tags/list`;
-
-//         try {
-//           core.info(`Processing Module "${modulePath}"...`);
-//           //core.info(`  Getting available tags at "${tagListUrl}"...`);
-
-//           //const tagListResponse = await axios.get(tagListUrl);
-//           //const tags = tagListResponse.data.tags.sort();
-//           const tags = 'main'
-//           const properties = {};
-//           for (const tag of tags) {
-//             const gitTag = `${modulePath}/${tag}`;
-//             const documentationUri = `https://github.com/miekki/bicep-modules/tree/${gitTag}/${modulePath}/README.md`;
-//             const description = await getModuleDescription(
-//               github,
-//               core,
-//               mainJsonPath,
-//               gitTag,
-//               context
-//             );
-
-//             properties[tag] = { description, documentationUri };
-//           }
-
-//           moduleIndexData.push({
-//             moduleName: modulePath,
-//             tags,
-//             properties,
-//           });
-//         } catch (error) {
-//           core.setFailed(error);
-//         }
-//       }
-
-//       numberOfModuleGroupsProcessed++;
-//     }
-//   }
 
   core.info(`Writing moduleIndex.json`);
   await fs.writeFile(
