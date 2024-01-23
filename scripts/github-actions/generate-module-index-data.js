@@ -14,7 +14,7 @@ async function getModuleDescription(
   gitTag,
   context
 ) {
-  const gitTagRef = `tags/${gitTag}`;
+  const gitTagRef = `heads/${gitTag}`;
 
   core.info(`  Retrieving main.bicep at Git tag ref ${gitTagRef}`);
   core.info(` getModuleDescription - owner = ${context.repo.owner}`);
