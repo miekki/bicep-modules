@@ -76,7 +76,6 @@ async function getModuleDescription(
     repo: context.repo.repo,
     file_sha: file.sha,
   });
-  core.info(`file content = ${JSON.stringify(mm_result3)}`);
   
   const content = mm_result3.data.content;
   // Get the blob data
@@ -90,6 +89,7 @@ async function getModuleDescription(
 
   // content is base64 encoded, so decode it
   const fileContent = Buffer.from(content, "base64").toString("utf8");
+  core.info(`file content = ${fileContent}`);
 
   // Parse the main.json file
   if (fileContent !== "") {
