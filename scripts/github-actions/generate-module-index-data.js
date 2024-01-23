@@ -103,23 +103,23 @@ async function generateModuleIndexData({ require, github, context, core }) {
 
         //const tagListResponse = await axios.get(tagListUrl);
         //const tags = tagListResponse.data.tags.sort();
-        const tags = 'main'
+        const tag = 'main'
         const properties = {};
-        for (const tag of tags) {
+        //for (const tag of tags) {
           // Using mcrModulePath because BRM module git tags do not include the modules/ prefix
             //const gitTag = `${mcrModulePath}/${tag}`;
             
-          const documentationUri = `https://github.com/miekki/bicep-modules/tree/${tag}/${modulePath}/README.md`;
-          const description = await getModuleDescription(
-            github,
-            core,
-            mainJsonPath,
-            tag,
-            context
-          );
-          //const description = 'Module description'
-          properties[tag] = { description, documentationUri };
-        }
+        const documentationUri = `https://github.com/miekki/bicep-modules/tree/${tag}/${modulePath}/README.md`;
+        const description = await getModuleDescription(
+          github,
+          core,
+          mainJsonPath,
+          tag,
+          context
+        );
+        //const description = 'Module description'
+        properties[tag] = { description, documentationUri };
+        //}
 
         moduleIndexData.push({
           moduleName: mcrModulePath,
