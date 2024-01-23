@@ -70,7 +70,7 @@ async function generateModuleGroupTable(github, context, modules, prettier, core
   for (const module of modules) {
     const modulePath = `\`${module.moduleName}\``;
 
-    core.info(`module details = ${module}`);
+    core.info(`module tags = ${module.tags}`);
 
     // module.tags is an sorted array.
     const latestVersion = module.tags.slice(-1)[0];
