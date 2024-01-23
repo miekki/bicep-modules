@@ -88,7 +88,7 @@ async function generateModuleGroupTable(github, context, modules, prettier, core
     //const description = `Module ${module.moduleName} description`;
     const description =
        module.properties &&
-       module.properties[latestVersion]?.description?.replace(/\n|\r/g, " ");
+       module.properties[tag]?.description?.replace(/\n|\r/g, " ");
 
     core.info(`description is ${description}`);
 
@@ -112,7 +112,7 @@ async function generateModuleGroupTable(github, context, modules, prettier, core
   });
 
   core.info(`end this function generateModuleGroupTable`);
-  
+
   return prettier.format(table, { parser: "markdown" });
 }
 
@@ -172,7 +172,7 @@ permalink: /
     moduleIndexMarkdown += "\n\n";
   }
 
-  await fs.writeFile("docs/index.md", moduleIndexMarkdown);
+  await fs.writeFile("./docs/index.md", moduleIndexMarkdown);
 }
 
 module.exports = generateModuleIndexMarkdown;
