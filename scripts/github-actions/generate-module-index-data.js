@@ -29,20 +29,20 @@ async function getModuleDescription(
   });
 
   core.info(` result from getRef ${JSON.stringify(mm_result.data.object.sha)}`);
-  
+  const commitSha = mm_result.data.object.sha;
   
   // Get the SHA of the commit
-  const {
-    data: {
-      object: { sha: commitSha },
-    },
-  } = await github.rest.git.getRef({
-    owner: context.repo.owner,
-    repo: context.repo.repo,
-    ref: gitTagRef,
-  });
+  // const {
+  //   data: {
+  //     object: { sha: commitSha },
+  //   },
+  // } = await github.rest.git.getRef({
+  //   owner: context.repo.owner,
+  //   repo: context.repo.repo,
+  //   ref: gitTagRef,
+  // });
 
-  core.info(` getModuleDescription - have data = ${data.object}`)
+  core.info(` getModuleDescription - have data = ${commitSha}`)
 
   // Get the tree data
   const {
