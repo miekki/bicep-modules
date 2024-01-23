@@ -93,8 +93,18 @@ async function getModuleDescription(
 
   // Parse the main.json file
   if (fileContent !== "") {
-    const json = JSON.parse(fileContent);
-    return json.metadata.description;
+    const strToFind = 'metadata description =';
+    const position = fileContent.search(strToFind);
+    fileContent = fileContent.substring(position + strToFind.length, 1000);
+    const firstquote = fileContent.indexOf("'") + 1;
+    const secondquote = fileContent.indexOf("'", firstquote);
+    const description = fileContent.substring(firstquote, secondquote);
+
+    core.info(`File description is  = ${description}`);
+
+    return "description"
+    // const json = JSON.parse(fileContent);
+    // return json.metadata.description;
   } else {
     throw new Error(
       "The specified path does not represent a file or it is empty."
