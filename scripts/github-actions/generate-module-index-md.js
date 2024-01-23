@@ -30,7 +30,7 @@ async function getPublishDate(github, context, tag) {
   const reference = await github.rest.git.getRef({
     owner,
     repo,
-    ref: `tags/${tag}`,
+    ref: `heads/${tag}`,
   });
   if (!reference) {
     throw `Could not find tag ${tag}`;
@@ -70,13 +70,14 @@ async function generateModuleGroupTable(github, context, modules, prettier, core
   for (const module of modules) {
     const modulePath = `\`${module.moduleName}\``;
 
-    core.info(`module tags = ${module.tags}`);
-
+    
     // module.tags is an sorted array.
-    const latestVersion = module.tags.slice(-1)[0];
+    //const latestVersion = module.tag;  //s.slice(-1)[0];
     //const versionListUrl = `https://mcr.microsoft.com/v2/bicep/${module.moduleName}/tags/list`;
     // const versionBadgeUrl = `https://img.shields.io/badge/mcr-${latestVersion}-blue`;
     //const versionBadge = `<a href="${versionListUrl}"><image src="${versionBadgeUrl}"/></a>`;
+    const latestVersion = JSON.parse(`https://github.com/miekki/bicep-modules/tree/main/modules/${module.moduleName}/metadata.json`).version;
+    core.info(`latestVersion is = ${latestVersion}`);
 
     const tag = `${module.moduleName}/${latestVersion}`;
     const publishDate = await getPublishDate(github, context, tag);
