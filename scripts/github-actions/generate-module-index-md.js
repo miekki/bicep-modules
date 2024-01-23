@@ -79,7 +79,7 @@ async function generateModuleGroupTable(github, context, modules, prettier, core
     const latestVersion = '1.0.0'; //JSON.parse(`https://github.com/miekki/bicep-modules/tree/main/modules/${module.moduleName}/metadata.json`).version;
     core.info(`latestVersion is = ${latestVersion}`);
 
-    const tag = `${module.moduleName}/${latestVersion}`;
+    const tag = 'main';// `${module.moduleName}/${latestVersion}`;
     const publishDate = await getPublishDate(github, context, tag);
     //const publishDate = '2024-01-01'
     //const description = `Module ${module.moduleName} description`;
