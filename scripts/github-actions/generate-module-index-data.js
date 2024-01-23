@@ -29,7 +29,6 @@ async function getModuleDescription(
     ref: gitTagRef,
   });
 
-  core.info(` result from getRef ${JSON.stringify(mm_result.data.object.sha)}`);
   const commitSha = mm_result.data.object.sha;
   
   // Get the SHA of the commit
@@ -43,7 +42,7 @@ async function getModuleDescription(
   //   ref: gitTagRef,
   // });
 
-  core.info(` getModuleDescription - have data = ${commitSha}`)
+  core.info(` getModuleDescription - commitSha = ${commitSha}`)
 
   const mm_result2 = await github.rest.git.getTree({
     owner: context.repo.owner,
@@ -51,7 +50,7 @@ async function getModuleDescription(
     tree_sha: commitSha,
     recursive: true,
   });
-  core.info(` result from getTree ${JSON.stringify(mm_result2)}`);
+  core.info(` result from getTree ${JSON.stringify(mm_result2.data.tree)}`);
   const tree = mm_result2.data.tree;
 
   core.info(` Tree data = ${JSON.stringify(tree)}`);
