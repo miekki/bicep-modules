@@ -16,6 +16,7 @@ async function getModuleDescription(
 ) {
   const gitTagRef = `heads/${gitTag}`;
 
+  core.info(`MainJsonPath= ${mainJsonPath}`);
   core.info(`  Retrieving main.bicep at Git tag ref ${gitTagRef}`);
   core.info(` getModuleDescription - owner = ${context.repo.owner}`);
   core.info(` getModuleDescription - repo = ${context.repo.repo}`);
@@ -52,6 +53,8 @@ async function getModuleDescription(
   });
   core.info(` result from getTree ${JSON.stringify(mm_result2)}`);
   const tree = mm_result2.data.tree;
+
+  core.info(` Tree data = ${JSON.stringify(tree)}`);
   // Get the tree data
   // const {
   //   data: { tree },
