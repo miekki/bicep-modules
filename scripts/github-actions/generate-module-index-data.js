@@ -17,7 +17,9 @@ async function getModuleDescription(
   const gitTagRef = `tags/${gitTag}`;
 
   core.info(`  Retrieving main.bicep at Git tag ref ${gitTagRef}`);
-
+  core.info(` getModuleDescription - owner = ${context.repo.owner}`);
+  core.info(` getModuleDescription - repo = ${context.repo.repo}`);
+  core.info(` getModuleDescription - ref = ${gitTagRef}`);
   // Get the SHA of the commit
   const {
     data: {
@@ -28,6 +30,8 @@ async function getModuleDescription(
     repo: context.repo.repo,
     ref: gitTagRef,
   });
+
+  core.info(` getModuleDescription - have data = ${data.object}`)
 
   // Get the tree data
   const {
