@@ -51,15 +51,16 @@ async function getModuleDescription(
     recursive: true,
   });
   core.info(` result from getTree ${JSON.stringify(mm_result2)}`);
+  const tree = mm_result2.data.tree;
   // Get the tree data
-  const {
-    data: { tree },
-  } = await github.rest.git.getTree({
-    owner: context.repo.owner,
-    repo: context.repo.repo,
-    tree_sha: commitSha,
-    recursive: true,
-  });
+  // const {
+  //   data: { tree },
+  // } = await github.rest.git.getTree({
+  //   owner: context.repo.owner,
+  //   repo: context.repo.repo,
+  //   tree_sha: commitSha,
+  //   recursive: true,
+  // });
 
   // Find the file in the tree
   const file = tree.find((f) => f.path === mainJsonPath);
@@ -67,14 +68,20 @@ async function getModuleDescription(
     throw new Error(`File ${mainJsonPath} not found in repository`);
   }
 
-  // Get the blob data
-  const {
-    data: { content },
-  } = await github.rest.git.getBlob({
+  const mm_result3 = await github.rest.git.getBlob({
     owner: context.repo.owner,
     repo: context.repo.repo,
     file_sha: file.sha,
   });
+  const content = mm_result3.data.content;
+  // Get the blob data
+  // const {
+  //   data: { content },
+  // } = await github.rest.git.getBlob({
+  //   owner: context.repo.owner,
+  //   repo: context.repo.repo,
+  //   file_sha: file.sha,
+  // });
 
   // content is base64 encoded, so decode it
   const fileContent = Buffer.from(content, "base64").toString("utf8");
