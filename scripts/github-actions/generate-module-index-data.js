@@ -20,6 +20,17 @@ async function getModuleDescription(
   core.info(` getModuleDescription - owner = ${context.repo.owner}`);
   core.info(` getModuleDescription - repo = ${context.repo.repo}`);
   core.info(` getModuleDescription - ref = ${gitTagRef}`);
+  
+  
+  const mm_result = await github.rest.git.getRef({
+    owner: context.repo.owner,
+    repo: context.repo.repo,
+    ref: gitTagRef,
+  });
+
+  core.info(` result from getRef ${mm_result}`);
+  
+  
   // Get the SHA of the commit
   const {
     data: {
