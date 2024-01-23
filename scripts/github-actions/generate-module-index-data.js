@@ -44,6 +44,13 @@ async function getModuleDescription(
 
   core.info(` getModuleDescription - have data = ${commitSha}`)
 
+  const mm_result2 = await github.rest.git.getTree({
+    owner: context.repo.owner,
+    repo: context.repo.repo,
+    tree_sha: commitSha,
+    recursive: true,
+  });
+  core.info(` result from getTree ${JSON.stringify(mm_result2)}`);
   // Get the tree data
   const {
     data: { tree },
