@@ -28,7 +28,7 @@ async function getModuleDescription(
     ref: gitTagRef,
   });
 
-  core.info(` result from getRef ${mm_result}`);
+  core.info(` result from getRef ${JSON.stringify(mm_result)}`);
   
   
   // Get the SHA of the commit
