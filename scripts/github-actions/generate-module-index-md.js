@@ -70,6 +70,8 @@ async function generateModuleGroupTable(github, context, modules, prettier) {
   for (const module of modules) {
     const modulePath = `\`${module.moduleName}\``;
 
+    core.info(`module details = ${module}`);
+    
     // module.tags is an sorted array.
     const latestVersion = module.tags.slice(-1)[0];
     //const versionListUrl = `https://mcr.microsoft.com/v2/bicep/${module.moduleName}/tags/list`;
