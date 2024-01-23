@@ -16,11 +16,11 @@ async function getModuleDescription(
 ) {
   const gitTagRef = `heads/${gitTag}`;
 
-  core.info(`MainJsonPath= ${mainJsonPath}`);
-  core.info(`  Retrieving main.bicep at Git tag ref ${gitTagRef}`);
-  core.info(` getModuleDescription - owner = ${context.repo.owner}`);
-  core.info(` getModuleDescription - repo = ${context.repo.repo}`);
-  core.info(` getModuleDescription - ref = ${gitTagRef}`);
+  // core.info(`MainJsonPath= ${mainJsonPath}`);
+  // core.info(`  Retrieving main.bicep at Git tag ref ${gitTagRef}`);
+  // core.info(` getModuleDescription - owner = ${context.repo.owner}`);
+  // core.info(` getModuleDescription - repo = ${context.repo.repo}`);
+  // core.info(` getModuleDescription - ref = ${gitTagRef}`);
   
   
   const mm_result = await github.rest.git.getRef({
@@ -42,7 +42,7 @@ async function getModuleDescription(
   //   ref: gitTagRef,
   // });
 
-  core.info(` getModuleDescription - commitSha = ${commitSha}`)
+  // core.info(` getModuleDescription - commitSha = ${commitSha}`)
 
   const mm_result2 = await github.rest.git.getTree({
     owner: context.repo.owner,
@@ -52,7 +52,7 @@ async function getModuleDescription(
   });
   const tree = mm_result2.data.tree;
 
-  core.info(` Tree data = ${JSON.stringify(tree)}`);
+  // core.info(` Tree data = ${JSON.stringify(tree)}`);
   // Get the tree data
   // const {
   //   data: { tree },
@@ -69,7 +69,7 @@ async function getModuleDescription(
   if (!file) {
     throw new Error(`File ${mainJsonPath} not found in repository`);
   }
-  core.info(`file sha is ${file.sha}`);
+  // core.info(`file sha is ${file.sha}`);
 
   const mm_result3 = await github.rest.git.getBlob({
     owner: context.repo.owner,
@@ -95,10 +95,10 @@ async function getModuleDescription(
   if (fileContent !== "") {
     const strToFind = 'metadata description =';
     const position = fileContent.search(strToFind);
-    fileContent = fileContent.substring(position + strToFind.length, 1000);
-    const firstquote = fileContent.indexOf("'") + 1;
-    const secondquote = fileContent.indexOf("'", firstquote);
-    const description = fileContent.substring(firstquote, secondquote);
+    const cutStr = fileContent.substring(position + strToFind.length, 1000);
+    const firstquote = cutStr.indexOf("'") + 1;
+    const secondquote = cutStr.indexOf("'", firstquote);
+    const description = cutStr.substring(firstquote, secondquote);
 
     core.info(`File description is  = ${description}`);
 
