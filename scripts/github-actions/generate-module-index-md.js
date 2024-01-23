@@ -137,7 +137,7 @@ permalink: /
   if (!moduleIndexDataContent) {
     throw "Could not read moduleIndex.json";
   }
-  core.info(`ModuleInsex content = ${JSON.parse(moduleIndexDataContent)}`);
+  core.info(`ModuleInsex content = ${JSON.stringify(moduleIndexDataContent)}`);
 
   const moduleIndexData = JSON.parse(moduleIndexDataContent);
   const moduleGroups = groupBy(
