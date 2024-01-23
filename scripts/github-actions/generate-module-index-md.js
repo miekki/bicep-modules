@@ -81,11 +81,16 @@ async function generateModuleGroupTable(github, context, modules, prettier, core
 
     const tag = 'main';// `${module.moduleName}/${latestVersion}`;
     const publishDate = await getPublishDate(github, context, tag);
+
+    core.info(`publish date is ${publishDate}`);
+
     //const publishDate = '2024-01-01'
     //const description = `Module ${module.moduleName} description`;
-     const description =
+    const description =
        module.properties &&
        module.properties[latestVersion]?.description?.replace(/\n|\r/g, " ");
+
+    core.info(`description is ${description}`);
 
     const moduleRootUrl = `https://github.com/miekki/bicep-modules/tree/main/modules/${module.moduleName}`;
     const sourceCodeButton = `[Source code](${moduleRootUrl}/main.bicep){: .btn}`;
@@ -106,6 +111,8 @@ async function generateModuleGroupTable(github, context, modules, prettier, core
     align: ["l", "r", "r", "r", "r", "l"],
   });
 
+  core.info(`end this function generateModuleGroupTable`);
+  
   return prettier.format(table, { parser: "markdown" });
 }
 
