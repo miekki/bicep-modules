@@ -50,7 +50,6 @@ async function getModuleDescription(
     tree_sha: commitSha,
     recursive: true,
   });
-  core.info(` result from getTree ${JSON.stringify(mm_result2.data.tree)}`);
   const tree = mm_result2.data.tree;
 
   core.info(` Tree data = ${JSON.stringify(tree)}`);
@@ -66,15 +65,19 @@ async function getModuleDescription(
 
   // Find the file in the tree
   const file = tree.find((f) => f.path === mainJsonPath);
+  core.info(`after file search`)
   if (!file) {
     throw new Error(`File ${mainJsonPath} not found in repository`);
   }
+  core.info(`file sha is ${file.sha}`);
 
   const mm_result3 = await github.rest.git.getBlob({
     owner: context.repo.owner,
     repo: context.repo.repo,
     file_sha: file.sha,
   });
+  core.info(`file content = ${JSON.stringify(mm_result3)}`);
+  
   const content = mm_result3.data.content;
   // Get the blob data
   // const {
