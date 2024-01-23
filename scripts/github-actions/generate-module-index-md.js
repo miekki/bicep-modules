@@ -172,7 +172,7 @@ permalink: /
     moduleIndexMarkdown += "\n\n";
   }
 
-  await fs.writeFile("./docs/index.md", moduleIndexMarkdown);
+  await fs.writeFile("index.md", moduleIndexMarkdown);
 }
 
 module.exports = generateModuleIndexMarkdown;
