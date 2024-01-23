@@ -16,13 +16,7 @@ async function getModuleDescription(
 ) {
   const gitTagRef = `heads/${gitTag}`;
 
-  // core.info(`MainJsonPath= ${mainJsonPath}`);
-  // core.info(`  Retrieving main.bicep at Git tag ref ${gitTagRef}`);
-  // core.info(` getModuleDescription - owner = ${context.repo.owner}`);
-  // core.info(` getModuleDescription - repo = ${context.repo.repo}`);
-  // core.info(` getModuleDescription - ref = ${gitTagRef}`);
-  
-  
+  // Get the SHA of the commit
   const mm_result = await github.rest.git.getRef({
     owner: context.repo.owner,
     repo: context.repo.repo,
@@ -31,19 +25,7 @@ async function getModuleDescription(
 
   const commitSha = mm_result.data.object.sha;
   
-  // Get the SHA of the commit
-  // const {
-  //   data: {
-  //     object: { sha: commitSha },
-  //   },
-  // } = await github.rest.git.getRef({
-  //   owner: context.repo.owner,
-  //   repo: context.repo.repo,
-  //   ref: gitTagRef,
-  // });
-
-  // core.info(` getModuleDescription - commitSha = ${commitSha}`)
-
+  // Get the tree data
   const mm_result2 = await github.rest.git.getTree({
     owner: context.repo.owner,
     repo: context.repo.repo,
@@ -52,24 +34,12 @@ async function getModuleDescription(
   });
   const tree = mm_result2.data.tree;
 
-  // core.info(` Tree data = ${JSON.stringify(tree)}`);
-  // Get the tree data
-  // const {
-  //   data: { tree },
-  // } = await github.rest.git.getTree({
-  //   owner: context.repo.owner,
-  //   repo: context.repo.repo,
-  //   tree_sha: commitSha,
-  //   recursive: true,
-  // });
-
   // Find the file in the tree
   const file = tree.find((f) => f.path === mainJsonPath);
   core.info(`after file search`)
   if (!file) {
     throw new Error(`File ${mainJsonPath} not found in repository`);
   }
-  // core.info(`file sha is ${file.sha}`);
 
   const mm_result3 = await github.rest.git.getBlob({
     owner: context.repo.owner,
@@ -78,14 +48,6 @@ async function getModuleDescription(
   });
   
   const content = mm_result3.data.content;
-  // Get the blob data
-  // const {
-  //   data: { content },
-  // } = await github.rest.git.getBlob({
-  //   owner: context.repo.owner,
-  //   repo: context.repo.repo,
-  //   file_sha: file.sha,
-  // });
 
   // content is base64 encoded, so decode it
   const fileContent = Buffer.from(content, "base64").toString("utf8");
@@ -102,9 +64,7 @@ async function getModuleDescription(
 
     core.info(`File description is  = ${description}`);
 
-    return "description"
-    // const json = JSON.parse(fileContent);
-    // return json.metadata.description;
+    return description;
   } else {
     throw new Error(
       "The specified path does not represent a file or it is empty."
@@ -167,7 +127,7 @@ async function generateModuleIndexData({ require, github, context, core }) {
 
         moduleIndexData.push({
           moduleName: mcrModulePath,
-          tags,
+          tag,
           properties,
         });
       } catch (error) {
