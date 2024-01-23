@@ -55,7 +55,7 @@ async function getPublishDate(github, context, tag) {
  * @param {typeof import("prettier")} prettier
  * @returns
  */
-async function generateModuleGroupTable(github, context, modules, prettier) {
+async function generateModuleGroupTable(github, context, modules, prettier, core) {
   const moduleGroupTableData = [
     [
       "Module",
@@ -71,7 +71,7 @@ async function generateModuleGroupTable(github, context, modules, prettier) {
     const modulePath = `\`${module.moduleName}\``;
 
     core.info(`module details = ${module}`);
-    
+
     // module.tags is an sorted array.
     const latestVersion = module.tags.slice(-1)[0];
     //const versionListUrl = `https://mcr.microsoft.com/v2/bicep/${module.moduleName}/tags/list`;
@@ -155,7 +155,8 @@ permalink: /
       github,
       context,
       modules,
-      prettier
+      prettier,
+      core
     );
 
     moduleIndexMarkdown += `## ${moduleGroup}\n\n`;
