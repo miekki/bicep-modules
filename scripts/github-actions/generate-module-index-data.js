@@ -77,11 +77,14 @@ async function getModuleDescription(
  *
  * @param {Params} params
  */
-async function generateModuleIndexData({ require, github, context, core, acr_auth }) {
+async function generateModuleIndexData({ require, github, context, core }) {
   const fs = require("fs").promises;
   const axios = require("axios").default;
   const moduleIndexData = [];
 
+  core.info(`params = ${params}`);
+  core.info(`context = ${context}`);
+  
   let numberOfModuleGroupsProcessed = 0;
 
   const header = `Authorization: Basic ${acr_auth}`
