@@ -74,16 +74,15 @@ async function getModuleDescription(
  * @property {ReturnType<typeof import("@actions/github").getOctokit>} github
  * @property {typeof import("@actions/github").context} context
  * @property {typeof import("@actions/core")} core
- * @property {string} texttodisplay
  * 
  * @param {Params} params
  */
-async function generateModuleIndexData({ require, github, context, core , texttodisplay}) {
+async function generateModuleIndexData({ require, github, context, core }) {
   const fs = require("fs").promises;
   const axios = require("axios").default;
   const moduleIndexData = [];
 
-  core.info(`texttodisplay = ${texttodisplay}`);
+  core.info(`texttodisplay = ${process.env.TEXT_GH}`);
   
 
   let numberOfModuleGroupsProcessed = 0;
