@@ -87,3 +87,13 @@ jobs:
             az bicep publish \
                 --target 'br:${{ vars.AZURE_REGISTRY_URL }}/${{ inputs.module_name }}:${{ env.MODULE_VERSION }}' \
                 --file ${{ inputs.module_file_path }}
+      
+      - uses: LadyCailin/azure-table-storage-upload@v1.0.0
+        with:
+          table_name: "BicepModuleVersion"
+          partition_key: "PartitionKey"
+          row_key: "RowKey"
+          data: 'PartitionKey=${{ inputs.module_name }} RowKey=${{ env.MODULE_VERSION }} PublishDate=$(date + "%Y-%m-%d") '
+          if_exists: 'replace'
+          extra_args: ''
+          connection_string: ${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}
