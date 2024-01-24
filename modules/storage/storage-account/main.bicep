@@ -50,16 +50,27 @@ Default is Hot.
 ])
 param accessTier string = 'Hot'
 
-@description('Allow or disallow public access to all blobs or containers in the storage account.')
+@description('Optional. Allow or disallow public access to all blobs or containers in the storage account.')
 param allowBlobPublicAccess bool = false
 
-@description('Required. Properties object for a Blob service of a Storage Account.')
-param blobServiceProperties blobServicePropertiesType = {}
+@description('Optional. Properties object for a Blob service of a Storage Account.')
+param blobServiceProperties blobServicePropertiesType = {
+  containerDeleteRetentionPolicy: {
+    allowPermanentDelete: false
+    days: 90
+    enabled: true
+  }
+  deleteRetentionPolicy: {
+    allowPermanentDelete: false
+    days: 90
+    enabled: true
+  }
+}
 
 @description('Optional. Array of blob containers to be created for blobServices of Storage Account.')
 param blobContainers blobContainerType[] = []
 
-@description('Configuration for network access rules.')
+@description('Optional. Configuration for network access rules.')
 param networkAcls networkAclsType = {
   defaultAction: 'Deny'
 }
@@ -126,12 +137,12 @@ type changeFeed = {
 
 type deleteRetentionPolicyType = {
   @description('This property when set to true allows deletion of the soft deleted blob versions and snapshots. This property cannot be used blob restore policy. This property only applies to blob service and does not apply to containers or file share.')
-  allowPermanentDelete: false
+  allowPermanentDelete: bool
   @minValue(1)
   @maxValue(365)
   @description('Indicates the number of days that the deleted item should be retained.')
   days: int
-  enabled: true
+  enabled: bool
 }
 
 @description('Specifies CORS rules for the Blob service. You can include up to five CorsRule elements in the request. If no CorsRule elements are included in the request body, all CORS rules will be deleted, and CORS will be disabled for the Blob service.')

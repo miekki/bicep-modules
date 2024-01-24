@@ -20,7 +20,7 @@ var my_tags = {
   env: 'dev'
 }
 
-// TEST 1
+// TEST 1 - minimum parameters
 module test1 '../main.bicep' = {
   name: 'test1'
   params: {
@@ -28,52 +28,17 @@ module test1 '../main.bicep' = {
     name: names.test1.storage
     tags: my_tags
     sku: 'Standard_GRS'
-
-    blobServiceProperties: {
-      containerDeleteRetentionPolicy: {
-        allowPermanentDelete: false
-        enabled: true
-        days: 90
-      }
-      deleteRetentionPolicy: {
-        allowPermanentDelete: false
-        enabled: true
-        days: 90
-      }
-    }
   }
 }
 
-// TEST 2
+// TEST 2 - storage with blobs
 module test2 '../main.bicep' = {
   name: 'test2'
   params: {
     location: location
     name: names.test2.storage
     tags: my_tags
-    allowBlobPublicAccess: false
-    networkAcls: {
-      defaultAction: 'Deny'
-    }
-    blobServiceProperties: {
-      containerDeleteRetentionPolicy: {
-        allowPermanentDelete: false
-        enabled: true
-        days: 90
-      }
-      isVersioningEnabled: true
-      changeFeed: {
-        enabled: true
-      }
-      lastAccessTimeTrackingPolicy: {
-        enable: true
-      }
-      deleteRetentionPolicy: {
-        allowPermanentDelete: false
-        enabled: true
-        days: 90
-      }
-    }
+
     blobContainers: [
       {
         name: names.test2.containers[0]
