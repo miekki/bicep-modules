@@ -74,17 +74,19 @@ async function getModuleDescription(
  * @property {ReturnType<typeof import("@actions/github").getOctokit>} github
  * @property {typeof import("@actions/github").context} context
  * @property {typeof import("@actions/core")} core
- *
+ * @property {typeof string} texttodisplay
  * @param {Params} params
  */
-async function generateModuleIndexData({ require, github, context, core }) {
+async function generateModuleIndexData({ require, github, context, core , texttodisplay}) {
   const fs = require("fs").promises;
   const axios = require("axios").default;
   const moduleIndexData = [];
 
-  core.info(`params = ${params}`);
+  core.info(`texttodisplay = ${texttodisplay}`);
   core.info(`context = ${context}`);
+  core.info(`params = ${params}`);
   
+
   let numberOfModuleGroupsProcessed = 0;
 
   const header = `Authorization: Basic ${acr_auth}`
