@@ -85,10 +85,11 @@ async function generateModuleIndexData({ require, github, context, core, acr_aut
   let numberOfModuleGroupsProcessed = 0;
 
   const header = `Authorization: Basic ${acr_auth}`
+  core.info(`MD ${acr_auth}`);
   const acr_url= `https://mmbicepmoduleregistry.azurecr.io/oauth2/token?scope=repository:storage-account:metadata_read&service=mmbicepmoduleregistry.azurecr.io`
   var breatoken = axios.get(acr_url, { headers: { header } });
 
-  core.info(`BearToken is: ${breatoken}`);
+  core.info(`BearToken is: ${JSON.stringify(breatoken)}`);
 
   // BRM Modules
   for (const moduleGroup of await getSubdirNames(fs, "modules")) {
