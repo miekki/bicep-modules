@@ -85,7 +85,7 @@ async function generateModuleIndexData({ require, github, context, core }) {
   let numberOfModuleGroupsProcessed = 0;
 
   //const header = `Authorization: Basic ${process.env.ACR_USER}:${process.env.ACR_PASS}`
-  const header = `Authorization: Basic test-token:wDS8XuLSMWb9Pwr3oV38O1HgdULff2u3JT+w8mHTJG+ACRCn8y0a`
+  const header = `"Authorization": "Basic test-token:wDS8XuLSMWb9Pwr3oV38O1HgdULff2u3JT+w8mHTJG+ACRCn8y0a"`
   
   core.info(`header ${header}`);
   const acr_url= `https://mmbicepmoduleregistry.azurecr.io/oauth2/token?scope=repository:storage-account:metadata_read&service=mmbicepmoduleregistry.azurecr.io`
