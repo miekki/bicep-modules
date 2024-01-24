@@ -32,7 +32,8 @@ jobs:
       - name: Generate moduleIndex.json
         uses: actions/github-script@v7
         env:
-          TEXT_GH: 'this is a test'
+          ACR_USER: ${{ secrets.AZURE_ACR_USER}}
+          ACR_PASS: ${{ secrets.AZURE_ACR_PASSWORD }}
         with:
           script: |
             const script = require("./scripts/github-actions/generate-module-index-data.js")

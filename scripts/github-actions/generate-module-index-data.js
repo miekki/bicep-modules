@@ -82,13 +82,10 @@ async function generateModuleIndexData({ require, github, context, core }) {
   const axios = require("axios").default;
   const moduleIndexData = [];
 
-  core.info(`texttodisplay = ${process.env.TEXT_GH}`);
-  
-
   let numberOfModuleGroupsProcessed = 0;
 
-  const header = `Authorization: Basic ${acr_auth}`
-  core.info(`MD ${acr_auth}`);
+  const header = `Authorization: Basic ${process.env.ACR_USER}:${process.env.ACR_PASS} `
+  core.info(`header ${header}`);
   const acr_url= `https://mmbicepmoduleregistry.azurecr.io/oauth2/token?scope=repository:storage-account:metadata_read&service=mmbicepmoduleregistry.azurecr.io`
   var breatoken = axios.get(acr_url, { headers: { header } });
 
