@@ -34,7 +34,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Run Bicep linter
         run: az bicep build --file ${{ inputs.module_file_path }}
@@ -65,7 +65,7 @@ jobs:
     needs: [lint]
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Sign in to Azure
         uses: azure/login@v1
@@ -88,15 +88,7 @@ jobs:
                 --target 'br:${{ vars.AZURE_REGISTRY_URL }}/${{ inputs.module_name }}:${{ env.MODULE_VERSION }}' \
                 --file ${{ inputs.module_file_path }}
       
-      - name: Publish module details
+      - name: Publish module metadata
         run : |
-          az storage entity insert --connection-string ${{ secrets.AZURE_STORAGE_CONNECTION_STRING }} --table-name "BicepModuleVersion" --entity PartitionKey="${{ inputs.module_name }}"  RowKey="${{ env.MODULE_VERSION }}" PublishDate="2023-01-01"                 
-      # - uses: LadyCailin/azure-table-storage-upload@v1.0.0
-      #   with:
-      #     table_name: "BicepModuleVersion"
-      #     partition_key: ${{ inputs.module_name }} 
-      #     row_key: ${{ env.MODULE_VERSION }}
-      #     data: "PublishDate=$(date + '%Y-%m-%d')"
-      #     if_exists: 'replace'
-      #     extra_args: ''
-      #     connection_string: ${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}
+          az storage entity insert --connection-string "${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}" --entity PartitionKey="${{ inputs.module_name }}"  RowKey="${{ env.MODULE_VERSION }}" PublishDate="2023-01-01" --table-name "BicepModuleVersion"
+     
