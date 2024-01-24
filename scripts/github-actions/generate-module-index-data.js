@@ -75,6 +75,7 @@ async function getModuleDescription(
  * @property {typeof import("@actions/github").context} context
  * @property {typeof import("@actions/core")} core
  * @property {string} texttodisplay
+ * 
  * @param {Params} params
  */
 async function generateModuleIndexData({ require, github, context, core , texttodisplay}) {
