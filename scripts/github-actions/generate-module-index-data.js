@@ -88,8 +88,17 @@ async function generateModuleIndexData({ require, github, context, core }) {
   const header = `"Authorization": "Basic test-token:wDS8XuLSMWb9Pwr3oV38O1HgdULff2u3JT+w8mHTJG+ACRCn8y0a"`
   
   core.info(`header ${header}`);
+  const breatoken = "";
   const acr_url= `https://mmbicepmoduleregistry.azurecr.io/oauth2/token?scope=repository:storage-account:metadata_read&service=mmbicepmoduleregistry.azurecr.io`
-  var breatoken = axios.get(acr_url, { headers: { header } });
+  axios.get(acr_url,
+    {
+      headers:
+      {
+        "Authorization": "Basic test-token:wDS8XuLSMWb9Pwr3oV38O1HgdULff2u3JT+w8mHTJG+ACRCn8y0a"
+      }
+    }).then((response) => {
+       breatoken = response.data;
+    });
 
   core.info(`BearToken is: ${JSON.stringify(breatoken)}`);
 
