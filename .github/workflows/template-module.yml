@@ -80,20 +80,23 @@ jobs:
           versionNumber="$majorMinorVersionNumber.${{ github.run_number }}"
           echo "MODULE_VERSION=$versionNumber" >> $GITHUB_ENV
 
-      - uses: azure/cli@v1
-        name: Publish bicep module
+      - name: Publish bicep module
+        uses: azure/cli@v1
         with:
           inlineScript: |
             az bicep publish \
                 --target 'br:${{ vars.AZURE_REGISTRY_URL }}/${{ inputs.module_name }}:${{ env.MODULE_VERSION }}' \
                 --file ${{ inputs.module_file_path }}
       
-      - uses: LadyCailin/azure-table-storage-upload@v1.0.0
-        with:
-          table_name: "BicepModuleVersion"
-          partition_key: ${{ inputs.module_name }} 
-          row_key: ${{ env.MODULE_VERSION }}
-          data: "PublishDate=$(date + '%Y-%m-%d')"
-          if_exists: 'replace'
-          extra_args: ''
-          connection_string: ${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}
+      - name: Publish module details
+        run : |
+          az storage entity insert --connection-string ${{ secrets.AZURE_STORAGE_CONNECTION_STRING }} --table-name "BicepModuleVersion" --entity PartitionKey="${{ inputs.module_name }}"  RowKey="${{ env.MODULE_VERSION }}" PublishDate="2023-01-01"                 
+      # - uses: LadyCailin/azure-table-storage-upload@v1.0.0
+      #   with:
+      #     table_name: "BicepModuleVersion"
+      #     partition_key: ${{ inputs.module_name }} 
+      #     row_key: ${{ env.MODULE_VERSION }}
+      #     data: "PublishDate=$(date + '%Y-%m-%d')"
+      #     if_exists: 'replace'
+      #     extra_args: ''
+      #     connection_string: ${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}
