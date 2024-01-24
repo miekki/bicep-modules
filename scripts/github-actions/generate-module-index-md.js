@@ -76,7 +76,7 @@ async function generateModuleGroupTable(github, context, modules, prettier, core
     //const versionListUrl = `https://mcr.microsoft.com/v2/bicep/${module.moduleName}/tags/list`;
     // const versionBadgeUrl = `https://img.shields.io/badge/mcr-${latestVersion}-blue`;
     //const versionBadge = `<a href="${versionListUrl}"><image src="${versionBadgeUrl}"/></a>`;
-    const latestVersion = '1.0.0'; //JSON.parse(`https://github.com/miekki/bicep-modules/tree/main/modules/${module.moduleName}/metadata.json`).version;
+    const latestVersion = module.moduleVersion;  //'1.0.0'; //JSON.parse(`https://github.com/miekki/bicep-modules/tree/main/modules/${module.moduleName}/metadata.json`).version;
     core.info(`latestVersion is = ${latestVersion}`);
 
     const tag = 'main';// `${module.moduleName}/${latestVersion}`;

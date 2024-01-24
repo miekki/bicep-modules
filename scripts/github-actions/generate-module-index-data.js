@@ -77,12 +77,18 @@ async function getModuleDescription(
  *
  * @param {Params} params
  */
-async function generateModuleIndexData({ require, github, context, core }) {
+async function generateModuleIndexData({ require, github, context, core, acr_auth }) {
   const fs = require("fs").promises;
   const axios = require("axios").default;
   const moduleIndexData = [];
 
   let numberOfModuleGroupsProcessed = 0;
+
+  const header = `Authorization: Basic ${acr_auth}`
+  const acr_url= `https://mmbicepmoduleregistry.azurecr.io/oauth2/token?scope=repository:storage-account:metadata_read&service=mmbicepmoduleregistry.azurecr.io`
+  var breatoken = axios.get(acr_url, { headers: { header } });
+
+  core.info(`BearToken is: ${breatoken}`);
 
   // BRM Modules
   for (const moduleGroup of await getSubdirNames(fs, "modules")) {
@@ -96,13 +102,15 @@ async function generateModuleIndexData({ require, github, context, core }) {
       // BRM module git tags do not include the modules/ prefix.
       const mcrModulePath = modulePath.slice(8);
       //const tagListUrl = `https://mcr.microsoft.com/v2/bicep/${mcrModulePath}/tags/list`;
+      //GET https://mmbicepmoduleregistry.azurecr.io/acr/v1/storage-account/_tags?n=1&orderby=timedesc
+      const tagListUrl = `https://mmbicepmoduleregistry.azurecr.io/acr/v1/${moduleName}/_tags?n=1&orderby=timedesc`
 
       try {
         core.info(`Processing Module "${modulePath}"...`);
         //core.info(`  Getting available tags at "${tagListUrl}"...`);
 
-        //const tagListResponse = await axios.get(tagListUrl);
-        //const tags = tagListResponse.data.tags.sort();
+        const tagListResponse = await axios.get(tagListUrl, { headers: {"Authorization": `Bearer ${breatoken}`}});
+        const version = tagListResponse.data.tags.sort();
         const tag = 'main'
         const properties = {};
         //for (const tag of tags) {
@@ -125,6 +133,7 @@ async function generateModuleIndexData({ require, github, context, core }) {
           moduleName: mcrModulePath,
           tag,
           properties,
+          moduleVersion: version
         });
       } catch (error) {
         core.setFailed(error);
