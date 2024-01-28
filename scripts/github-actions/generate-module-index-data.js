@@ -2,6 +2,11 @@
  * @param {typeof import("fs").promises} fs
  * @param {string} dir
  */
+
+const { ContainerRegistryClient } = require("@azure/container-registry");
+const { DefaultAzureCredential } = require("@azure/identity");
+require("dotenv").config();
+
 async function getSubdirNames(fs, dir) {
   var files = await fs.readdir(dir, { withFileTypes: true });
   return files.filter((x) => x.isDirectory()).map((x) => x.name);
@@ -68,6 +73,56 @@ async function getModuleDescription(
   }
 }
 
+async function getLatestTag(repositoryName) {
+  const endpoint = process.env.CONTAINER_REGISTRY_ENDPOINT || "<endpoint>";
+  const client = new ContainerRegistryClient(
+    endpoint,
+    new DefaultAzureCredential()
+  );
+
+  const repository = client.getRepository(repositoryName);
+  const manifest = await listManifestProperties(repository);
+
+  if (manifest && manifest.length) {
+    const digest = manifest[0].digest;
+    if (digest) {
+      const artifact = repository.getArtifact(digest);
+      const tags = await listTagProperties(artifact);
+      return tags;
+    }
+  }
+}
+
+async function listManifestProperties(repository) {
+  const artifacts = [];
+  const iterator = repository.listManifestProperties();
+  for await (const artifact of iterator) {
+    artifacts.push(artifact);
+  }
+
+  return artifacts;
+}
+
+async function listTagProperties(artifact) {
+  const tags = [];
+  // Obtain the tags ordered from newest to oldest by passing the `orderBy` option
+  //"LastUpdatedOnAscending"
+  const iterator = artifact.listTagProperties({
+    order: "LastUpdatedOnDescending",
+  });
+  var tmpTagName = "";
+
+  for await (const tag of iterator) {
+    if (tmpTagName != tag.repositoryName) {
+      tmpTagName = tag.repositoryName;
+      tags.push(tag);
+      break;
+    }
+  }
+  return tags;
+}
+
+
 /**
  * @typedef Params
  * @property {typeof require} require
@@ -84,24 +139,6 @@ async function generateModuleIndexData({ require, github, context, core }) {
 
   let numberOfModuleGroupsProcessed = 0;
 
-  //const header = `Authorization: Basic ${process.env.ACR_USER}:${process.env.ACR_PASS}`
-  const header = `"Authorization": "Basic test-token:wDS8XuLSMWb9Pwr3oV38O1HgdULff2u3JT+w8mHTJG+ACRCn8y0a"`
-  
-  core.info(`header ${header}`);
-  const breatoken = "";
-  const acr_url= `https://mmbicepmoduleregistry.azurecr.io/oauth2/token?scope=repository:storage-account:metadata_read&service=mmbicepmoduleregistry.azurecr.io`
-  axios.get(acr_url,
-    {
-      headers:
-      {
-        "Authorization": "Basic test-token:wDS8XuLSMWb9Pwr3oV38O1HgdULff2u3JT+w8mHTJG+ACRCn8y0a"
-      }
-    }).then((response) => {
-       breatoken = response.data;
-    });
-
-  core.info(`BearToken is: ${JSON.stringify(breatoken)}`);
-
   // BRM Modules
   for (const moduleGroup of await getSubdirNames(fs, "modules")) {
     const moduleGroupPath = `modules/${moduleGroup}`;
@@ -109,20 +146,22 @@ async function generateModuleIndexData({ require, github, context, core }) {
 
     for (const moduleName of moduleNames) {
       const modulePath = `${moduleGroupPath}/${moduleName}`;
-        //const mainJsonPath = `${modulePath}/main.json`;
       const mainJsonPath = `${modulePath}/main.bicep`;
       // BRM module git tags do not include the modules/ prefix.
       const mcrModulePath = modulePath.slice(8);
       //const tagListUrl = `https://mcr.microsoft.com/v2/bicep/${mcrModulePath}/tags/list`;
       //GET https://mmbicepmoduleregistry.azurecr.io/acr/v1/storage-account/_tags?n=1&orderby=timedesc
-      const tagListUrl = `https://mmbicepmoduleregistry.azurecr.io/acr/v1/${moduleName}/_tags?n=1&orderby=timedesc`
+      //const tagListUrl = `https://mmbicepmoduleregistry.azurecr.io/acr/v1/${moduleName}/_tags?n=1&orderby=timedesc`
+      core.log(`Before getting latest tag`);
+      const moduleLatestTag = getLatestTag(moduleName);
+      core.log(`Latest tag is ${moduleLatestTag} - for module ${moduleName}`);
 
       try {
         core.info(`Processing Module "${modulePath}"...`);
         //core.info(`  Getting available tags at "${tagListUrl}"...`);
 
-        const tagListResponse = await axios.get(tagListUrl, { headers: {"Authorization": `Bearer ${breatoken}`}});
-        const version = tagListResponse.data.tags.sort();
+        // const tagListResponse = await axios.get(tagListUrl, { headers: {"Authorization": `Bearer ${breatoken}`}});
+        // const version = tagListResponse.data.tags.sort();
         const tag = 'main'
         const properties = {};
         //for (const tag of tags) {
@@ -145,7 +184,7 @@ async function generateModuleIndexData({ require, github, context, core }) {
           moduleName: mcrModulePath,
           tag,
           properties,
-          moduleVersion: version
+          moduleVersion: moduleLatestTag
         });
       } catch (error) {
         core.setFailed(error);
