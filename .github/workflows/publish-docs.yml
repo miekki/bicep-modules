@@ -3,7 +3,7 @@
 name: Publish module index
 on:
   schedule:
-    - cron: 45 11 * * * # Run daily at 3:45 AM PST
+    - cron: 0 8 * * * # Run daily at 8:00 AM
   workflow_dispatch:
 
 permissions:

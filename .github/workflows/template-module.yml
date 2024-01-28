@@ -40,7 +40,7 @@ jobs:
         run: az bicep build --file ${{ inputs.module_file_path }}
 
       - name: Run PSRule analysis
-        uses: microsoft/ps-rule@v2.9.0
+        uses: microsoft/ps-rule@v2
         with:
           modules: PSRule.Rules.Azure
 
@@ -52,7 +52,7 @@ jobs:
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
       - name: Run preflight validation
-        uses: Azure/arm-deploy@v1.0.9
+        uses: azure/arm-deploy@v1
         with:
           scope: "resourcegroup"
           resourceGroupName: ${{ vars.AZURE_TEST_RESOURCEGROUP_NAME }}
@@ -87,8 +87,3 @@ jobs:
             az bicep publish \
                 --target 'br:${{ vars.AZURE_REGISTRY_URL }}/${{ inputs.module_name }}:${{ env.MODULE_VERSION }}' \
                 --file ${{ inputs.module_file_path }}
-      
-      - name: Publish module metadata
-        run : |
-          az storage entity insert --connection-string "${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}" --entity PartitionKey="${{ inputs.module_name }}"  RowKey="${{ env.MODULE_VERSION }}" PublishDate=$(date +'%Y-%m-%d') --table-name "BicepModuleVersion"
-     
