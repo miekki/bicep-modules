@@ -34,11 +34,12 @@ jobs:
         env:
           ACR_USER: ${{ secrets.AZURE_ACR_USER}}
           ACR_PASS: ${{ secrets.AZURE_ACR_PASSWORD }}
+          AZURE_REGISTRY_URL: ${{ vars.AZURE_REGISTRY_URL }}
         with:
           script: |
             const script = require("./scripts/github-actions/generate-module-index-data.js")
             await script({ require, github, context, core })
-      
+
       - name: Generate index.md
         uses: actions/github-script@v7
         with:
@@ -51,14 +52,14 @@ jobs:
         with:
           path: index.md
           name: index.md
-   
+
   build-index-page:
     runs-on: ubuntu-latest
     needs: upload-index-data
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      
+
       - name: Download artifact
         uses: actions/download-artifact@v3
         with:
@@ -67,7 +68,7 @@ jobs:
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
-      
+
       - name: Build with Jekyll
         uses: actions/jekyll-build-pages@v1
         with:
