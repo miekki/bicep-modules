@@ -116,8 +116,6 @@ async function listTagProperties(artifact) {
     if (tmpTagName != tag.repositoryName) {
       tmpTagName = tag.repositoryName;
       return tag;
-      //tags.push(tag);
-      //break;
     }
   }
   return tags;
@@ -134,12 +132,9 @@ async function listTagProperties(artifact) {
  */
 async function generateModuleIndexData({ require, github, context, core }) {
   const fs = require("fs").promises;
-  //const axios = require("axios").default;
   const moduleIndexData = [];
-
   let numberOfModuleGroupsProcessed = 0;
 
-  // BRM Modules
   for (const moduleGroup of await getSubdirNames(fs, "modules")) {
     const moduleGroupPath = `modules/${moduleGroup}`;
     const moduleNames = await getSubdirNames(fs, moduleGroupPath);
@@ -147,27 +142,13 @@ async function generateModuleIndexData({ require, github, context, core }) {
     for (const moduleName of moduleNames) {
       const modulePath = `${moduleGroupPath}/${moduleName}`;
       const mainJsonPath = `${modulePath}/main.bicep`;
-      // BRM module git tags do not include the modules/ prefix.
       const mcrModulePath = modulePath.slice(8);
-      //const tagListUrl = `https://mcr.microsoft.com/v2/bicep/${mcrModulePath}/tags/list`;
-      //GET https://mmbicepmoduleregistry.azurecr.io/acr/v1/storage-account/_tags?n=1&orderby=timedesc
-      //const tagListUrl = `https://mmbicepmoduleregistry.azurecr.io/acr/v1/${moduleName}/_tags?n=1&orderby=timedesc`
-      core.info(`Before getting latest tag`);
       const moduleLatestTag = await getLatestTag(moduleName, core);
-      core.info(`Latest tag is ${moduleLatestTag} - for module ${moduleName}`);
 
       try {
         core.info(`Processing Module "${modulePath}"...`);
-        //core.info(`  Getting available tags at "${tagListUrl}"...`);
-
-        // const tagListResponse = await axios.get(tagListUrl, { headers: {"Authorization": `Bearer ${breatoken}`}});
-        // const version = tagListResponse.data.tags.sort();
         const tag = "main";
         const properties = {};
-        //for (const tag of tags) {
-        // Using mcrModulePath because BRM module git tags do not include the modules/ prefix
-        //const gitTag = `${mcrModulePath}/${tag}`;
-
         const documentationUri = `https://github.com/miekki/bicep-modules/tree/${tag}/${modulePath}/README.md`;
         const description = await getModuleDescription(
           github,
@@ -178,7 +159,6 @@ async function generateModuleIndexData({ require, github, context, core }) {
         );
 
         properties[tag] = { description, documentationUri };
-        //}
 
         moduleIndexData.push({
           moduleName: mcrModulePath,
