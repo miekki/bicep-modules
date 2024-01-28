@@ -29,7 +29,7 @@ async function getModuleDescription(
   });
 
   const commitSha = mm_result.data.object.sha;
-  
+
   // Get the tree data
   const mm_result2 = await github.rest.git.getTree({
     owner: context.repo.owner,
@@ -50,7 +50,7 @@ async function getModuleDescription(
     repo: context.repo.repo,
     file_sha: file.sha,
   });
-  
+
   const content = mm_result3.data.content;
 
   // content is base64 encoded, so decode it
@@ -58,7 +58,7 @@ async function getModuleDescription(
 
   // Parse the main.json file
   if (fileContent !== "") {
-    const strToFind = 'metadata description =';
+    const strToFind = "metadata description =";
     const position = fileContent.search(strToFind);
     const cutStr = fileContent.substring(position + strToFind.length, 1000);
     const firstquote = cutStr.indexOf("'") + 1;
@@ -73,7 +73,7 @@ async function getModuleDescription(
   }
 }
 
-async function getLatestTag(repositoryName) {
+async function getLatestTag(repositoryName, core) {
   const endpoint = "https://" + process.env.AZURE_REGISTRY_URL || "<endpoint>";
   const client = new ContainerRegistryClient(
     endpoint,
@@ -115,13 +115,13 @@ async function listTagProperties(artifact) {
   for await (const tag of iterator) {
     if (tmpTagName != tag.repositoryName) {
       tmpTagName = tag.repositoryName;
-      tags.push(tag);
-      break;
+      return tag;
+      //tags.push(tag);
+      //break;
     }
   }
   return tags;
 }
-
 
 /**
  * @typedef Params
@@ -129,12 +129,12 @@ async function listTagProperties(artifact) {
  * @property {ReturnType<typeof import("@actions/github").getOctokit>} github
  * @property {typeof import("@actions/github").context} context
  * @property {typeof import("@actions/core")} core
- * 
+ *
  * @param {Params} params
  */
 async function generateModuleIndexData({ require, github, context, core }) {
   const fs = require("fs").promises;
-  const axios = require("axios").default;
+  //const axios = require("axios").default;
   const moduleIndexData = [];
 
   let numberOfModuleGroupsProcessed = 0;
@@ -152,9 +152,9 @@ async function generateModuleIndexData({ require, github, context, core }) {
       //const tagListUrl = `https://mcr.microsoft.com/v2/bicep/${mcrModulePath}/tags/list`;
       //GET https://mmbicepmoduleregistry.azurecr.io/acr/v1/storage-account/_tags?n=1&orderby=timedesc
       //const tagListUrl = `https://mmbicepmoduleregistry.azurecr.io/acr/v1/${moduleName}/_tags?n=1&orderby=timedesc`
-      core.log(`Before getting latest tag`);
-      const moduleLatestTag = getLatestTag(moduleName);
-      core.log(`Latest tag is ${moduleLatestTag} - for module ${moduleName}`);
+      core.info(`Before getting latest tag`);
+      const moduleLatestTag = await getLatestTag(moduleName, core);
+      core.info(`Latest tag is ${moduleLatestTag} - for module ${moduleName}`);
 
       try {
         core.info(`Processing Module "${modulePath}"...`);
@@ -162,12 +162,12 @@ async function generateModuleIndexData({ require, github, context, core }) {
 
         // const tagListResponse = await axios.get(tagListUrl, { headers: {"Authorization": `Bearer ${breatoken}`}});
         // const version = tagListResponse.data.tags.sort();
-        const tag = 'main'
+        const tag = "main";
         const properties = {};
         //for (const tag of tags) {
-          // Using mcrModulePath because BRM module git tags do not include the modules/ prefix
-            //const gitTag = `${mcrModulePath}/${tag}`;
-            
+        // Using mcrModulePath because BRM module git tags do not include the modules/ prefix
+        //const gitTag = `${mcrModulePath}/${tag}`;
+
         const documentationUri = `https://github.com/miekki/bicep-modules/tree/${tag}/${modulePath}/README.md`;
         const description = await getModuleDescription(
           github,
@@ -176,7 +176,7 @@ async function generateModuleIndexData({ require, github, context, core }) {
           tag,
           context
         );
-  
+
         properties[tag] = { description, documentationUri };
         //}
 
@@ -184,7 +184,7 @@ async function generateModuleIndexData({ require, github, context, core }) {
           moduleName: mcrModulePath,
           tag,
           properties,
-          moduleVersion: moduleLatestTag
+          moduleVersion: moduleLatestTag,
         });
       } catch (error) {
         core.setFailed(error);
@@ -193,7 +193,6 @@ async function generateModuleIndexData({ require, github, context, core }) {
 
     numberOfModuleGroupsProcessed++;
   }
-
 
   core.info(`Writing moduleIndex.json`);
   await fs.writeFile(

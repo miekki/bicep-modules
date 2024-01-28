@@ -24,6 +24,7 @@ function groupBy(items, keyGetter) {
  * @param {typeof import("@actions/github").context} context
  * @param {string} tag
  */
+/*
 async function getPublishDate(github, context, tag) {
   const { owner, repo } = context.repo;
 
@@ -47,7 +48,7 @@ async function getPublishDate(github, context, tag) {
 
   return commit.data.committer.date.split("T")[0];
 }
-
+*/
 /**
  * @param {ReturnType<typeof import("@actions/github").getOctokit>} github
  * @param {typeof import("@actions/github").context} context
@@ -55,7 +56,13 @@ async function getPublishDate(github, context, tag) {
  * @param {typeof import("prettier")} prettier
  * @returns
  */
-async function generateModuleGroupTable(github, context, modules, prettier, core) {
+async function generateModuleGroupTable(
+  github,
+  context,
+  modules,
+  prettier,
+  core
+) {
   const moduleGroupTableData = [
     [
       "Module",
@@ -69,32 +76,20 @@ async function generateModuleGroupTable(github, context, modules, prettier, core
 
   for (const module of modules) {
     const modulePath = `\`${module.moduleName}\``;
-
-    
-    // module.tags is an sorted array.
-    //const latestVersion = module.tag;  //s.slice(-1)[0];
-    //const versionListUrl = `https://mcr.microsoft.com/v2/bicep/${module.moduleName}/tags/list`;
-    // const versionBadgeUrl = `https://img.shields.io/badge/mcr-${latestVersion}-blue`;
-    //const versionBadge = `<a href="${versionListUrl}"><image src="${versionBadgeUrl}"/></a>`;
-    const latestVersion = module.moduleVersion;  //'1.0.0'; //JSON.parse(`https://github.com/miekki/bicep-modules/tree/main/modules/${module.moduleName}/metadata.json`).version;
-    core.info(`latestVersion is = ${latestVersion}`);
-
-    const tag = 'main';// `${module.moduleName}/${latestVersion}`;
-    const publishDate = await getPublishDate(github, context, tag);
-
+    const latestVersion = `\`${module.moduleVersion.name}\``;
+    const tag = "main";
+    const publishDate = `\`${
+      module.moduleVersion.lastUpdatedOn.split("T")[0]
+    }\``;
     core.info(`publish date is ${publishDate}`);
 
-    //const publishDate = '2024-01-01'
-    //const description = `Module ${module.moduleName} description`;
     const description =
-       module.properties &&
-       module.properties[tag]?.description?.replace(/\n|\r/g, " ");
-
-    core.info(`description is ${description}`);
+      module.properties &&
+      module.properties[tag]?.description?.replace(/\n|\r/g, " ");
 
     const moduleRootUrl = `https://github.com/miekki/bicep-modules/tree/main/modules/${module.moduleName}`;
-    const sourceCodeButton = `[Source code](${moduleRootUrl}/main.bicep){: .btn}`;
-    const readmeButton = `[Readme](${moduleRootUrl}/README.md){: .btn .btn-purple}`;
+    const sourceCodeButton = `[Source code](${moduleRootUrl}/main.bicep)`;
+    const readmeButton = `[Readme](${moduleRootUrl}/README.md)`;
 
     moduleGroupTableData.push([
       modulePath,
