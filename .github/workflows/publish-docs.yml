@@ -30,7 +30,7 @@ jobs:
         run: npm ci
 
       - name: Azure Login
-        uses: Azure/login@v1.6.1
+        uses: azure/login@v1
         with:
           # ClientId of the Azure Service principal created.
           client-id: ${{ secrets.AZURE_CLIENT_ID}}
