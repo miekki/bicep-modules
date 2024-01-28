@@ -1,2 +1,4 @@
 .DS_Store
 azure-api.http
+.env
+node_modules/
