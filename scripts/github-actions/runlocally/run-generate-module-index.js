@@ -1,14 +1,14 @@
 // This runs locally the scripts that power the "Publish Module Index" action on github
-// (see bicep-registry-modules/.github/workflows/publish-module-index.yml)
+// (see bicep-modules/.github/workflows/publish-docs.yml)
 // to make it easier to debug locally.
 //
-// Run via run-generate-module-index{.bat,.sh} from the root of the repo
+// Run via run-generate-module-index.js from the root of the repo
 // after having set up these environment variables:
 //
 //   GITHUB_PAT: your github PAT
 //   GITHUB_OWNER:
-//     "Azure" for Azure/bicep-registry-modules
-//       sor your github username for a fork of bicep-registry-modules
+//     "Azure" for Azure/bicep-modules
+//       sor your github username for a fork of bicep-modules
 
 const path = require("path");
 const core = require("@actions/core");
@@ -21,7 +21,7 @@ if (!process.env.GITHUB_PAT) {
 }
 if (!process.env.GITHUB_OWNER) {
   console.error(
-    'Need to set GITHUB_OWNER (e.g. "Azure" for "Azure/bicep-registry-modules"'
+    'Need to set GITHUB_OWNER (e.g. "Azure" for "Azure/bicep-modules"'
   );
   return;
 }

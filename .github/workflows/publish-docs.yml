@@ -32,11 +32,8 @@ jobs:
       - name: Azure Login
         uses: azure/login@v1
         with:
-          # ClientId of the Azure Service principal created.
           client-id: ${{ secrets.AZURE_CLIENT_ID}}
-          # TenantId of the Azure Service principal created.
           tenant-id: ${{ secrets.AZURE_TENANT_ID}}
-          # Azure subscriptionId
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID}}
 
       - name: Generate moduleIndex.json

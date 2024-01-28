@@ -22,36 +22,6 @@ function groupBy(items, keyGetter) {
 /**
  * @param {ReturnType<typeof import("@actions/github").getOctokit>} github
  * @param {typeof import("@actions/github").context} context
- * @param {string} tag
- */
-/*
-async function getPublishDate(github, context, tag) {
-  const { owner, repo } = context.repo;
-
-  const reference = await github.rest.git.getRef({
-    owner,
-    repo,
-    ref: `heads/${tag}`,
-  });
-  if (!reference) {
-    throw `Could not find tag ${tag}`;
-  }
-
-  const commit = await github.rest.git.getCommit({
-    owner: context.repo.owner,
-    repo: context.repo.repo,
-    commit_sha: reference.data.object.sha,
-  });
-  if (!commit) {
-    throw `Could not find commit for tag ${tag}`;
-  }
-
-  return commit.data.committer.date.split("T")[0];
-}
-*/
-/**
- * @param {ReturnType<typeof import("@actions/github").getOctokit>} github
- * @param {typeof import("@actions/github").context} context
  * @param {Array<{ moduleName: string, tags: string[] }>} modules
  * @param {typeof import("prettier")} prettier
  * @returns
@@ -81,7 +51,9 @@ async function generateModuleGroupTable(
     const publishDate = `\`${
       module.moduleVersion.lastUpdatedOn.split("T")[0]
     }\``;
-    core.info(`publish date is ${publishDate}`);
+    core.info(
+      `publish date is ${publishDate} for module ${module} with version=${latestVersion}`
+    );
 
     const description =
       module.properties &&
@@ -105,8 +77,6 @@ async function generateModuleGroupTable(
   const table = markdownTable(moduleGroupTableData, {
     align: ["l", "r", "r", "r", "r", "l"],
   });
-
-  core.info(`end this function generateModuleGroupTable`);
 
   return prettier.format(table, { parser: "markdown" });
 }
@@ -140,7 +110,6 @@ permalink: /
   if (!moduleIndexDataContent) {
     throw "Could not read moduleIndex.json";
   }
-  core.info(`ModuleInsex content = ${JSON.stringify(moduleIndexDataContent)}`);
 
   const moduleIndexData = JSON.parse(moduleIndexDataContent);
   const moduleGroups = groupBy(
