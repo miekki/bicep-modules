@@ -24,6 +24,9 @@
     "eslint-config-prettier": "^8.3.0",
     "markdown-table": "^3.0.2",
     "prettier": "2.8.6",
-    "semver": "^7.3.5"
+    "semver": "^7.3.5",
+    "@azure/container-registry": "latest",
+    "dotenv": "latest",
+    "@azure/identity": "^2.1.0-beta.2"
   }
 }

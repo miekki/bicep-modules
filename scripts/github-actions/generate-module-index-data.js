@@ -74,7 +74,7 @@ async function getModuleDescription(
 }
 
 async function getLatestTag(repositoryName) {
-  const endpoint = process.env.CONTAINER_REGISTRY_ENDPOINT || "<endpoint>";
+  const endpoint = "https://" + process.env.AZURE_REGISTRY_URL || "<endpoint>";
   const client = new ContainerRegistryClient(
     endpoint,
     new DefaultAzureCredential()
