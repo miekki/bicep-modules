@@ -35,6 +35,9 @@ jobs:
           ACR_USER: ${{ secrets.AZURE_ACR_USER}}
           ACR_PASS: ${{ secrets.AZURE_ACR_PASSWORD }}
           AZURE_REGISTRY_URL: ${{ vars.AZURE_REGISTRY_URL }}
+          AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+          AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          AZURE_CLIENT_ID: ~${{ secrets.AZURE_CLIENT_ID }}
         with:
           script: |
             const script = require("./scripts/github-actions/generate-module-index-data.js")
