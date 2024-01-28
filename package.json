@@ -16,6 +16,11 @@
     "prettier:check": "prettier --check .",
     "prettier": "prettier --write ."
   },
+  "dependencies": {
+    "@azure/container-registry": "latest",
+    "dotenv": "latest",
+    "@azure/identity": "^2.1.0-beta.2"
+  },
   "devDependencies": {
     "@actions/core": "^1.9.1",
     "@actions/github": "^5.0.0",
@@ -24,9 +29,6 @@
     "eslint-config-prettier": "^8.3.0",
     "markdown-table": "^3.0.2",
     "prettier": "2.8.6",
-    "semver": "^7.3.5",
-    "@azure/container-registry": "latest",
-    "dotenv": "latest",
-    "@azure/identity": "^2.1.0-beta.2"
+    "semver": "^7.3.5"
   }
 }
