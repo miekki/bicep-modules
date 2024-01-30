@@ -35,7 +35,7 @@ Use this module within other Bicep templates to simplify the usage of a Virtual 
 Example of how to deploy a virtual network using the minimum required parameters.
 
 ```bicep
-module vNet 'br/mmbicepmoduleregistry.azurecr.io/virtual-network:1.0.35' = {
+module vNet 'br:mmbicepmoduleregistry.azurecr.io/virtual-network:1.0.35' = {
   name: '${uniqueString(deployment().name, 'uksouth')}-vnet'
   params: {
     name: 'az-vnet-01'
@@ -53,7 +53,7 @@ module vNet 'br/mmbicepmoduleregistry.azurecr.io/virtual-network:1.0.35' = {
 Example of how to deploy a virtual network with subnets, network security groups and service endpoints.
 
 ```bicep
-module vNet 'br/mmbicepmoduleregistry.azurecr.io/virtual-network:1.0.35' = {
+module vNet 'br:mmbicepmoduleregistry.azurecr.io/virtual-network:1.0.35' = {
   name: '${uniqueString(deployment().name, 'uksouth')}-vnet'
   params: {
     name: 'az-vnet-01'
