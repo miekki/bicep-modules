@@ -1,0 +1,26 @@
+name: module-appservice
+concurrency:
+  group: ${{ github.workflow }}
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - "modules/web/appservice/**"
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  call-shared-workflow:
+    name: Run
+    uses: ./.github/workflows/template-module.yml
+    with:
+      module_name: appservice
+      module_file_path: modules/web/appservice/main.bicep
+      module_metadata_file_path: modules/web/appservice/metadata.json
+      module_parameters: name=test-app tags={'env':'dev'} location=uksouth runtimeName=dotnet runtimeVersion=8-lts
+    secrets: inherit
