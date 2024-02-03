@@ -13,7 +13,7 @@ repository:
   homepage: https://miekki.github.io/bicep-modules/
 
   # A comma-separated list of topics to set on the repository
-  topics: azure-modules
+  topics: azure, bicep-modules
 
   # Either `true` to make the repository private, or `false` to make it public.
   private: false
