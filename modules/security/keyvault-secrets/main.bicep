@@ -8,7 +8,7 @@ param keyVaultName string
 @description('Required. Secret name.')
 param secretName string
 
-@description('Required. Secret value')
+@description('Required. Secret value.')
 @secure()
 param secretValue string
 
