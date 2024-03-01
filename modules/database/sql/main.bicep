@@ -50,34 +50,58 @@ resource sqlServer 'Microsoft.Sql/servers@2023-05-01-preview' = {
     administratorLogin: sqlAdministratorUsername
     administratorLoginPassword: adminPassword
   }
-}
+  resource vnetRule 'virtualNetworkRules' = if (!empty(sqlServerSubnetId)) {
+    name: sqlServerName
+    properties: {
+      virtualNetworkSubnetId: sqlServerSubnetId
+    }
+  }
 
-resource vnetRule 'Microsoft.Sql/servers/virtualNetworkRules@2023-05-01-preview' = if (!empty(sqlServerSubnetId)) {
-  name: sqlServerName
-  properties: {
-    virtualNetworkSubnetId: sqlServerSubnetId
+  resource sqlDatabase 'databases' = {
+    name: sqlDatabaseName
+    location: location
+    sku: {
+      name: skuName
+      capacity: skuCapacity
+      tier: skuTier
+    }
+  }
+
+  resource firewall 'firewallRules' = {
+    name: 'AllowAllWindowsAzureIps'
+    properties: {
+      startIpAddress: '0.0.0.0'
+      endIpAddress: '0.0.0.0'
+    }
   }
 }
 
-resource sqlDatabase 'Microsoft.Sql/servers/databases@2023-05-01-preview' = {
-  parent: sqlServer
-  name: sqlDatabaseName
-  location: location
-  sku: {
-    name: skuName
-    capacity: skuCapacity
-    tier: skuTier
-  }
-}
+// resource vnetRule 'Microsoft.Sql/servers/virtualNetworkRules@2023-05-01-preview' = if (!empty(sqlServerSubnetId)) {
+//   name: sqlServerName
+//   properties: {
+//     virtualNetworkSubnetId: sqlServerSubnetId
+//   }
+// }
 
-resource firewall 'Microsoft.Sql/servers/firewallRules@2023-05-01-preview' = {
-  parent: sqlServer
-  name: 'AllowAllWindowsAzureIps'
-  properties: {
-    startIpAddress: '0.0.0.0'
-    endIpAddress: '0.0.0.0'
-  }
-}
+// resource sqlDatabase 'Microsoft.Sql/servers/databases@2023-05-01-preview' = {
+//   parent: sqlServer
+//   name: sqlDatabaseName
+//   location: location
+//   sku: {
+//     name: skuName
+//     capacity: skuCapacity
+//     tier: skuTier
+//   }
+// }
+
+// resource firewall 'Microsoft.Sql/servers/firewallRules@2023-05-01-preview' = {
+//   parent: sqlServer
+//   name: 'AllowAllWindowsAzureIps'
+//   properties: {
+//     startIpAddress: '0.0.0.0'
+//     endIpAddress: '0.0.0.0'
+//   }
+// }
 
 resource keyVault 'Microsoft.KeyVault/vaults@2023-07-01' existing = {
   name: keyVaultName
@@ -87,6 +111,6 @@ resource keyVaultSecret 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
   parent: keyVault
   name: connectionStringKey
   properties: {
-    value: 'Server=${sqlServer.properties.fullyQualifiedDomainName}; Database=${sqlDatabase.name}; User=${sqlAdministratorUsername}; Password=${adminPassword};'
+    value: 'Server=${sqlServer.properties.fullyQualifiedDomainName}; Database=${sqlServer::sqlDatabase.name}; User=${sqlAdministratorUsername}; Password=${adminPassword};'
   }
 }
