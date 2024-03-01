@@ -1,0 +1,30 @@
+# if you need to login to azure use the command below
+# az login
+
+# to see if you are logged in to the correct subscription use below command
+# az account show
+
+# to change the current subscription use the below command
+# az account set --subscription "Your Subscription Name"
+
+export rg_name="bicep-module-tmp-test-rg"
+export location="uksouth"
+
+# create a rg 
+az group create --resource-group $rg_name --location $location
+
+# create deployment in rg with the content from main.bicep file and params
+az deployment group create --resource-group $rg_name --name module-testing --mode Complete --template-file main.bicep --parameters main.parameters.json
+
+
+
+# ################### #
+# Destroy commands #
+# ################### #
+
+# delete deployment with the specify name
+az deployment group delete --resource-group $rg_name --name module-testing
+
+# delete the whole rg 
+az group delete --resource-group $rg_name --yes
+
