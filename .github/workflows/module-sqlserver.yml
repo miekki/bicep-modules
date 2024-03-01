@@ -8,7 +8,7 @@ on:
     branches:
       - main
     paths:
-      - "modules/database/sql/**"
+      - "modules/database/sqlserver/**"
 
 permissions:
   id-token: write
@@ -20,7 +20,7 @@ jobs:
     uses: ./.github/workflows/template-module.yml
     with:
       module_name: sqlserver
-      module_file_path: modules/database/sql/main.bicep
-      module_metadata_file_path: modules/database/sql/metadata.json
+      module_file_path: modules/database/sqlserver/main.bicep
+      module_metadata_file_path: modules/database/sqlserver/metadata.json
       module_parameters: sqlServerName=test-sqlserver tags={'env':'dev'} location=uksouth sqlDatabaseName=DBName keyVaultName=kv-name
     secrets: inherit
