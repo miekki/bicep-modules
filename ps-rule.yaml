@@ -34,6 +34,6 @@ configuration:
   AZURE_BICEP_FILE_EXPANSION: true
   AZURE_BICEP_CHECK_TOOL: true
   PSRULE_AZURE_BICEP_PAT: "/usr/local/bin/"
-# rule:
-#   exclude:
-#     - "AZR-000166"
+rule:
+  exclude:
+    - "AZR-000125" # exluded Azure.KeyVault.PurgeProtect. Enable Purge Protection on Key Vaults to prevent early purge of vaults and vault items.
