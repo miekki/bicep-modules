@@ -19,7 +19,7 @@ jobs:
     name: Run
     uses: ./.github/workflows/template-module.yml
     with:
-      module_name: keyvault
+      module_name: keyvault-access-policy
       module_file_path: modules/security/keyvault-access-policy/main.bicep
       module_metadata_file_path: modules/security/keyvault-access-policy/metadata.json
       module_parameters: keyVaultName=test-keyvault objectId=1
