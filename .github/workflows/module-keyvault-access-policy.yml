@@ -22,5 +22,5 @@ jobs:
       module_name: keyvault
       module_file_path: modules/security/keyvault-access-policy/main.bicep
       module_metadata_file_path: modules/security/keyvault-access-policy/metadata.json
-      module_parameters: keyVaultName=test-keyvault tags={'env':'dev'} location=uksouth objectId=1
+      module_parameters: keyVaultName=test-keyvault objectId=1
     secrets: inherit

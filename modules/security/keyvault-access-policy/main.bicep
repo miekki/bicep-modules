@@ -5,9 +5,6 @@ metadata owner = 'MM'
 @description('Required. Name of Key Vault.')
 param keyVaultName string
 
-@description('Required. Name of Key Vault Access Policy.')
-param policyName string = 'add'
-
 @description('Required. Object Id of a user, service principal or security group')
 param objectId string
 
@@ -22,6 +19,9 @@ param keyPermissions array = []
 
 @description('Optional. Specify the permissions to certificates. Valid values are: all, backup, create, delete, deleteissuers, get, getissuers, import, list, listissuers, managecontacts, manageissuers, purge, recover, restore, setissuers, update')
 param certificatPermissions array = []
+
+@description('Oprional. Name of Key Vault Access Policy.')
+param policyName string = 'add'
 
 resource keyvault 'Microsoft.KeyVault/vaults@2023-07-01' existing = {
   name: keyVaultName
