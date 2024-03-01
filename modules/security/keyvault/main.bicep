@@ -300,4 +300,5 @@ type roleAssignmentType = {
 
 //   @description('Optional. The full ARM resource ID of the Marketplace resource to which you would like to send Diagnostic Logs.')
 //   marketplacePartnerResourceId: string?
+//
 // }[]?
