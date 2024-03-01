@@ -14,6 +14,7 @@ export location="uksouth"
 az group create --resource-group $rg_name --location $location
 
 # create deployment in rg with the content from main.bicep file and params
+
 az deployment group create --resource-group $rg_name --name module-testing --mode Complete --template-file main.bicep --parameters main.parameters.json
 
 

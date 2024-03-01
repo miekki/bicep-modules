@@ -14,6 +14,7 @@ param tags object
 // Reference Properties
 @description('Optional. Provide Application Insight Name.')
 param applicationInsightsName string = ''
+
 @description('Optional. Provide Key Vault Name.')
 param keyVaultName string = ''
 //@description('Optional. Set to managed Identity if Key Vault Name is provided.')

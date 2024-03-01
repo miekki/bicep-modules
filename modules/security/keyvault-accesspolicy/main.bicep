@@ -6,11 +6,10 @@ metadata owner = 'MM'
 param keyVaultName string
 
 @description('Required. Name of Key Vault Access Policy.')
-param policyName string
+param policyName string = 'add'
 
 @description('Required. Object Id of a user, service principal or security group')
-param objectId string 
-
+param objectId string
 
 @description('Optional. Application id of the client making request')
 param applicationId string = ''
@@ -24,7 +23,6 @@ param keyPermissions array = []
 @description('Optional. Specify the permissions to certificates. Valid values are: all, backup, create, delete, deleteissuers, get, getissuers, import, list, listissuers, managecontacts, manageissuers, purge, recover, restore, setissuers, update')
 param certificatPermissions array = []
 
-
 resource keyvault 'Microsoft.KeyVault/vaults@2023-07-01' existing = {
   name: keyVaultName
 }
@@ -36,14 +34,14 @@ resource accessPolicy 'Microsoft.KeyVault/vaults/accessPolicies@2023-07-01' = {
     accessPolicies: [
       {
         objectId: !empty(objectId) ? objectId : ''
-        applicationId:  !empty(applicationId) ? applicationId : null
+        applicationId: !empty(applicationId) ? applicationId : null
         permissions: {
-          secrets: !empty(secretsPermissions) ? secretsPermissions : null
-          keys: !empty(keyPermissions)? keyPermissions : null
-          certificates:!empty(certificatPermissions)? certificatPermissions : null
+          secrets: !empty(secretsPermissions) ? secretsPermissions : []
+          keys: !empty(keyPermissions) ? keyPermissions : []
+          certificates: !empty(certificatPermissions) ? certificatPermissions : []
         }
         tenantId: subscription().tenantId
       }
-    ] 
+    ]
   }
 }
