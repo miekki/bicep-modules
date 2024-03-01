@@ -1,0 +1,26 @@
+name: module-keyvault-access-policy
+concurrency:
+  group: ${{ github.workflow }}
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - "modules/security/keyvault-access-policy/**"
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  call-shared-workflow:
+    name: Run
+    uses: ./.github/workflows/template-module.yml
+    with:
+      module_name: keyvault
+      module_file_path: modules/security/keyvault-access-policy/main.bicep
+      module_metadata_file_path: modules/security/keyvault-access-policy/metadata.json
+      module_parameters: keyVaultName=test-keyvault tags={'env':'dev'} location=uksouth objectId=1
+    secrets: inherit
