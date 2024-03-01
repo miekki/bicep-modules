@@ -1,4 +1,4 @@
-metadata name = 'Azure Key Vault - Secrets'
+metadata name = 'Azure Key Vault - Secrets.'
 metadata description = 'Bicep module for simplified deployment of KeyVault - Secrets.'
 metadata owner = 'MM'
 

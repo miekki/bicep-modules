@@ -8,7 +8,7 @@ param keyVaultName string
 @description('Required. Object Id of a user, service principal or security group')
 param objectId string
 
-@description('Optional. Application id of the client making request')
+@description('Optional. Application id of the client making request.')
 param applicationId string = ''
 
 @description('Optional. Specifies the permissions to secrets in the vault. Valid values are: all, get, list, set, delete, backup, restore, recover, and purge.')
