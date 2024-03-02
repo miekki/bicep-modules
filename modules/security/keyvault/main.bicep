@@ -17,24 +17,24 @@ param workspaceId string
 @description('Optional. Provide Service Principal Id with access for the keyvault')
 param principalId string = ''
 
-@description('Optional. Specifies whether soft delete should be enabled for the Key Vault.')
+@description('Optional. Specifies whether soft delete should be enabled for the Key Vault. The default is true.')
 param enableSoftDelete bool = true
 
-@description('Optional. The number of days to retain deleted data in the Key Vault.')
+@description('Optional. The number of days to retain deleted data in the Key Vault. The default is 7 days.')
 param softDeleteRetentionInDays int = 7
 
-@description('Optional. Specify whether purge protection should be enabled for the Key Vault.')
+@description('Optional. Specify whether purge protection should be enabled for the Key Vault. The default is false.')
 param enablePurgeProtection bool = false
 
 @description('Optional. Specify whether the Key Vault will be using RBAC. Default is false - use the access policy.')
 param enableRbacAuthorization bool = false
 
 @allowed([ 'standard', 'premium' ])
-@description('Optional. The SKU name of the Key Vault.')
+@description('Optional. The SKU name of the Key Vault. The default is "standard".')
 param skuName string = 'standard'
 
 @allowed([ 'A', 'B' ])
-@description('Optional. The SKU family of the Key Vault.')
+@description('Optional. The SKU family of the Key Vault. The default is "A".')
 param skuFamily string = 'A'
 
 @description('Optional. Configuration for network access rules.')
@@ -50,11 +50,11 @@ param networkAcls networkAclsType = {
 ])
 param publicNetworkAccess string = ''
 
-// @description('Optional. Configuration details for private endpoints. For security reasons, it is recommended to use private endpoints whenever possible.')
-// param privateEndpoints privateEndpointType 
-
 @description('Optional. The lock settings of the service.')
 param lock lockType = {}
+
+// @description('Optional. Configuration details for private endpoints. For security reasons, it is recommended to use private endpoints whenever possible.')
+// param privateEndpoints privateEndpointType 
 
 var varNetworkAclsIpRules = [for ip in networkAcls.?ipAllowlist ?? []: { value: ip }]
 
@@ -119,7 +119,7 @@ resource keyVault_lock 'Microsoft.Authorization/locks@2020-05-01' = if (!empty(l
 }
 
 @description('Key vault id')
-output id string = keyVault.id
+output resourceId string = keyVault.id
 
 @description('Key vault name')
 output name string = keyVault.name
@@ -241,28 +241,28 @@ type lockType = {
 //   }
 // }[]?
 
-type roleAssignmentType = {
-  @description('Required. The role to assign. You can provide either the display name of the role definition, the role definition GUID, or its fully qualified ID in the following format: \'/providers/Microsoft.Authorization/roleDefinitions/c2f4ef07-c644-48eb-af81-4b1b4947fb11\'.')
-  roleDefinitionIdOrName: string
+// type roleAssignmentType = {
+//   @description('Required. The role to assign. You can provide either the display name of the role definition, the role definition GUID, or its fully qualified ID in the following format: \'/providers/Microsoft.Authorization/roleDefinitions/c2f4ef07-c644-48eb-af81-4b1b4947fb11\'.')
+//   roleDefinitionIdOrName: string
 
-  @description('Required. The principal ID of the principal (user/group/identity) to assign the role to.')
-  principalId: string
+//   @description('Required. The principal ID of the principal (user/group/identity) to assign the role to.')
+//   principalId: string
 
-  @description('Optional. The principal type of the assigned principal ID.')
-  principalType: ('ServicePrincipal' | 'Group' | 'User' | 'ForeignGroup' | 'Device')?
+//   @description('Optional. The principal type of the assigned principal ID.')
+//   principalType: ('ServicePrincipal' | 'Group' | 'User' | 'ForeignGroup' | 'Device')?
 
-  @description('Optional. The description of the role assignment.')
-  description: string?
+//   @description('Optional. The description of the role assignment.')
+//   description: string?
 
-  @description('Optional. The conditions on the role assignment. This limits the resources it can be assigned to. e.g.: @Resource[Microsoft.Storage/storageAccounts/blobServices/containers:ContainerName] StringEqualsIgnoreCase "foo_storage_container".')
-  condition: string?
+//   @description('Optional. The conditions on the role assignment. This limits the resources it can be assigned to. e.g.: @Resource[Microsoft.Storage/storageAccounts/blobServices/containers:ContainerName] StringEqualsIgnoreCase "foo_storage_container".')
+//   condition: string?
 
-  @description('Optional. Version of the condition.')
-  conditionVersion: '2.0'?
+//   @description('Optional. Version of the condition.')
+//   conditionVersion: '2.0'?
 
-  @description('Optional. The Resource Id of the delegated managed identity resource.')
-  delegatedManagedIdentityResourceId: string?
-}[]?
+//   @description('Optional. The Resource Id of the delegated managed identity resource.')
+//   delegatedManagedIdentityResourceId: string?
+// }[]?
 
 // type diagnosticSettingType = {
 //   @description('Optional. The name of diagnostic setting.')

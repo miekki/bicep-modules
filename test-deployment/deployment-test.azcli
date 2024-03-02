@@ -7,14 +7,13 @@
 # to change the current subscription use the below command
 # az account set --subscription "Your Subscription Name"
 
-export rg_name="bicep-module-tmp-test-rg"
+export rg_name="tmp-test-bicep-module-rg"
 export location="uksouth"
 
 # create a rg 
 az group create --resource-group $rg_name --location $location
 
 # create deployment in rg with the content from main.bicep file and params
-
 az deployment group create --resource-group $rg_name --name module-testing --mode Complete --template-file main.bicep --parameters main.parameters.json
 
 

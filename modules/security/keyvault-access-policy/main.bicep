@@ -20,7 +20,7 @@ param keyPermissions array = []
 @description('Optional. Specify the permissions to certificates. Valid values are: all, backup, create, delete, deleteissuers, get, getissuers, import, list, listissuers, managecontacts, manageissuers, purge, recover, restore, setissuers, update')
 param certificatPermissions array = []
 
-@description('Oprional. Name of Key Vault Access Policy.')
+@description('Optional. Name of Key Vault Access Policy.')
 param policyName string = 'add'
 
 resource keyvault 'Microsoft.KeyVault/vaults@2023-07-01' existing = {

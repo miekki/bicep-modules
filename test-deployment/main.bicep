@@ -39,7 +39,6 @@ var varNetworkAcls = {
 }
 
 module kv '../modules/security/keyvault/main.bicep' = {
-  // scope: rg
   name: 'deploy-kv-test'
   params: {
     location: location
@@ -52,20 +51,55 @@ module kv '../modules/security/keyvault/main.bicep' = {
   }
 }
 
-module kv_secret '../modules/security/keyvault-secrets/main.bicep' = {
-  name: 'deploy-kv-secret-test'
+module sql '../modules/database/sqlserver/main.bicep' = {
+  name: 'deploy-sql-test'
   params: {
     keyVaultName: kv.outputs.name
-    secretName: 'ConnectionStrings--DefaultConnection'
-    secretValue: 'my pass'
+    location: location
+    databaseName: 'my-db-name'
+    sqlServerName: 'my-sql-server-name'
+    tags: tags
   }
 }
 
-module kv_access_policy '../modules/security/keyvault-accesspolicy/main.bicep' = {
-  name: 'deploy-kv-access-policy-test'
-  params: {
-    keyVaultName: kv.outputs.name
-    objectId: '47689dc0-8e50-4474-970a-b913a75b5b0e' // for magicsoftware-Calculator-8e88c488-1596-4d79-8d3f-f9d16aa345ad
-    secretsPermissions: [ 'get', 'list', 'set', 'delete' ]
-  }
-}
+// Key Vault sample
+//
+
+// var varNetworkAcls = {
+//   bypass: 'AzureServices'
+//   defaultAction: 'Deny'
+//   ipAllowlist: [ '81.106.66.0/24' ]
+//   // subnetIds ['']
+// }
+
+// module kv '../modules/security/keyvault/main.bicep' = {
+//   // scope: rg
+//   name: 'deploy-kv-test'
+//   params: {
+//     location: location
+//     name: '${abbrs.keyVaultVaults}${resourceToken}'
+//     tags: tags
+//     workspaceId: logAnalyticsWorkspace.id
+//     networkAcls: varNetworkAcls
+//     principalId: 'c5c1dcd6-c181-466e-a606-cd67d0532eb9' // me
+
+//   }
+// }
+
+// module kv_secret '../modules/security/keyvault-secrets/main.bicep' = {
+//   name: 'deploy-kv-secret-test'
+//   params: {
+//     keyVaultName: kv.outputs.name
+//     secretName: 'ConnectionStrings--DefaultConnection'
+//     secretValue: 'my pass'
+//   }
+// }
+
+// module kv_access_policy '../modules/security/keyvault-accesspolicy/main.bicep' = {
+//   name: 'deploy-kv-access-policy-test'
+//   params: {
+//     keyVaultName: kv.outputs.name
+//     objectId: '47689dc0-8e50-4474-970a-b913a75b5b0e' // for magicsoftware-Calculator-8e88c488-1596-4d79-8d3f-f9d16aa345ad
+//     secretsPermissions: [ 'get', 'list', 'set', 'delete' ]
+//   }
+// }

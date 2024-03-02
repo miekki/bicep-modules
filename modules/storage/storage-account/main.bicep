@@ -115,7 +115,7 @@ resource blobContainer 'Microsoft.Storage/storageAccounts/blobServices/container
   properties: container.?properties ?? {}
 }]
 
-@description('The properties of a storage account’s Blob service.')
+@description('The properties of a storage accounts Blob service.')
 type blobServicePropertiesType = {
   changeFeed: changeFeed?
   containerDeleteRetentionPolicy: deleteRetentionPolicyType?
@@ -208,7 +208,7 @@ type networkAclsResourceAccessRuleType = {
 }
 
 @description('The name of the Storage Account resource')
-output name string = name
+output name string = storageAccount.name
 
 @description('The ID of the Storage Account. Use this ID to reference the Storage Account in other Azure resource deployments.')
-output id string = storageAccount.id
+output resourceId string = storageAccount.id

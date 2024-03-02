@@ -8,28 +8,28 @@ Use this module within other Bicep templates to simplify the usage of a Web App 
 
 ## Parameters
 
-| Name                       |   Type   | Required | Description                                                                  |
-| :------------------------- | :------: | :------: | :--------------------------------------------------------------------------- |
-| `name`                     | `string` |   Yes    | Required. The App Service Name                                     |
-| `location`                 | `string` |   Yes    | Required. Location name for the resource. default to resource group location |
-| `tags`                     | `object` |   Yes    | Required. Tags of the resources                                              |
-| `runtimeName` | `string` | Yes | Required. Provide a runtime name from the list (dotnet, dotnetcore, node, python, java). |
-| `runtimeVersion` | `string` | Yes | Required. Provide a runtime version |
-| `sku` | `object` | No | Optional. SKU for the App Service Plan |
-| `applicationInsightsName` | `string` | No | Optional. Provide Application Insight Name. |
-| `keyVaultName` | `string` | No | Optional. Provide Key Vault Name |
-| `kind` | `string` | No | Optional. Kind of resource |
-| `reserved` | `bool` | No | Optional. If Linux app service plan true, false otherwise.|
+| Name                      |   Type   | Required | Description                                                                              |
+| :------------------------ | :------: | :------: | :--------------------------------------------------------------------------------------- |
+| `name`                    | `string` |   Yes    | Required. The App Service Name                                                           |
+| `location`                | `string` |   Yes    | Required. Location name for the resource. default to resource group location             |
+| `tags`                    | `object` |   Yes    | Required. Tags of the resources                                                          |
+| `runtimeName`             | `string` |   Yes    | Required. Provide a runtime name from the list (dotnet, dotnetcore, node, python, java). |
+| `runtimeVersion`          | `string` |   Yes    | Required. Provide a runtime version                                                      |
+| `sku`                     | `object` |    No    | Optional. SKU for the App Service Plan                                                   |
+| `applicationInsightsName` | `string` |    No    | Optional. Provide Application Insight Name.                                              |
+| `keyVaultName`            | `string` |    No    | Optional. Provide Key Vault Name                                                         |
+| `kind`                    | `string` |    No    | Optional. Kind of resource                                                               |
+| `reserved`                |  `bool`  |    No    | Optional. If Linux app service plan true, false otherwise.                               |
 
 ## Outputs
 
-| Name                |   Type   | Description                             |
-| :------------------ | :------: | :-------------------------------------- |
-| `identityPrincipalId`        | `string` | The app service identity principal ID  |
-| `appServiceName`              | `string` | The name of app service         |
-| `appServiceUrl`       | `string`  | The public url for the app service      |
-| `appServicePlanId` | `string`  | The app service plan ID |
-| `appServicePlanName` | `string` | The app service plan name |
+| Name                  |   Type   | Description                           |
+| :-------------------- | :------: | :------------------------------------ |
+| `identityPrincipalId` | `string` | The app service identity principal ID |
+| `appServiceName`      | `string` | The name of app service               |
+| `appServiceUrl`       | `string` | The public url for the app service    |
+| `appServicePlanId`    | `string` | The app service plan ID               |
+| `appServicePlanName`  | `string` | The app service plan name             |
 
 ## Examples
 
