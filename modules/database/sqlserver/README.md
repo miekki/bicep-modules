@@ -48,5 +48,4 @@ module sql 'br:mmbicepmoduleregistry.azurecr.io/sqlserver"1.0.2' = {
     }
   }
 }
-
 ```
