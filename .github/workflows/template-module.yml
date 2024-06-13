@@ -81,7 +81,7 @@ jobs:
           echo "MODULE_VERSION=$versionNumber" >> $GITHUB_ENV
 
       - name: Publish bicep module
-        uses: azure/cli@v1
+        uses: azure/cli@v2
         with:
           inlineScript: |
             az bicep publish \
