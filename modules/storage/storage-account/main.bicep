@@ -87,7 +87,7 @@ var varNetworkAcls = {
   virtualNetworkRules: varNetworkAclsVirtualNetworkRules
 }
 
-resource storageAccount 'Microsoft.Storage/storageAccounts@2023-01-01' = {
+resource storageAccount 'Microsoft.Storage/storageAccounts@2026-04-01' = {
   name: name
   location: location
   sku: {
@@ -100,20 +100,23 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2023-01-01' = {
     minimumTlsVersion: 'TLS1_2'
     allowBlobPublicAccess: allowBlobPublicAccess
     networkAcls: varNetworkAcls
+    allowSharedKeyAccess: false
   }
 }
 
-resource blobService 'Microsoft.Storage/storageAccounts/blobServices@2023-01-01' = {
+resource blobService 'Microsoft.Storage/storageAccounts/blobServices@2026-04-01' = {
   name: 'default'
   parent: storageAccount
   properties: blobServiceProperties
 }
 
-resource blobContainer 'Microsoft.Storage/storageAccounts/blobServices/containers@2023-01-01' = [for container in blobContainers: {
-  name: container.name
-  parent: blobService
-  properties: container.?properties ?? {}
-}]
+resource blobContainer 'Microsoft.Storage/storageAccounts/blobServices/containers@2026-04-01' = [
+  for container in blobContainers: {
+    name: container.name
+    parent: blobService
+    properties: container.?properties ?? {}
+  }
+]
 
 @description('The properties of a storage accounts Blob service.')
 type blobServicePropertiesType = {

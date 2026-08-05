@@ -25,7 +25,7 @@ param subnets array = []
 @description('Optional. Specify the type of lock.')
 param lock string = 'NotSpecified'
 
-@allowed([ 'new', 'existing', 'none' ])
+@allowed(['new', 'existing', 'none'])
 @description('Create a new, use an existing, or provide no default NSG.')
 param newOrExistingNSG string = 'none'
 
@@ -42,9 +42,11 @@ resource existingNetworkSecurityGroup 'Microsoft.Network/networkSecurityGroups@2
   name: networkSecurityGroupName
 }
 
-var networkSecurityGroupId = { id: newOrExistingNSG == 'new' ? networkSecurityGroup.id : existingNetworkSecurityGroup.id }
+var networkSecurityGroupId = {
+  id: newOrExistingNSG == 'new' ? networkSecurityGroup.id : existingNetworkSecurityGroup.id
+}
 
-resource virtualNetwork 'Microsoft.Network/virtualNetworks@2023-06-01' = {
+resource virtualNetwork 'Microsoft.Network/virtualNetworks@2025-07-01' = {
   name: name
   location: location
   tags: tags
@@ -55,23 +57,28 @@ resource virtualNetwork 'Microsoft.Network/virtualNetworks@2023-06-01' = {
     //ddosProtectionPlan: !empty(ddosProtectionPlanId) ? ddosProtectionPlan : null
     //dhcpOptions: !empty(dnsServers) ? { dnsServers: array(dnsServers) } : null
     //enableDdosProtection: !empty(ddosProtectionPlanId)
-    subnets: [for subnet in subnets: {
-      name: subnet.name
-      properties: {
-        addressPrefix: subnet.addressPrefix
-        addressPrefixes: contains(subnet, 'addressPrefixes') ? subnet.addressPrefixes : []
-        //applicationGatewayIpConfigurations: contains(subnet, 'applicationGatewayIpConfigurations') ? subnet.applicationGatewayIpConfigurations : []
-        delegations: contains(subnet, 'delegations') ? subnet.delegations : []
-        ipAllocations: contains(subnet, 'ipAllocations') ? subnet.ipAllocations : []
-        natGateway: contains(subnet, 'natGatewayId') ? { id: subnet.natGatewayId } : null
-        networkSecurityGroup: contains(subnet, 'networkSecurityGroupId') ? { id: subnet.networkSecurityGroupId } : (newOrExistingNSG != 'none' ? networkSecurityGroupId : null)
-        //privateEndpointNetworkPolicies: contains(subnet, 'privateEndpointNetworkPolicies') ? subnet.privateEndpointNetworkPolicies : null
-        //privateLinkServiceNetworkPolicies: contains(subnet, 'privateLinkServiceNetworkPolicies') ? subnet.privateLinkServiceNetworkPolicies : null
-        routeTable: contains(subnet, 'routeTableId') ? { id: subnet.routeTableId } : null
-        serviceEndpoints: contains(subnet, 'serviceEndpoints') ? subnet.serviceEndpoints : []
-        serviceEndpointPolicies: contains(subnet, 'serviceEndpointPolicies') ? subnet.serviceEndpointPolicies : []
+    subnets: [
+      for subnet in subnets: {
+        name: subnet.name
+        properties: {
+          addressPrefix: subnet.addressPrefix
+          defaultOutboundAccess: false
+          addressPrefixes: contains(subnet, 'addressPrefixes') ? subnet.addressPrefixes : []
+          //applicationGatewayIpConfigurations: contains(subnet, 'applicationGatewayIpConfigurations') ? subnet.applicationGatewayIpConfigurations : []
+          delegations: contains(subnet, 'delegations') ? subnet.delegations : []
+          ipAllocations: contains(subnet, 'ipAllocations') ? subnet.ipAllocations : []
+          natGateway: contains(subnet, 'natGatewayId') ? { id: subnet.natGatewayId } : null
+          networkSecurityGroup: contains(subnet, 'networkSecurityGroupId')
+            ? { id: subnet.networkSecurityGroupId }
+            : (newOrExistingNSG != 'none' ? networkSecurityGroupId : null)
+          //privateEndpointNetworkPolicies: contains(subnet, 'privateEndpointNetworkPolicies') ? subnet.privateEndpointNetworkPolicies : null
+          //privateLinkServiceNetworkPolicies: contains(subnet, 'privateLinkServiceNetworkPolicies') ? subnet.privateLinkServiceNetworkPolicies : null
+          routeTable: contains(subnet, 'routeTableId') ? { id: subnet.routeTableId } : null
+          serviceEndpoints: contains(subnet, 'serviceEndpoints') ? subnet.serviceEndpoints : []
+          serviceEndpointPolicies: contains(subnet, 'serviceEndpointPolicies') ? subnet.serviceEndpointPolicies : []
+        }
       }
-    }]
+    ]
   }
 }
 
@@ -79,7 +86,9 @@ resource virtualNetwork_lock 'Microsoft.Authorization/locks@2020-05-01' = if (lo
   name: '${virtualNetwork.name}-${lock}-lock'
   properties: {
     level: lock
-    notes: lock == 'CanNotDelete' ? 'Cannot delete resource or child resources.' : 'Cannot modify the resource or child resources.'
+    notes: lock == 'CanNotDelete'
+      ? 'Cannot delete resource or child resources.'
+      : 'Cannot modify the resource or child resources.'
   }
   scope: virtualNetwork
 }
@@ -94,4 +103,6 @@ output name string = virtualNetwork.name
 output subnetNames array = [for subnet in subnets: subnet.name]
 
 @description('The resource IDs of the deployed subnets')
-output subnetResourceIds array = [for subnet in subnets: az.resourceId('Microsoft.Network/virtualNetworks/subnets', name, subnet.name)]
+output subnetResourceIds array = [
+  for subnet in subnets: az.resourceId('Microsoft.Network/virtualNetworks/subnets', name, subnet.name)
+]
