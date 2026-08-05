@@ -27,13 +27,13 @@ param softDeleteRetentionInDays int = 7
 param enablePurgeProtection bool = false
 
 @description('Optional. Specify whether the Key Vault will be using RBAC. Default is false - use the access policy.')
-param enableRbacAuthorization bool = false
+param enableRbacAuthorization bool = true
 
-@allowed([ 'standard', 'premium' ])
+@allowed(['standard', 'premium'])
 @description('Optional. The SKU name of the Key Vault. The default is "standard".')
 param skuName string = 'standard'
 
-@allowed([ 'A', 'B' ])
+@allowed(['A', 'B'])
 @description('Optional. The SKU family of the Key Vault. The default is "A".')
 param skuFamily string = 'A'
 
@@ -67,7 +67,7 @@ var varNetworkAcls = {
   virtualNetworkRules: varNetworkAclsVirtualNetworkRules
 }
 
-resource keyVault 'Microsoft.KeyVault/vaults@2023-07-01' = {
+resource keyVault 'Microsoft.KeyVault/vaults@2026-02-01' = {
   name: name
   location: location
   tags: tags
@@ -84,13 +84,15 @@ resource keyVault 'Microsoft.KeyVault/vaults@2023-07-01' = {
     networkAcls: varNetworkAcls
     // publicNetworkAccess: !empty(publicNetworkAccess) ? publicNetworkAccess : ((!empty(privateEndpoints ?? []) && empty(networkAcls ?? {})) ? 'Disabled' : null)
     publicNetworkAccess: !empty(publicNetworkAccess) ? publicNetworkAccess : null
-    accessPolicies: !empty(principalId) ? [
-      {
-        objectId: principalId
-        permissions: { secrets: [ 'get', 'list' ] }
-        tenantId: subscription().tenantId
-      }
-    ] : []
+    accessPolicies: !empty(principalId)
+      ? [
+          {
+            objectId: principalId
+            permissions: { secrets: ['get', 'list'] }
+            tenantId: subscription().tenantId
+          }
+        ]
+      : []
   }
 }
 
@@ -113,7 +115,9 @@ resource keyVault_lock 'Microsoft.Authorization/locks@2020-05-01' = if (!empty(l
   name: lock.?name ?? 'lock-${name}'
   properties: {
     level: lock.?kind ?? ''
-    notes: lock.?kind == 'CanNotDelete' ? 'Cannot delete resource or child resources.' : 'Cannot delete or modify the resource or child resources.'
+    notes: lock.?kind == 'CanNotDelete'
+      ? 'Cannot delete resource or child resources.'
+      : 'Cannot delete or modify the resource or child resources.'
   }
   scope: keyVault
 }
