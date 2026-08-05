@@ -55,7 +55,7 @@ jobs:
             await script({ require, github, context, core })
 
       - name: Upload Markdown artifact
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v7
         with:
           path: index.md
           name: index.md
