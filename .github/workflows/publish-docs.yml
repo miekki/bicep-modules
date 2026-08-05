@@ -37,7 +37,7 @@ jobs:
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID}}
 
       - name: Generate moduleIndex.json
-        uses: actions/github-script@v8
+        uses: actions/github-script@v9
         env:
           ACR_USER: ${{ secrets.AZURE_ACR_USER}}
           ACR_PASS: ${{ secrets.AZURE_ACR_PASSWORD }}
@@ -48,7 +48,7 @@ jobs:
             await script({ require, github, context, core })
 
       - name: Generate index.md
-        uses: actions/github-script@v8
+        uses: actions/github-script@v9
         with:
           script: |
             const script = require("./scripts/github-actions/generate-module-index-md.js")
