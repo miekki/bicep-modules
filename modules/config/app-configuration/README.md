@@ -1,6 +1,6 @@
 # App Configuration Store
 
-This module deploys an Azure App Configuration Store.
+This module deploys an Azure App Configuration Store .
 
 ## Details
 
