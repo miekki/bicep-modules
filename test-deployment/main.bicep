@@ -25,6 +25,3 @@ module appConfig '../modules/config/app-configuration/main.bicep' = {
     ]
   }
 }
-
-git config --global user.email "maciej@server.com"
-git config --global user.name "Maciej"
