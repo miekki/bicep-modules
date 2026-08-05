@@ -22,7 +22,14 @@ param keyVaultName string = ''
 
 @description('Required. Provide a runtime name from the list.')
 @allowed([
-  'dotnet', 'dotnetcore', 'dotnet-isolated', 'node', 'python', 'java', 'powershell', 'custom'
+  'dotnet'
+  'dotnetcore'
+  'dotnet-isolated'
+  'node'
+  'python'
+  'java'
+  'powershell'
+  'custom'
 ])
 param runtimeName string
 
@@ -34,7 +41,11 @@ param runtimeNameAndVersion string = '${runtimeName}|${runtimeVersion}'
 
 @description('Optional. SKU for the App Service Plan.')
 param sku object = {
-  name: 'B1'
+  name: 'P1v3'
+  tier: 'PremiumV3'
+  size: 'P1v3'
+  family: 'Pv3'
+  capacity: 2
 }
 
 // Microsoft.Web/sites Properties
@@ -59,19 +70,20 @@ param numberOfWorkers int = -1
 param scmDoBuildDuringDeployment bool = false
 param use32BitWorkerProcess bool = false
 param ftpsState string = 'FtpsOnly'
-param healthCheckPath string = ''
+param healthCheckPath string = '/healthcheck'
 
-resource appServicePlan 'Microsoft.Web/serverfarms@2023-01-01' = {
+resource appServicePlan 'Microsoft.Web/serverfarms@2025-03-01' = {
   name: name
   location: location
   tags: tags
   sku: sku
   properties: {
     reserved: reserved
+    zoneRedundant: true
   }
 }
 
-resource appService 'Microsoft.Web/sites@2023-01-01' = {
+resource appService 'Microsoft.Web/sites@2025-03-01' = {
   name: name
   location: location
   tags: tags
@@ -91,7 +103,7 @@ resource appService 'Microsoft.Web/sites@2023-01-01' = {
       healthCheckPath: healthCheckPath
       http20Enabled: true
       cors: {
-        allowedOrigins: union([ 'https://portal.azure.com', 'https://ms.portal.azure.com' ], allowedOrigins)
+        allowedOrigins: union(['https://portal.azure.com', 'https://ms.portal.azure.com'], allowedOrigins)
       }
     }
     clientAffinityEnabled: clientAffinityEnabled
@@ -132,18 +144,22 @@ module config './appservice-appsettings/appservice-appsettings.bicep' = if (!emp
   name: '${name}-appSettings'
   params: {
     name: appService.name
-    appSettings: union(appSettings,
+    appSettings: union(
+      appSettings,
       {
         SCM_DO_BUILD_DURING_DEPLOYMENT: string(scmDoBuildDuringDeployment)
         ENABLE_ORYX_BUILD: string(enableOryxBuild)
       },
       runtimeName == 'python' && appCommandLine == '' ? { PYTHON_ENABLE_GUNICORN_MULTIWORKERS: 'true' } : {},
-      !empty(applicationInsightsName) ? { APPLICATIONINSIGHTS_CONNECTION_STRING: applicationInsights.properties.ConnectionString } : {},
-      !empty(keyVaultName) ? { AZURE_KEY_VAULT_ENDPOINT: keyVault.properties.vaultUri } : {})
+      !empty(applicationInsightsName)
+        ? { APPLICATIONINSIGHTS_CONNECTION_STRING: applicationInsights.?properties.?ConnectionString }
+        : {},
+      !empty(keyVaultName) ? { AZURE_KEY_VAULT_ENDPOINT: keyVault.?properties.vaultUri } : {}
+    )
   }
 }
 
-resource keyVault 'Microsoft.KeyVault/vaults@2023-07-01' existing = if (!(empty(keyVaultName))) {
+resource keyVault 'Microsoft.KeyVault/vaults@2026-02-01' existing = if (!(empty(keyVaultName))) {
   name: keyVaultName
 }
 
