@@ -35,6 +35,6 @@ module test2 '../main.bicep' = {
     }
     reserved: true
     runtimeName: 'node'
-    runtimeVersion: '18-lts'
+    runtimeVersion: '20-lts'
   }
 }

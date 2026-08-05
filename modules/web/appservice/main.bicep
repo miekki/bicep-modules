@@ -41,7 +41,11 @@ param runtimeNameAndVersion string = '${runtimeName}|${runtimeVersion}'
 
 @description('Optional. SKU for the App Service Plan.')
 param sku object = {
-  name: 'B1'
+  name: 'P1v3'
+  tier: 'PremiumV3'
+  size: 'P1v3'
+  family: 'Pv3'
+  capacity: 2
 }
 
 // Microsoft.Web/sites Properties
