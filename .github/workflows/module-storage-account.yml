@@ -22,5 +22,5 @@ jobs:
       module_name: storage-account
       module_file_path: modules/storage/storage-account/main.bicep
       module_metadata_file_path: modules/storage/storage-account/metadata.json
-      module_parameters: name=st0977h tags={'env':'dev'} location=uksouth
+      module_parameters: name=st0977h tags='{"env":"dev"}' location=uksouth
     secrets: inherit
