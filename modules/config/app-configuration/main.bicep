@@ -134,7 +134,7 @@ var formattedRoleAssignments = [
   })
 ]
 
-resource configurationStore 'Microsoft.AppConfiguration/configurationStores@2025-02-01-preview' = {
+resource configurationStore 'Microsoft.AppConfiguration/configurationStores@2025-08-01-preview' = {
   name: name
   location: location
   tags: tags
