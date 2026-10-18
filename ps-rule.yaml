@@ -28,6 +28,11 @@ input:
     # Include test files from modules
     #- "!modules/**/*.tests.bicep"
 
+# Test templates are expansion sources; their expanded Azure resources are
+# evaluated, but the source files themselves do not match Azure rules.
+execution:
+  unprocessedObject: Debug
+
 # Enable expansion of Azure .bicepparam files.
 # PSRule's Bicep CLI settings are environment variables, not YAML options.
 # For local runs with Azure CLI-managed Bicep, set
