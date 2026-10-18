@@ -1,0 +1,24 @@
+{
+  "universe_usage_history": [
+    {
+      "universe": "Marvel Cinematic Universe",
+      "assignment_id": "48F16400-1E8E-43CB-AFCD-17D6EDB293AA",
+      "used_at": "2026-10-18T07:54:44.068+01:00"
+    }
+  ],
+  "assignment_cast_snapshots": {
+    "48F16400-1E8E-43CB-AFCD-17D6EDB293AA": {
+      "universe": "Marvel Cinematic Universe",
+      "agents": {
+        "tony-stark": "Tony Stark",
+        "shuri": "Shuri",
+        "bruce-banner": "Bruce Banner",
+        "peter-parker": "Peter Parker",
+        "nick-fury": "Nick Fury"
+      },
+      "created_at": "2026-10-18T07:54:44.068+01:00"
+    }
+  },
+  "transaction_id": "48F16400-1E8E-43CB-AFCD-17D6EDB293AA",
+  "registry_revision": 2
+}

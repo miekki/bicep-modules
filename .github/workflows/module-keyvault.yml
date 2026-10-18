@@ -12,7 +12,7 @@ on:
 
 permissions:
   id-token: write
-  contents: read
+  contents: write
 
 jobs:
   call-shared-workflow:
@@ -21,6 +21,7 @@ jobs:
     with:
       module_name: keyvault
       module_file_path: modules/security/keyvault/main.bicep
-      module_metadata_file_path: modules/security/keyvault/metadata.json
+      module_baseline_file_path: modules/security/keyvault/metadata.json
+      release_base_sha: ${{ github.event.before }}
       module_parameters: name=test-keyvault tags='{"env":"dev"}' location=uksouth workspaceId=1
     secrets: inherit
