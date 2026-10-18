@@ -25,7 +25,7 @@ Use this module within another Bicep template to manage a Key Vault access polic
 Example of how to deploy a key vault access policy using a minimum required parameters.
 
 ```bicep
-module kv_access_policy '.br:mmbicepmoduleregistry.azurecr.io/keyvault-access-policy:0.1.2' = {
+module kv_access_policy '.br:mmbicepmoduleregistry.azurecr.io/keyvault-access-policy:1.0.0' = {
   name: '${uniqueString(deployment().name, 'uksouth')}-access-policy'
   params: {
     keyVaultName: 'az-kv-01'
