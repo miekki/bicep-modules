@@ -8,6 +8,7 @@
   --catalog-text: #152238;
   --catalog-muted: #44536a;
   --catalog-category-bar: #1f4268;
+  --catalog-category-edge: #4b9bff;
   --catalog-link: #176b4b;
   --catalog-accent: #177a55;
   --catalog-accent-soft: #eaf6ef;
@@ -25,19 +26,19 @@
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     color-scheme: dark;
-    --catalog-background: #0b1220;
-    --catalog-surface: #121c2c;
-    --catalog-surface-raised: #162235;
-    --catalog-border: #2b3a50;
-    --catalog-code-background: #1c293b;
-    --catalog-text: #edf3fb;
-    --catalog-muted: #aab9cd;
-    --catalog-link: #a1e5bd;
-    --catalog-accent: #48dc91;
-    --catalog-accent-soft: #1c3f2e;
-    --catalog-button-background: #167a4b;
-    --catalog-hover: #23382e;
-    --catalog-focus: #a1e5bd;
+    --catalog-background: #08111f;
+    --catalog-surface: #101d30;
+    --catalog-surface-raised: #14243a;
+    --catalog-border: #2a3d58;
+    --catalog-code-background: #18263a;
+    --catalog-text: #f3f6fc;
+    --catalog-muted: #b5c2d4;
+    --catalog-link: #82bdff;
+    --catalog-accent: #4b9bff;
+    --catalog-accent-soft: #142b47;
+    --catalog-button-background: #0d1a2c;
+    --catalog-hover: #192b43;
+    --catalog-focus: #78b6ff;
     --catalog-button-text: #ffffff;
     --catalog-shadow: 0 14px 36px rgb(0 0 0 / 22%);
   }
@@ -45,19 +46,19 @@
 
 :root[data-theme="dark"] {
   color-scheme: dark;
-  --catalog-background: #0b1220;
-  --catalog-surface: #121c2c;
-  --catalog-surface-raised: #162235;
-  --catalog-border: #2b3a50;
-  --catalog-code-background: #1c293b;
-  --catalog-text: #edf3fb;
-  --catalog-muted: #aab9cd;
-  --catalog-link: #a1e5bd;
-  --catalog-accent: #48dc91;
-  --catalog-accent-soft: #1c3f2e;
-  --catalog-button-background: #167a4b;
-  --catalog-hover: #23382e;
-  --catalog-focus: #a1e5bd;
+  --catalog-background: #08111f;
+  --catalog-surface: #101d30;
+  --catalog-surface-raised: #14243a;
+  --catalog-border: #2a3d58;
+  --catalog-code-background: #18263a;
+  --catalog-text: #f3f6fc;
+  --catalog-muted: #b5c2d4;
+  --catalog-link: #82bdff;
+  --catalog-accent: #4b9bff;
+  --catalog-accent-soft: #142b47;
+  --catalog-button-background: #0d1a2c;
+  --catalog-hover: #192b43;
+  --catalog-focus: #78b6ff;
   --catalog-button-text: #ffffff;
   --catalog-shadow: 0 14px 36px rgb(0 0 0 / 22%);
 }
@@ -139,7 +140,7 @@ body {
   margin: 2.5rem 0 1rem;
   padding: 0.65rem 0 0.65rem 0.9rem;
   border: 0;
-  border-left: 3px solid var(--catalog-category-bar);
+  border-left: 3px solid var(--catalog-category-edge);
   border-radius: 0 0.35rem 0.35rem 0;
   background: var(--catalog-category-bar);
   color: #ffffff;
