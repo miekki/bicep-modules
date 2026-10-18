@@ -50,7 +50,7 @@ module configurationWithKeyValues '../main.bicep' = {
     name: '${uniqueName}-kv'
     location: location
     tags: keyValueTestTags
-    disableLocalAuth: false
+    // disableLocalAuth: false
     diagnosticSettings: diagnosticSettings
     replicaLocations: replicaLocations
     keyValues: [
