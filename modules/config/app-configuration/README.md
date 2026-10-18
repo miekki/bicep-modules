@@ -21,6 +21,8 @@ Use this module within other Bicep templates to simplify the deployment and conf
 | `publicNetworkAccess` | `string?` | No | Optional. Whether public network access is allowed. Allowed values: `Enabled`, `Disabled`. If not specified and private endpoints are set, defaults to `Disabled`. |
 | `softDeleteRetentionInDays` | `int` | No | Optional. Number of days to retain the store when soft deleted. Must be between 1 and 7. Defaults to `1`, except `0` for `Free` and `Developer` SKU. |
 | `keyValues` | `array?` | No | Optional. All key-values to create in the App Configuration Store. Requires local authentication to be enabled. |
+| `replicaLocations` | `replicaLocationType[]?` | No | Optional. Secondary replica locations to create. Replicas require the `Standard` SKU. |
+| `diagnosticSettings` | `diagnosticSettingsType?` | No | Optional. Diagnostic settings to send App Configuration logs to a Log Analytics workspace. |
 | `lock` | `lockType?` | No | Optional. The lock settings for the service. |
 | `roleAssignments` | `roleAssignmentType[]?` | No | Optional. Array of role assignments to create. |
 | `dataPlaneProxy` | `dataPlaneProxyType?` | No | Optional. Configuration for the data plane proxy. |

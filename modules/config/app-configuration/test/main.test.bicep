@@ -1,11 +1,37 @@
 @description('Optional. The location to deploy resources to.')
 param location string = resourceGroup().location
 
+@description('Optional. The resource ID of the Log Analytics workspace for diagnostic settings.')
+param workspaceId string = resourceId('Microsoft.OperationalInsights/workspaces', 'test-workspace')
+
 var uniqueName = 'appconfig-${uniqueString(resourceGroup().id, deployment().name, location)}'
+var secondaryLocation = location == 'westus2' ? 'eastus2' : 'westus2'
 
 var tags = {
   environment: 'test'
 }
+
+var keyValueTestTags = union(tags, {
+  psRuleException: 'key-values-require-local-auth'
+})
+
+var diagnosticSettings = {
+  workspaceId: workspaceId
+  logs: [
+    {
+      category: null
+      categoryGroup: 'audit'
+      enabled: true
+    }
+  ]
+}
+
+var replicaLocations = [
+  {
+    name: 'secondary'
+    replicaLocation: secondaryLocation
+  }
+]
 
 module minimumConfiguration '../main.bicep' = {
   name: '${uniqueString(deployment().name, location)}-minimum'
@@ -13,6 +39,8 @@ module minimumConfiguration '../main.bicep' = {
     name: uniqueName
     location: location
     tags: tags
+    diagnosticSettings: diagnosticSettings
+    replicaLocations: replicaLocations
   }
 }
 
@@ -21,8 +49,10 @@ module configurationWithKeyValues '../main.bicep' = {
   params: {
     name: '${uniqueName}-kv'
     location: location
-    tags: tags
-    disableLocalAuth: false
+    tags: keyValueTestTags
+    // disableLocalAuth: false
+    diagnosticSettings: diagnosticSettings
+    replicaLocations: replicaLocations
     keyValues: [
       {
         name: 'test-key'
