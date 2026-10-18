@@ -171,6 +171,7 @@ resource configurationStore_replicas 'Microsoft.AppConfiguration/configurationSt
   }
 ]
 
+#disable-next-line use-recent-api-versions
 resource configurationStore_diagnosticSettings 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' = if (!empty(diagnosticSettings)) {
   name: 'appconfig-diagnostics'
   scope: configurationStore
@@ -192,19 +193,6 @@ module configurationStore_keyValues 'key-value/main.bicep' = [
     }
   }
 ]
-
-// @batchSize(1)
-// module configurationStore_replicas 'replica/main.bicep' = [
-//   for (replicaLocation, index) in (replicaLocations ?? []): {
-//     name: '${uniqueString(deployment().name, location)}-AppConfig-Replicas-${index}'
-//     params: {
-//       appConfigurationName: configurationStore.name
-//       replicaLocation: replicaLocation.replicaLocation
-//       name: replicaLocation.?name
-//       enableTelemetry: enableReferencedModulesTelemetry
-//     }
-//   }
-// ]
 
 resource configurationStore_lock 'Microsoft.Authorization/locks@2020-05-01' = if (!empty(lock ?? {}) && lock.?kind != 'None') {
   name: lock.?name ?? 'lock-${name}'
