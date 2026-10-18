@@ -23,11 +23,11 @@ param certificatPermissions array = []
 @description('Optional. Name of Key Vault Access Policy.')
 param policyName string = 'add'
 
-resource keyvault 'Microsoft.KeyVault/vaults@2023-07-01' existing = {
+resource keyvault 'Microsoft.KeyVault/vaults@2026-05-15' existing = {
   name: keyVaultName
 }
 
-resource accessPolicy 'Microsoft.KeyVault/vaults/accessPolicies@2023-07-01' = {
+resource accessPolicy 'Microsoft.KeyVault/vaults/accessPolicies@2026-05-15' = {
   name: policyName
   parent: keyvault
   properties: {
