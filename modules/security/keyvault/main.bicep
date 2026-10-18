@@ -42,7 +42,7 @@ param networkAcls networkAclsType = {
   defaultAction: 'Deny'
 }
 
-@description('Optional. Whether or not public network access is allowed for this resource. For security reasons it should be disabled. If not specified, it will be disabled by default if private endpoints are set and networkAcls are not set.')
+@description('Optional. Controls whether public network access is enabled for the Key Vault. When omitted, the service default applies.')
 @allowed([
   ''
   'Enabled'
@@ -67,7 +67,7 @@ var varNetworkAcls = {
   virtualNetworkRules: varNetworkAclsVirtualNetworkRules
 }
 
-resource keyVault 'Microsoft.KeyVault/vaults@2026-02-01' = {
+resource keyVault 'Microsoft.KeyVault/vaults@2026-05-15' = {
   name: name
   location: location
   tags: tags
@@ -96,9 +96,8 @@ resource keyVault 'Microsoft.KeyVault/vaults@2026-02-01' = {
   }
 }
 
-resource log 'microsoft.insights/diagnosticSettings@2016-09-01' = {
+resource log 'microsoft.insights/diagnosticSettings@2021-05-01-preview' = {
   name: 'service' // '${keyVault.name}-diagnostics'
-  location: location
   scope: keyVault
   properties: {
     workspaceId: workspaceId

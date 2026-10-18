@@ -1,29 +1,31 @@
 # Key Vaults
 
-This module deploy Key Vaults.
+This module deploys Key Vaults and configures diagnostics.
 
 ## Details
 
-Use this module within other Bicep template to simplify the usage of a Key Vault.
+Use this module within other Bicep templates to simplify the deployment of a Key Vault, including network ACLs and diagnostic settings.
+
+The Key Vault is deployed using the stable `Microsoft.KeyVault/vaults@2026-05-15` API.
 
 ## Parameters
 
-| Name                        |    Type    | Required | Description                                                                                                                                                                                                                        |
-| :-------------------------- | :--------: | :------: | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `name`                      |  `string`  |   Yes    | Required. Name of Key Vault                                                                                                                                                                                                        |
-| `location`                  |  `string`  |   Yes    | Required. Location for all resources                                                                                                                                                                                               |
-| `tags`                      |  `object`  |   Yes    | Required. Tags of the resources                                                                                                                                                                                                    |
-| `workspaceId`               |  `string`  |   Yes    | Required. Provide Log Analytics Workspace Id for diagnostics settings                                                                                                                                                              |
-| `principalId`               |  `string`  |    No    | Optional. Provide Service Principal Id with access for the keyvault                                                                                                                                                                |
-| `enableSoftDelete`          |   `bool`   |    No    | Optional. Specifies whether soft delete should be enabled for the Key Vault                                                                                                                                                        |
-| `softDeleteRetentionInDays` |  `string`  |    No    | Optional. The number of days to retain deleted data in the Key Vault                                                                                                                                                               |
-| `enablePurgeProtection`     |  `string`  |    No    | Optional. Specify whether purge protection should be enabled for the Key Vault                                                                                                                                                     |
-| `enableRbacAuthorization`   |  `string`  |    No    | Optional. Specify whether the Key Vault will be using RBAC. Default is false - use the access policy                                                                                                                               |
-| `skuName`                   |  `string`  |    No    | Optional. The SKU name of the Key Vault                                                                                                                                                                                            |
-| `skuFamily`                 |  `string`  |    No    | Optional. The SKU family of the Key Vault                                                                                                                                                                                          |
-| `networkAcls`               |  `string`  |    No    | Optional. Configuration for network access rules                                                                                                                                                                                   |
-| `publicNetworkAccess`       |  `string`  |    No    | Optional. Whether or not public network access is allowed for this resource. For security reasons it should be disabled. If not specified, it will be disabled by default if private endpoints are set and networkAcls are not set |
-| `lock`                      | `lockType` |    No    | Optional. The lock settings of the service                                                                                                                                                                                         |
+| Name                        |    Type    | Required | Default | Description |
+| :-------------------------- | :--------: | :------: | :-----: | :---------- |
+| `name`                      | `string`   | Yes      | —       | Name of the Key Vault. |
+| `location`                  | `string`   | Yes      | —       | Location for the Key Vault. |
+| `tags`                      | `object`   | Yes      | —       | Tags applied to the Key Vault. |
+| `workspaceId`               | `string`   | Yes      | —       | Log Analytics workspace resource ID used by the diagnostic setting. |
+| `principalId`               | `string`   | No       | `''`    | Service principal object ID granted the `get` and `list` secret permissions through an access policy. |
+| `enableSoftDelete`          | `bool`     | No       | `true`  | Whether soft delete is enabled. |
+| `softDeleteRetentionInDays` | `int`      | No       | `7`     | Number of days to retain deleted data. |
+| `enablePurgeProtection`     | `bool`     | No       | `false` | Whether purge protection is enabled. |
+| `enableRbacAuthorization`   | `bool`     | No       | `true`  | Whether the Key Vault uses RBAC authorization. |
+| `skuName`                   | `string`   | No       | `standard` | Key Vault SKU name (`standard` or `premium`). |
+| `skuFamily`                 | `string`   | No       | `A`     | Key Vault SKU family. |
+| `networkAcls`               | `networkAclsType` | No | `{ defaultAction: 'Deny' }` | Network access rules, including optional IP and subnet allowlists. |
+| `publicNetworkAccess`       | `string`   | No       | `''`    | Public network access setting (`Enabled` or `Disabled`). When omitted, the service default applies. |
+| `lock`                      | `lockType` | No       | `{}`    | Optional management lock (`CanNotDelete`, `ReadOnly`, or `None`). |
 
 ## Outputs
 
