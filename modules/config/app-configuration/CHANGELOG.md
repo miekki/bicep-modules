@@ -16,6 +16,10 @@
   rules can validate the emitted resources. Diagnostic settings use
   `2021-05-01-preview` (the latest listed version with category-group support;
   the latest stable version is older than 700 days).
+- The key-value test enables local authentication because provisioning its
+  child key-value requires it. A PSRule suppression group, matched only by a
+  test-only tag on that fixture store, scopes the expected AZR-000291 exception
+  without excluding the rule for other resources.
 
 - [Configuration store API reference](https://learn.microsoft.com/azure/templates/microsoft.appconfiguration/configurationstores)
 - [Configuration store API change log](https://learn.microsoft.com/azure/templates/microsoft.appconfiguration/change-log/configurationstores)

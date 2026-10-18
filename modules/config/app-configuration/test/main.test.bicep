@@ -11,6 +11,10 @@ var tags = {
   environment: 'test'
 }
 
+var keyValueTestTags = union(tags, {
+  psRuleException: 'key-values-require-local-auth'
+})
+
 var diagnosticSettings = {
   workspaceId: workspaceId
   logs: [
@@ -45,7 +49,7 @@ module configurationWithKeyValues '../main.bicep' = {
   params: {
     name: '${uniqueName}-kv'
     location: location
-    tags: tags
+    tags: keyValueTestTags
     disableLocalAuth: false
     diagnosticSettings: diagnosticSettings
     replicaLocations: replicaLocations
