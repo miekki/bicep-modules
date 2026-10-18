@@ -52,8 +52,11 @@ param softDeleteRetentionInDays int = 1
 @description('Optional. All Key / Values to create. Requires local authentication to be enabled.')
 param keyValues array?
 
-// @description('Optional. All Replicas to create.')
-// param replicaLocations replicaLocationType[]?
+@description('Optional. All Replicas to create.')
+param replicaLocations replicaLocationType[]?
+
+@description('Optional. Diagnostic settings to record interactions with data or the settings of the App Configuration Store.')
+param diagnosticSettings diagnosticSettingsType?
 
 import { lockType } from 'br/public:avm/utl/types/avm-common-types:0.6.0'
 @description('Optional. The lock settings of the service.')
@@ -156,6 +159,24 @@ resource configurationStore 'Microsoft.AppConfiguration/configurationStores@2025
           privateLinkDelegation: dataPlaneProxy!.privateLinkDelegation
         }
       : null
+  }
+}
+
+@batchSize(1)
+resource configurationStore_replicas 'Microsoft.AppConfiguration/configurationStores/replicas@2025-08-01-preview' = [
+  for (replicaLocation, index) in (replicaLocations ?? []): {
+    name: replicaLocation.?name ?? uniqueString(deployment().name, replicaLocation.replicaLocation)
+    parent: configurationStore
+    location: replicaLocation.replicaLocation
+  }
+]
+
+resource configurationStore_diagnosticSettings 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' = if (!empty(diagnosticSettings)) {
+  name: 'appconfig-diagnostics'
+  scope: configurationStore
+  properties: {
+    workspaceId: diagnosticSettings!.workspaceId
+    logs: diagnosticSettings!.logs
   }
 }
 
@@ -340,4 +361,23 @@ type replicaLocationType = {
 
   @description('Optional. Name of the replica.')
   name: string?
+}
+
+@export()
+@description('The type for App Configuration diagnostic settings.')
+type diagnosticSettingsType = {
+  @description('Required. The resource ID of the Log Analytics workspace to send diagnostic logs to.')
+  workspaceId: string
+
+  @description('Required. The log categories or category groups to enable.')
+  logs: {
+    @description('Optional. The log category to enable.')
+    category: string?
+
+    @description('Optional. The log category group to enable.')
+    categoryGroup: string?
+
+    @description('Required. Whether this log category or group is enabled.')
+    enabled: bool
+  }[]
 }
