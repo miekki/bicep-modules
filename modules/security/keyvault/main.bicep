@@ -96,8 +96,9 @@ resource keyVault 'Microsoft.KeyVault/vaults@2026-05-15' = {
   }
 }
 
-resource log 'microsoft.insights/diagnosticSettings@2021-05-01-preview' = {
-  name: 'service' // '${keyVault.name}-diagnostics'
+#disable-next-line use-recent-api-versions
+resource log 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' = {
+  name: 'service'
   scope: keyVault
   properties: {
     workspaceId: workspaceId
