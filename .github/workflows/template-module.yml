@@ -13,10 +13,15 @@ on:
         description: "Provide path including file name for the module"
         required: true
 
-      module_metadata_file_path:
+      module_baseline_file_path:
         type: string
-        description: "Provide path including file name for the metadata file"
+        description: "Deprecated initial version baseline for this module"
         required: true
+
+      release_base_sha:
+        type: string
+        description: "Push event's base commit, used only for the first release before a module tag exists"
+        required: false
 
       module_parameters:
         type: string
@@ -24,10 +29,7 @@ on:
 
 permissions:
   id-token: write
-  contents: read
-
-env:
-  MODULE_VERSION: "1.0.0"
+  contents: write
 
 jobs:
   lint:
@@ -35,9 +37,14 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
 
       - name: Run Bicep linter
         run: az bicep build --file ${{ inputs.module_file_path }}
+
+      - name: Test module release versioning
+        run: python3 -m unittest discover -s test -p 'test_module_release.py'
 
       - name: Run PSRule analysis
         uses: microsoft/ps-rule@v2.9.0
@@ -64,6 +71,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
 
       - name: Sign in to Azure
         uses: azure/login@v3
@@ -72,14 +81,77 @@ jobs:
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-      - name: Get module version number
+      - name: Select module release version
+        id: release
+        env:
+          ACR_SERVER: ${{ vars.AZURE_REGISTRY_URL }}
+          MODULE_NAME: ${{ inputs.module_name }}
+          MODULE_FILE_PATH: ${{ inputs.module_file_path }}
+          MODULE_BASELINE_FILE_PATH: ${{ inputs.module_baseline_file_path }}
+          RELEASE_BASE_SHA: ${{ inputs.release_base_sha }}
         run: |
-          majorMinorVersionNumber=$(jq '(.version | tostring)' ${{ inputs.module_metadata_file_path }} -r )
-          versionNumber="$majorMinorVersionNumber.${{ github.run_number }}"
-          echo "MODULE_VERSION=$versionNumber" >> $GITHUB_ENV
+          registry_name="${ACR_SERVER%%.*}"
+          repositories_json="$(az acr repository list --name "$registry_name" --output json)"
+          if jq -e --arg repository "$MODULE_NAME" 'index($repository) != null' \
+            <<< "$repositories_json" >/dev/null; then
+            registry_tags_json="$(az acr repository show-tags \
+              --name "$registry_name" \
+              --repository "$MODULE_NAME" \
+              --output json)"
+          else
+            registry_tags_json='[]'
+          fi
+          REGISTRY_TAGS_JSON="$registry_tags_json" python3 scripts/release/module-release.py \
+            --module-name "$MODULE_NAME" \
+            --module-path "$(dirname "$MODULE_FILE_PATH")" \
+            --baseline-file "$MODULE_BASELINE_FILE_PATH" \
+            --base-ref "$RELEASE_BASE_SHA"
+
+      - name: Confirm selected version is still unused
+        if: steps.release.outputs.should_release == 'true'
+        env:
+          ACR_SERVER: ${{ vars.AZURE_REGISTRY_URL }}
+          MODULE_NAME: ${{ inputs.module_name }}
+          MODULE_VERSION: ${{ steps.release.outputs.version }}
+        run: |
+          registry_name="${ACR_SERVER%%.*}"
+          repositories_json="$(az acr repository list --name "$registry_name" --output json)"
+          if jq -e --arg repository "$MODULE_NAME" 'index($repository) != null' \
+            <<< "$repositories_json" >/dev/null; then
+            registry_tags_json="$(az acr repository show-tags \
+              --name "$registry_name" \
+              --repository "$MODULE_NAME" \
+              --output json)"
+          else
+            registry_tags_json='[]'
+          fi
+          REGISTRY_TAGS_JSON="$registry_tags_json" python3 scripts/release/module-release.py \
+            --check-version "$MODULE_VERSION"
 
       - name: Publish bicep module
+        if: steps.release.outputs.should_release == 'true'
+        env:
+          ACR_SERVER: ${{ vars.AZURE_REGISTRY_URL }}
+          MODULE_NAME: ${{ inputs.module_name }}
+          MODULE_FILE_PATH: ${{ inputs.module_file_path }}
+          MODULE_VERSION: ${{ steps.release.outputs.version }}
         run: |
           az bicep publish \
-              --target 'br:${{ vars.AZURE_REGISTRY_URL }}/${{ inputs.module_name }}:${{ env.MODULE_VERSION }}' \
-              --file ${{ inputs.module_file_path }}
+              --target "br:${ACR_SERVER}/${MODULE_NAME}:${MODULE_VERSION}" \
+              --file "$MODULE_FILE_PATH"
+
+      - name: Create module release tag
+        if: steps.release.outputs.should_release == 'true'
+        env:
+          MODULE_NAME: ${{ inputs.module_name }}
+          MODULE_VERSION: ${{ steps.release.outputs.version }}
+        run: |
+          tag="modules/${MODULE_NAME}/v${MODULE_VERSION}"
+          if git show-ref --verify --quiet "refs/tags/${tag}"; then
+            echo "Refusing to overwrite existing module release tag ${tag}."
+            exit 1
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag "$tag" "$GITHUB_SHA"
+          git push origin "refs/tags/${tag}"

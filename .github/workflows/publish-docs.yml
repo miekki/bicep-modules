@@ -3,7 +3,7 @@
 name: Publish module index
 on:
   schedule:
-    - cron: 0 8 * * * # Run daily at 8:00 AM
+    - cron: 0 8 1 * * # Run monthly on the first day at 8:00 AM
   workflow_dispatch:
 
 permissions:
@@ -30,7 +30,7 @@ jobs:
         run: npm ci
 
       - name: Azure Login
-        uses: azure/login@v2
+        uses: azure/login@v3
         with:
           client-id: ${{ secrets.AZURE_CLIENT_ID}}
           tenant-id: ${{ secrets.AZURE_TENANT_ID}}
