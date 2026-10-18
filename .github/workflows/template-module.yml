@@ -48,6 +48,8 @@ jobs:
 
       - name: Run PSRule analysis
         uses: microsoft/ps-rule@v2.9.0
+        env:
+          PSRULE_AZURE_BICEP_USE_AZURE_CLI: 'true'
         with:
           modules: PSRule.Rules.Azure
 
