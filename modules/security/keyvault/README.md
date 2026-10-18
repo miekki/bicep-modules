@@ -6,6 +6,8 @@ This module deploys Key Vaults and configures diagnostics.
 
 Use this module within other Bicep templates to simplify the deployment of a Key Vault, including network ACLs and diagnostic settings.
 
+The Key Vault is deployed using the stable `Microsoft.KeyVault/vaults@2026-05-15` API.
+
 ## Parameters
 
 | Name                        |    Type    | Required | Default | Description |

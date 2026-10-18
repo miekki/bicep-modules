@@ -2,7 +2,7 @@ param keyVaultName string
 param rbacPolicies array
 param rbacRole string
 
-resource keyVault 'Microsoft.KeyVault/vaults@2026-02-01' existing = {
+resource keyVault 'Microsoft.KeyVault/vaults@2026-05-15' existing = {
   name: keyVaultName
 }
 
