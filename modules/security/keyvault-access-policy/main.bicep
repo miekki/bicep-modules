@@ -14,13 +14,13 @@ param applicationId string = ''
 @description('Optional. Specifies the permissions to secrets in the vault. Valid values are: all, get, list, set, delete, backup, restore, recover, and purge.')
 param secretsPermissions array = []
 
-@description('Optional. Specifies the permissions to keys in the vault. Valid values are: all, encrypt, decrypt, wrapKey, unwrapKey, sign, verify, get, list, create, update, import, delete, backup, restore, recover, and purge.')
+@description('Optional. Specifies the permissions to keys in the vault. Valid values are: all, encrypt, decrypt, wrapKey, unwrapKey, sign, verify, get, list, create, update, import, delete, backup, restore, recover, purge, release, rotate, getrotationpolicy, and setrotationpolicy.')
 param keyPermissions array = []
 
 @description('Optional. Specify the permissions to certificates. Valid values are: all, backup, create, delete, deleteissuers, get, getissuers, import, list, listissuers, managecontacts, manageissuers, purge, recover, restore, setissuers, update')
 param certificatPermissions array = []
 
-@description('Optional. Name of Key Vault Access Policy.')
+@description('Optional. Access policy operation. Valid values are add, remove, or replace.')
 param policyName string = 'add'
 
 resource keyvault 'Microsoft.KeyVault/vaults@2026-05-15' existing = {
