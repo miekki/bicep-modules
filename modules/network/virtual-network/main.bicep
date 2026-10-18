@@ -32,13 +32,13 @@ param newOrExistingNSG string = 'none'
 @description('Name of default NSG to use for subnets.')
 param networkSecurityGroupName string = uniqueString(resourceGroup().name, location)
 
-resource networkSecurityGroup 'Microsoft.Network/networkSecurityGroups@2025-07-01' = if (newOrExistingNSG == 'new') {
+resource networkSecurityGroup 'Microsoft.Network/networkSecurityGroups@2025-09-01' = if (newOrExistingNSG == 'new') {
   name: networkSecurityGroupName
   location: location
   tags: tags
 }
 
-resource existingNetworkSecurityGroup 'Microsoft.Network/networkSecurityGroups@2025-07-01' existing = if (newOrExistingNSG == 'existing') {
+resource existingNetworkSecurityGroup 'Microsoft.Network/networkSecurityGroups@2025-09-01' existing = if (newOrExistingNSG == 'existing') {
   name: networkSecurityGroupName
 }
 
@@ -46,7 +46,7 @@ var networkSecurityGroupId = {
   id: newOrExistingNSG == 'new' ? networkSecurityGroup.id : existingNetworkSecurityGroup.id
 }
 
-resource virtualNetwork 'Microsoft.Network/virtualNetworks@2025-07-01' = {
+resource virtualNetwork 'Microsoft.Network/virtualNetworks@2025-09-01' = {
   name: name
   location: location
   tags: tags

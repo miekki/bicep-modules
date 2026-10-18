@@ -19,7 +19,7 @@ var my_tags = {
 // General resources
 // =================
 
-resource networkSecurityGroup 'Microsoft.Network/networkSecurityGroups@2023-06-01' = {
+resource networkSecurityGroup 'Microsoft.Network/networkSecurityGroups@2025-09-01' = {
   name: 'dep-${serviceShort}-az-nsg-x-01'
   location: location
   tags: my_tags
@@ -41,7 +41,7 @@ resource networkSecurityGroup 'Microsoft.Network/networkSecurityGroups@2023-06-0
   }
 }
 
-resource routeTable 'Microsoft.Network/routeTables@2023-06-01' = {
+resource routeTable 'Microsoft.Network/routeTables@2025-09-01' = {
   name: 'dep-${serviceShort}-az-rt-x-01'
   location: location
   tags: my_tags
