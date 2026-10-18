@@ -7,6 +7,7 @@
   --catalog-code-background: #eef2f6;
   --catalog-text: #152238;
   --catalog-muted: #44536a;
+  --catalog-category-bar: #1f4268;
   --catalog-link: #176b4b;
   --catalog-accent: #177a55;
   --catalog-accent-soft: #eaf6ef;
@@ -138,9 +139,10 @@ body {
   margin: 2.5rem 0 1rem;
   padding: 0.65rem 0 0.65rem 0.9rem;
   border: 0;
-  border-left: 3px solid var(--catalog-accent);
+  border-left: 3px solid var(--catalog-category-bar);
   border-radius: 0 0.35rem 0.35rem 0;
-  background: linear-gradient(90deg, var(--catalog-accent-soft), transparent 75%);
+  background: var(--catalog-category-bar);
+  color: #ffffff;
   font-size: 1.2rem;
   font-weight: 700;
   letter-spacing: -0.025em;

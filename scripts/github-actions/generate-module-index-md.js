@@ -48,9 +48,8 @@ async function generateModuleGroupTable(
     const modulePath = `\`${module.moduleName}\``;
     const latestVersion = `\`${module.moduleVersion.name}\``;
     const tag = "main";
-    const publishDate = `\`${
-      module.moduleVersion.lastUpdatedOn.split("T")[0]
-    }\``;
+    const publishDate = `\`${module.moduleVersion.lastUpdatedOn.split("T")[0]
+      }\``;
     core.info(
       `publish date is ${publishDate} for module ${module} with version=${latestVersion}`
     );
@@ -104,7 +103,8 @@ catalog_assets: /Jekyll/assets
 
 # Module Index
 
-Browse the published Bicep modules by category. Search by module name or description.
+Browse the published Bicep modules by category. 
+Search by module name or description.
 
 <div class="catalog-toolbar">
   <div class="catalog-search">
