@@ -51,7 +51,7 @@ resource routeTable 'Microsoft.Network/routeTables@2025-09-01' = {
 module minvnet '../main.bicep' = {
   name: '${uniqueString(deployment().name, location)}-minvnet'
   params: {
-    addressPrefixes: [ '10.0.0.0/16' ]
+    addressPrefixes: ['10.0.0.0/16']
     name: '${serviceShort}-az-vnet-min-01'
     location: location
     tags: my_tags
@@ -63,13 +63,12 @@ module sgvnet '../main.bicep' = {
   name: '${uniqueString(deployment().name, location)}-sgvnet'
 
   params: {
-    addressPrefixes: [ '10.0.0.0/16' ]
+    addressPrefixes: ['10.0.0.0/16']
     name: '${serviceShort}-az-vnet-sg-01'
     subnets: [
       {
         name: '${serviceShort}-subnet-001'
         addressPrefix: '10.0.1.0/24'
-        //networkSecurityGroupId: networkSecurityGroup.id
         serviceEndpoints: [
           {
             service: 'Microsoft.Storage'
@@ -83,7 +82,6 @@ module sgvnet '../main.bicep' = {
       {
         name: '${serviceShort}-subnet-002'
         addressPrefix: '10.0.2.0/24'
-        //networkSecurityGroupId: networkSecurityGroup.id
       }
     ]
     location: location

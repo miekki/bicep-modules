@@ -63,19 +63,19 @@ resource virtualNetwork 'Microsoft.Network/virtualNetworks@2025-09-01' = {
         properties: {
           addressPrefix: subnet.addressPrefix
           defaultOutboundAccess: false
-          addressPrefixes: contains(subnet, 'addressPrefixes') ? subnet.addressPrefixes : []
-          //applicationGatewayIpConfigurations: contains(subnet, 'applicationGatewayIpConfigurations') ? subnet.applicationGatewayIpConfigurations : []
-          delegations: contains(subnet, 'delegations') ? subnet.delegations : []
-          ipAllocations: contains(subnet, 'ipAllocations') ? subnet.ipAllocations : []
-          natGateway: contains(subnet, 'natGatewayId') ? { id: subnet.natGatewayId } : null
-          networkSecurityGroup: contains(subnet, 'networkSecurityGroupId')
+          addressPrefixes: subnet.?addressPrefixes ?? []
+          //applicationGatewayIpConfigurations: subnet.?applicationGatewayIpConfigurations ?? []
+          delegations: subnet.?delegations ?? []
+          ipAllocations: subnet.?ipAllocations ?? []
+          natGateway: !empty(subnet.?natGatewayId) ? { id: subnet.natGatewayId } : null
+          networkSecurityGroup: !empty(subnet.?networkSecurityGroupId)
             ? { id: subnet.networkSecurityGroupId }
             : (newOrExistingNSG != 'none' ? networkSecurityGroupId : null)
-          //privateEndpointNetworkPolicies: contains(subnet, 'privateEndpointNetworkPolicies') ? subnet.privateEndpointNetworkPolicies : null
-          //privateLinkServiceNetworkPolicies: contains(subnet, 'privateLinkServiceNetworkPolicies') ? subnet.privateLinkServiceNetworkPolicies : null
-          routeTable: contains(subnet, 'routeTableId') ? { id: subnet.routeTableId } : null
-          serviceEndpoints: contains(subnet, 'serviceEndpoints') ? subnet.serviceEndpoints : []
-          serviceEndpointPolicies: contains(subnet, 'serviceEndpointPolicies') ? subnet.serviceEndpointPolicies : []
+          //privateEndpointNetworkPolicies: subnet.?privateEndpointNetworkPolicies ?? null
+          //privateLinkServiceNetworkPolicies: subnet.?privateLinkServiceNetworkPolicies ?? null
+          routeTable: !empty(subnet.?routeTableId) ? { id: subnet.routeTableId } : null
+          serviceEndpoints: subnet.?serviceEndpoints ?? []
+          serviceEndpointPolicies: subnet.?serviceEndpointPolicies ?? []
         }
       }
     ]
