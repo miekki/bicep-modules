@@ -17,6 +17,7 @@
 | Bruce Banner | Bicep Module Engineer | `.squad/agents/bruce-banner/charter.md` | ✅ Active |
 | Peter Parker | Quality Engineer | `.squad/agents/peter-parker/charter.md` | ✅ Active |
 | Nick Fury | DevOps & Registry Engineer | `.squad/agents/nick-fury/charter.md` | ✅ Active |
+| Sam Wilson | Frontend Developer | `.squad/agents/sam-wilson/charter.md` | ✅ Active |
 
 ## Built-in Support Agents
 

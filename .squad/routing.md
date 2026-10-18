@@ -11,6 +11,7 @@ How to decide who handles what.
 | Bicep module implementation | Bruce Banner | Resource modules, parameters, outputs, API versions |
 | Testing and module quality | Peter Parker | Bicep validation, module tests, deployment examples, regressions |
 | CI/CD and registry operations | Nick Fury | GitHub Actions, publishing, versioning, documentation workflows |
+| Frontend and GitHub Pages experience | Sam Wilson | Website layout, responsive styling, accessible interactions, themes |
 
 ## Issue Routing
 
@@ -22,6 +23,7 @@ How to decide who handles what.
 | `squad:bruce-banner` | Pick up Bicep module implementation issues | Bruce Banner |
 | `squad:peter-parker` | Pick up testing and quality issues | Peter Parker |
 | `squad:nick-fury` | Pick up CI/CD and registry issues | Nick Fury |
+| `squad:sam-wilson` | Pick up frontend and GitHub Pages issues | Sam Wilson |
 
 ### How Issue Assignment Works
 

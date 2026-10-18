@@ -99,9 +99,22 @@ layout: default
 title: Module Index
 nav_order: 1
 permalink: /
+catalog_assets: /Jekyll/assets
 ---
 
 # Module Index
+
+Browse the published Bicep modules by category. Search by module name or description.
+
+<div class="catalog-toolbar">
+  <div class="catalog-search">
+    <label for="module-search">Search modules</label>
+    <input id="module-search" type="search" placeholder="Search names or descriptions" autocomplete="off">
+  </div>
+  <button class="theme-toggle" id="theme-toggle" type="button" aria-pressed="false">
+    <span aria-hidden="true">◐</span> Dark mode
+  </button>
+</div>
 `;
 
   const moduleIndexDataContent = await fs.readFile("moduleIndex.json", {
@@ -116,8 +129,17 @@ permalink: /
     moduleIndexData,
     (x) => x.moduleName.split("/")[0]
   );
+  const visibleModuleGroups = [...moduleGroups].filter(
+    ([moduleGroup]) => !moduleGroup.includes("modules")
+  );
+  const moduleCount = visibleModuleGroups.reduce(
+    (total, [, modules]) => total + modules.length,
+    0
+  );
 
-  for (const [moduleGroup, modules] of moduleGroups) {
+  moduleIndexMarkdown += `<p class="catalog-results" id="module-results" role="status" aria-live="polite">Showing ${moduleCount} modules across ${visibleModuleGroups.length} categories.</p>\n\n`;
+
+  for (const [moduleGroup, modules] of visibleModuleGroups) {
     if (moduleGroup.includes("modules")) {
       continue;
     }
@@ -132,7 +154,9 @@ permalink: /
     );
 
     moduleIndexMarkdown += `## ${moduleGroup}\n\n`;
+    moduleIndexMarkdown += `<div class="catalog-table-scroll" role="region" aria-label="Modules in ${moduleGroup}" tabindex="0" markdown="1">\n\n`;
     moduleIndexMarkdown += moduleGroupTable;
+    moduleIndexMarkdown += "\n\n</div>";
     moduleIndexMarkdown += "\n\n";
   }
 

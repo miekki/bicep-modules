@@ -1,6 +1,6 @@
 ---
-updated_at: 2026-10-18T07:54:44.068+01:00
-focus_area: Azure Bicep module team setup
+updated_at: 2026-10-18T18:01:24.539+01:00
+focus_area: GitHub Pages frontend dark mode and visual refresh
 active_issues: []
 ---
 
