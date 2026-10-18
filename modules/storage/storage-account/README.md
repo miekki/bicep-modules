@@ -8,19 +8,19 @@ Use this module within other Bicep template to simplify the usage of storage acc
 
 ## Parameters
 
-| Name                    |            Type             | Required | Description                                                                                            |
-| :---------------------- | :-------------------------: | :------: | :----------------------------------------------------------------------------------------------------- |
-| `name`                  |          `string`           |   Yes    | Required. Name of Storage Account. Must be unique within Azure                                         |
-| `location`              |          `string`           |   Yes    | Required. Location for all resources                                                                   |
-| `tags`                  |          `object`           |   Yes    | Required. Tags of the resources                                                                        |
-| `isZoneRedundant`       |           `bool`            |    No    | Optional. This toggle changes the default value of the sku parameter from Standard_LRS to Standard_ZRS |
-| `sku`                   |          `string`           |    No    | Optional. Storage Account SKU. default is Standard_LRS                                                 |
-| `kind`                  |          `string`           |    No    | Optional. Storage Account Kind. Default is StorageV2                                                   |
-| `accessTier`            |          `string`           |    No    | Optional. The access tier of the storage account, which is used for billing                            |
-| `allowBlobPublicAccess` |           `bool`            |    No    | Optional. Allow or disallow public access to all blobs or containers in the storage account            |
-| `blobServiceProperties` | `blobServicePropertiesType` |    No    | Optional. Properties object for a Blob service of a Storage Account                                    |
-| `blobContainers`        |     `blobContainerType`     |    No    | Optional. Array of blob containers to be created for blobServices of Storage Account                   |
-| `networkAcls`           |      `networkAclsType`      |    No    | Optional. Configuration for network access rules                                                       |
+| Name                    |            Type             | Required | Description                                                                                                    |
+| :---------------------- | :-------------------------: | :------: | :------------------------------------------------------------------------------------------------------------- |
+| `name`                  |          `string`           |   Yes    | Name of the Storage Account. Must be unique within Azure.                                                      |
+| `location`              |          `string`           |   Yes    | Location for all resources.                                                                                    |
+| `tags`                  |          `object`           |   Yes    | Tags to apply to the resources.                                                                                |
+| `isZoneRedundant`       |           `bool`            |    No    | Defaults to `false`. When true, the default SKU is `Standard_ZRS` instead of `Standard_GRS`.                  |
+| `sku`                   |          `string`           |    No    | Defaults to `Standard_GRS`, or `Standard_ZRS` when `isZoneRedundant` is true. Overrides the derived default.  |
+| `kind`                  |          `string`           |    No    | Defaults to `StorageV2`.                                                                                       |
+| `accessTier`            |          `string`           |    No    | Defaults to `Hot`. The access tier used for billing.                                                           |
+| `allowBlobPublicAccess` |           `bool`            |    No    | Defaults to `false`. Controls public access to blobs and containers.                                           |
+| `blobServiceProperties` | `blobServicePropertiesType` |    No    | Defaults to enabled blob and container deletion retention policies of 90 days.                                 |
+| `blobContainers`        |   `blobContainerType[]`     |    No    | Defaults to an empty array. Blob containers to create for the Storage Account.                                |
+| `networkAcls`           |      `networkAclsType`      |    No    | Defaults to denying network access unless allowed by a rule; Azure services are bypassed by default.           |
 
 ## Outputs
 
@@ -28,6 +28,11 @@ Use this module within other Bicep template to simplify the usage of storage acc
 | :----------- | :------: | :------------------------------------- |
 | `resourceId` | `string` | The resource ID of the storage account |
 | `name`       | `string` | The name of the storage account        |
+
+## Resource API versions
+
+The Storage Account, Blob service, and Blob container resources use API version
+`2026-06-01`.
 
 ## Examples
 
