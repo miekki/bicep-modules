@@ -44,7 +44,7 @@ jobs:
         run: az bicep build --file ${{ inputs.module_file_path }}
 
       - name: Test module release versioning
-        run: python3 -m unittest discover -s test -p 'test_module_release.py'
+        run: python3 -m unittest discover -s scripts/release/test -p 'test_module_release.py'
 
       - name: Run PSRule analysis
         uses: microsoft/ps-rule@v2.9.0

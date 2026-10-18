@@ -36,3 +36,26 @@ The repository Actions token must be allowed to write contents/tags, and reposit
 allow the workflow to create `modules/*/v*` tags.
 Each release's commit list is written to the GitHub Actions summary as the release notes, using the
 same module-specific commit range that selected the version.
+
+## Local PSRule validation
+
+PSRule needs Azure CLI and its Bicep component for Bicep expansion. Install Azure CLI and run
+`az bicep install` once; verify it with `az bicep version`. Azure CLI does not add its managed Bicep
+binary to `PATH`, so PSRule cannot discover it as a standalone executable. Tell PSRule to invoke
+Bicep through Azure CLI when running locally:
+
+```bash
+PSRULE_AZURE_BICEP_USE_AZURE_CLI=true pwsh -NoLogo -Command 'Invoke-PSRule -InputPath .'
+```
+
+In PowerShell, set the environment variable for the current session before invoking PSRule:
+
+```powershell
+$env:PSRULE_AZURE_BICEP_USE_AZURE_CLI = 'true'
+Invoke-PSRule -InputPath .
+```
+
+Install ihis PSRule module
+```powershell
+Install-Module -Name 'PSRule.Rules.Azure' -Repository PSGallery -Scope CurrentUser
+```
