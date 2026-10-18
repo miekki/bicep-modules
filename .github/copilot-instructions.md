@@ -62,3 +62,9 @@ If you make a decision that affects other team members, write it to:
 .squad/decisions/inbox/copilot-{brief-slug}.md
 ```
 The Scribe will merge it into the shared decisions file.
+
+## Commit messages
+
+Use Conventional Commit messages for all future commits. Module release automation requires
+`feat` for minor changes, non-breaking changes such as `fix`/`perf` for patch releases, and either
+the `!` marker or a `BREAKING CHANGE:` footer for major releases.
