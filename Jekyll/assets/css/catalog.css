@@ -1,11 +1,12 @@
 :root {
   color-scheme: light;
-  --catalog-background: #f6f8fc;
+  --catalog-background: #edf1f6;
   --catalog-surface: #ffffff;
-  --catalog-surface-raised: #ffffff;
-  --catalog-border: #e0e6ef;
-  --catalog-text: #182338;
-  --catalog-muted: #59677d;
+  --catalog-surface-raised: #e4eaf2;
+  --catalog-border: #bac6d5;
+  --catalog-code-background: #eef2f6;
+  --catalog-text: #152238;
+  --catalog-muted: #44536a;
   --catalog-link: #176b4b;
   --catalog-accent: #177a55;
   --catalog-accent-soft: #eaf6ef;
@@ -27,6 +28,7 @@
     --catalog-surface: #121c2c;
     --catalog-surface-raised: #162235;
     --catalog-border: #2b3a50;
+    --catalog-code-background: #1c293b;
     --catalog-text: #edf3fb;
     --catalog-muted: #aab9cd;
     --catalog-link: #a1e5bd;
@@ -46,6 +48,7 @@
   --catalog-surface: #121c2c;
   --catalog-surface-raised: #162235;
   --catalog-border: #2b3a50;
+  --catalog-code-background: #1c293b;
   --catalog-text: #edf3fb;
   --catalog-muted: #aab9cd;
   --catalog-link: #a1e5bd;
@@ -175,7 +178,7 @@ body {
   padding: 0.65rem 0.85rem;
   border: 1px solid var(--catalog-border);
   border-radius: 0.6rem;
-  background: var(--catalog-background);
+  background: var(--catalog-surface);
   color: var(--catalog-text);
   font: inherit;
   transition: border-color 150ms ease, box-shadow 150ms ease, background-color 150ms ease;
@@ -281,7 +284,7 @@ body {
 
 .catalog-table-scroll code {
   border-radius: 0.3rem;
-  background: var(--catalog-accent-soft);
+  background: var(--catalog-code-background);
   color: var(--catalog-text);
   font-size: 0.88em;
 }
