@@ -5,6 +5,7 @@ param location string = resourceGroup().location
 param workspaceId string = resourceId('Microsoft.OperationalInsights/workspaces', 'test-workspace')
 
 var uniqueName = 'appconfig-${uniqueString(resourceGroup().id, deployment().name, location)}'
+var secondaryLocation = location == 'westus2' ? 'eastus2' : 'westus2'
 
 var tags = {
   environment: 'test'
@@ -24,7 +25,7 @@ var diagnosticSettings = {
 var replicaLocations = [
   {
     name: 'secondary'
-    replicaLocation: 'westus2'
+    replicaLocation: secondaryLocation
   }
 ]
 
