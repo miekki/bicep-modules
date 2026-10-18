@@ -9,6 +9,7 @@
   --catalog-link: #176b4b;
   --catalog-accent: #177a55;
   --catalog-accent-soft: #eaf6ef;
+  --catalog-button-background: #177a55;
   --catalog-hover: #f3f6fc;
   --catalog-focus: #177a55;
   --catalog-button-text: #ffffff;
@@ -29,11 +30,12 @@
     --catalog-text: #edf3fb;
     --catalog-muted: #aab9cd;
     --catalog-link: #a1e5bd;
-    --catalog-accent: #98dfb8;
-    --catalog-accent-soft: #1d382b;
+    --catalog-accent: #48dc91;
+    --catalog-accent-soft: #1c3f2e;
+    --catalog-button-background: #167a4b;
     --catalog-hover: #23382e;
     --catalog-focus: #a1e5bd;
-    --catalog-button-text: #10241a;
+    --catalog-button-text: #ffffff;
     --catalog-shadow: 0 14px 36px rgb(0 0 0 / 22%);
   }
 }
@@ -47,11 +49,12 @@
   --catalog-text: #edf3fb;
   --catalog-muted: #aab9cd;
   --catalog-link: #a1e5bd;
-  --catalog-accent: #98dfb8;
-  --catalog-accent-soft: #1d382b;
+  --catalog-accent: #48dc91;
+  --catalog-accent-soft: #1c3f2e;
+  --catalog-button-background: #167a4b;
   --catalog-hover: #23382e;
   --catalog-focus: #a1e5bd;
-  --catalog-button-text: #10241a;
+  --catalog-button-text: #ffffff;
   --catalog-shadow: 0 14px 36px rgb(0 0 0 / 22%);
 }
 
@@ -194,7 +197,7 @@ body {
   padding: 0.65rem 1rem;
   border: 1px solid var(--catalog-accent);
   border-radius: 0.6rem;
-  background: var(--catalog-accent);
+  background: var(--catalog-button-background);
   color: var(--catalog-button-text);
   font: inherit;
   font-size: 0.92rem;
@@ -217,9 +220,9 @@ body {
   min-height: 1.5rem;
   margin: 0.9rem 0 1.25rem;
   padding: 0.35rem 0.7rem;
-  border: 1px solid var(--catalog-border);
+  border: 1px solid var(--catalog-accent);
   border-radius: 99rem;
-  background: var(--catalog-surface);
+  background: var(--catalog-accent-soft);
   color: var(--catalog-muted);
   font-size: 0.82rem;
   font-weight: 550;
