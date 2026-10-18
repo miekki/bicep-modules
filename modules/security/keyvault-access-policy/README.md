@@ -1,22 +1,22 @@
 # Key Vaults - Access policy
 
-This module deploy Key Vaults Access Policy.
+This module adds, removes, or replaces an access policy on an existing Key Vault.
 
 ## Details
 
-Use this module within other Bicep template to simplify the usage of a Key Vault Access Policy.
+Use this module within another Bicep template to manage a Key Vault access policy. The module uses the stable `2026-05-15` Key Vault resource API.
 
 ## Parameters
 
-| Name                    |   Type   | Required | Description                                                                                                                                                                                                                             |
-| :---------------------- | :------: | :------: | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `keyVaultName`          | `string` |   Yes    | Required. Name of Key Vault                                                                                                                                                                                                             |
-| `objectId`              | `string` |   Yes    | Required. Object Id of a user, service principal or security group                                                                                                                                                                      |
-| `applicationId`         | `string` |    No    | Optional. Application id of the client making request                                                                                                                                                                                   |
-| `secretsPermissions`    | `array`  |    No    | Optional. Specifies the permissions to secrets in the vault. Valid values are: all, get, list, set, delete, backup, restore, recover, and purge                                                                                         |
-| `keyPermissions`        | `array`  |    No    | Optional. Specifies the permissions to keys in the vault. Valid values are: all, encrypt, decrypt, wrapKey, unwrapKey, sign, verify, get, list, create, update, import, delete, backup, restore, recover, and purge                     |
-| `certificatPermissions` | `array`  |    No    | Optional. Specify the permissions to certificates. Valid values are: all, backup, create, delete, deleteissuers, get, getissuers, import, list, listissuers, managecontacts, manageissuers, purge, recover, restore, setissuers, update |
-| `policyName`            | `string` |    No    | Optional. Name of Key Vault Access Policy                                                                                                                                                                                               |
+| Name                    |   Type   | Required | Description |
+| :---------------------- | :------: | :------: | :---------- |
+| `keyVaultName`          | `string` |   Yes    | Name of the existing Key Vault. |
+| `objectId`              | `string` |   Yes    | Object ID of the user, service principal, or security group receiving the permissions. |
+| `applicationId`         | `string` |    No    | Application ID of the client making the request. Defaults to an empty value, which is omitted from the access policy. |
+| `secretsPermissions`    | `array`  |    No    | Permissions for secrets: `all`, `get`, `list`, `set`, `delete`, `backup`, `restore`, `recover`, or `purge`. |
+| `keyPermissions`        | `array`  |    No    | Permissions for keys: `all`, `encrypt`, `decrypt`, `wrapKey`, `unwrapKey`, `sign`, `verify`, `get`, `list`, `create`, `update`, `import`, `delete`, `backup`, `restore`, `recover`, `purge`, `release`, `rotate`, `getrotationpolicy`, or `setrotationpolicy`. |
+| `certificatPermissions` | `array`  |    No    | Permissions for certificates: `all`, `backup`, `create`, `delete`, `deleteissuers`, `get`, `getissuers`, `import`, `list`, `listissuers`, `managecontacts`, `manageissuers`, `purge`, `recover`, `restore`, `setissuers`, or `update`. |
+| `policyName`            | `string` |    No    | Access policy operation: `add` (default), `remove`, or `replace`. |
 
 ## Examples
 
@@ -34,3 +34,5 @@ module kv_access_policy '.br:mmbicepmoduleregistry.azurecr.io/keyvault-access-po
   }
 }
 ```
+
+The Key Vault must already exist. The `policyName` value selects the operation on the access policy; it is not a custom policy name.
