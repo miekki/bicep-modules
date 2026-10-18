@@ -28,6 +28,15 @@ module test1 '../main.bicep' = {
     name: names.test1.storage
     tags: my_tags
     sku: 'Standard_GRS'
+    networkAcls: {
+      defaultAction: 'Deny'
+      resourceAccessRules: [
+        {
+          resourceId: resourceId('Microsoft.Web/sites', 'example')
+          tenantId: tenant().tenantId
+        }
+      ]
+    }
   }
 }
 

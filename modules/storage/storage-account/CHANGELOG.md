@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Rename the network ACL resource access rule field to `resourceId` to match
+  the Storage API type and avoid BCP037 warnings. The test fixture covers this
+  input shape.
 - Update the Storage Account, Blob service, and Blob container resource API
   versions from `2026-04-01` to the latest stable `2026-06-01`.
 - Microsoft Learn reports no properties added, updated, or removed for the

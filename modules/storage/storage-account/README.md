@@ -20,7 +20,7 @@ Use this module within other Bicep template to simplify the usage of storage acc
 | `allowBlobPublicAccess` |           `bool`            |    No    | Defaults to `false`. Controls public access to blobs and containers.                                           |
 | `blobServiceProperties` | `blobServicePropertiesType` |    No    | Defaults to enabled blob and container deletion retention policies of 90 days.                                 |
 | `blobContainers`        |   `blobContainerType[]`     |    No    | Defaults to an empty array. Blob containers to create for the Storage Account.                                |
-| `networkAcls`           |      `networkAclsType`      |    No    | Defaults to denying network access unless allowed by a rule; Azure services are bypassed by default.           |
+| `networkAcls`           |      `networkAclsType`      |    No    | Defaults to denying network access unless allowed by a rule; Azure services are bypassed by default. Resource access rules use `resourceId` and `tenantId`. |
 
 ## Outputs
 
