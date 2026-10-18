@@ -16,11 +16,11 @@ param contentType string?
 @description('Optional. Tags of the resource.')
 param tags object?
 
-resource appConfiguration 'Microsoft.AppConfiguration/configurationStores@2025-02-01-preview' existing = {
+resource appConfiguration 'Microsoft.AppConfiguration/configurationStores@2025-08-01-preview' existing = {
   name: appConfigurationName
 }
 
-resource keyValues 'Microsoft.AppConfiguration/configurationStores/keyValues@2025-02-01-preview' = {
+resource keyValues 'Microsoft.AppConfiguration/configurationStores/keyValues@2025-08-01-preview' = {
   name: name
   parent: appConfiguration
   properties: {
