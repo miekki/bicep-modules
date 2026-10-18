@@ -205,7 +205,7 @@ type networkAclsType = {
 
 type networkAclsResourceAccessRuleType = {
   @description('Specifies the resource id of the resource to which the access rule applies.')
-  resourceAccessRuleId: string
+  resourceId: string
   @description('Specifies the tenant id of the resource to which the access rule applies.')
   tenantId: string
 }
