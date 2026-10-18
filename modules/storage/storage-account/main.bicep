@@ -13,10 +13,10 @@ param location string
 @description('Required. Tags of the resource.')
 param tags object
 
-@description('Optional. This toggle changes the default value of the sku parameter from Standard_LRS to Standard_ZRS.')
+@description('Optional. When true, the default SKU is Standard_ZRS instead of Standard_GRS.')
 param isZoneRedundant bool = false
 
-@description('Optional. Storage Account SKU. default is Standard_LRS')
+@description('Optional. Storage Account SKU. Defaults to Standard_GRS, or Standard_ZRS when isZoneRedundant is true.')
 @allowed([
   'Premium_LRS'
   'Premium_ZRS'
@@ -87,7 +87,7 @@ var varNetworkAcls = {
   virtualNetworkRules: varNetworkAclsVirtualNetworkRules
 }
 
-resource storageAccount 'Microsoft.Storage/storageAccounts@2026-04-01' = {
+resource storageAccount 'Microsoft.Storage/storageAccounts@2026-06-01' = {
   name: name
   location: location
   sku: {
@@ -104,13 +104,13 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2026-04-01' = {
   }
 }
 
-resource blobService 'Microsoft.Storage/storageAccounts/blobServices@2026-04-01' = {
+resource blobService 'Microsoft.Storage/storageAccounts/blobServices@2026-06-01' = {
   name: 'default'
   parent: storageAccount
   properties: blobServiceProperties
 }
 
-resource blobContainer 'Microsoft.Storage/storageAccounts/blobServices/containers@2026-04-01' = [
+resource blobContainer 'Microsoft.Storage/storageAccounts/blobServices/containers@2026-06-01' = [
   for container in blobContainers: {
     name: container.name
     parent: blobService
