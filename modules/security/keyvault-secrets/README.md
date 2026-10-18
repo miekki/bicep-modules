@@ -31,7 +31,7 @@ the calling deployment rather than hard-coding a production value.
 @secure()
 param secretValue string
 
-module kv_secret 'br:mmbicepmoduleregistry.azurecr.io/keyvault-secrets:0.1.2' = {
+module kv_secret 'br:mmbicepmoduleregistry.azurecr.io/keyvault-secrets:1.0.0' = {
   name: '${uniqueString(deployment().name, 'uksouth')}-secret'
   params: {
     keyVaultName: 'az-kv-01'
