@@ -2,9 +2,19 @@
 #   and also a human-readable HTML version.
 name: Publish module index
 on:
-  schedule:
-    - cron: 0 8 1 * * # Run monthly on the first day at 8:00 AM
   workflow_dispatch:
+  workflow_run:
+    workflows:
+      - module-app-configuration
+      - module-appservice
+      - module-keyvault-access-policy
+      - module-keyvault-secrets
+      - module-keyvault
+      - module-sqlserver
+      - module-storage-account
+      - module-virtual-network
+    types:
+      - completed
 
 permissions:
   id-token: write
@@ -19,12 +29,13 @@ concurrency:
 
 jobs:
   upload-index-data:
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v7
         with:
-          fetch-depth: 0 // Needed to fetch all history and tags
+          fetch-depth: 0 # Needed to fetch all history and tags
 
       - name: Install packages
         run: npm ci
@@ -61,6 +72,7 @@ jobs:
           name: index.md
 
   build-index-page:
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     needs: upload-index-data
     steps:
@@ -86,6 +98,7 @@ jobs:
         uses: actions/upload-pages-artifact@v5
 
   deploy-index-page:
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
