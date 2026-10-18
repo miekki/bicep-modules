@@ -46,10 +46,17 @@ jobs:
       - name: Test module release versioning
         run: python3 -m unittest discover -s scripts/release/test -p 'test_module_release.py'
 
+      - name: Resolve module directory for PSRule
+        id: module
+        env:
+          MODULE_FILE_PATH: ${{ inputs.module_file_path }}
+        run: echo "directory=$(dirname "$MODULE_FILE_PATH")" >> "$GITHUB_OUTPUT"
+
       - name: Run PSRule analysis
         uses: microsoft/ps-rule@v2.9.0
         with:
           inputType: inputPath
+          inputPath: ${{ steps.module.outputs.directory }}
           modules: PSRule.Rules.Azure
 
       - name: Sign in to Azure
