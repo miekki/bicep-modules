@@ -1,6 +1,6 @@
 metadata name = 'Storage Account'
 metadata description = 'This module deploy storage account'
-metadata owner = 'MM'
+metadata owner = 'miekki'
 
 @description('Required. Name of Storage Account. Must be unique within Azure.')
 @maxLength(24)
