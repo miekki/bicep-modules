@@ -103,7 +103,8 @@ catalog_assets: /Jekyll/assets
 
 # Module Index
 
-Browse the published Bicep modules by category. 
+Browse the published Bicep modules by category.
+
 Search by module name or description.
 
 <div class="catalog-toolbar">

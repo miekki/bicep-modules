@@ -9,13 +9,13 @@
   --catalog-muted: #44536a;
   --catalog-category-bar: #1f4268;
   --catalog-category-edge: #4b9bff;
-  --catalog-link: #176b4b;
-  --catalog-accent: #177a55;
-  --catalog-accent-soft: #eaf6ef;
-  --catalog-button-background: #177a55;
+  --catalog-link: #1759a6;
+  --catalog-accent: #1f64b2;
+  --catalog-accent-soft: #e8f1fc;
+  --catalog-button-background: #f5f9ff;
   --catalog-hover: #f3f6fc;
-  --catalog-focus: #177a55;
-  --catalog-button-text: #ffffff;
+  --catalog-focus: #1f64b2;
+  --catalog-button-text: #111827;
   --catalog-shadow: 0 14px 36px rgb(27 45 79 / 7%);
 }
 
