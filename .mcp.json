@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "squad_state": {
+      "command": "/Users/maciej/.local/lib/squad/squad",
+      "args": [
+        "state-mcp"
+      ],
+      "env": {},
+      "tools": [
+        "*"
+      ]
+    }
+  }
+}
