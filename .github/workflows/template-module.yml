@@ -56,7 +56,7 @@ jobs:
         uses: microsoft/ps-rule@v2.9.0
         with:
           inputType: inputPath
-          inputPath: ${{ steps.module.outputs.directory }}
+          inputPath: ${{ steps.module.outputs.directory }}/test/main.test.bicep
           modules: PSRule.Rules.Azure
 
       - name: Sign in to Azure

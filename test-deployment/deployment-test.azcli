@@ -28,3 +28,5 @@ az deployment group delete --resource-group $rg_name --name module-testing
 # delete the whole rg 
 az group delete --resource-group $rg_name --yes
 
+# run PSRules for specic module usinf pwsh
+pwsh -Command "Invoke-PSRule -InputPath './modules/storage/storage-account/test/main.test.bicep' -Module 'PSRule.Rules.Azure'"
