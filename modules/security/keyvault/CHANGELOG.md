@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- Add private endpoint deployment and optional private DNS zone groups.
+- Disable public network access by default when private endpoints are configured,
+  and default Key Vault network ACL bypass to `None`.
+- Default soft-delete retention to 90 days and purge protection to enabled.
+- Grant `principalId` the Key Vault Secrets User role when RBAC authorization is
+  enabled, and use an access policy only when RBAC is disabled.
+- Correct the subnet ID used by the network ACL test.
 - Update Key Vault resource references to the latest stable `2026-05-15` API.
 - Update diagnostic settings from stable `2016-09-01` to the latest listed
   `2021-05-01-preview` API because the latest stable version is more than 700
