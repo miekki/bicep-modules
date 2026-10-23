@@ -72,6 +72,10 @@ var varNetworkAcls = {
   virtualNetworkRules: varNetworkAclsVirtualNetworkRules
 }
 
+var effectivePublicNetworkAccess = !empty(publicNetworkAccess)
+  ? publicNetworkAccess
+  : (!empty(privateEndpoints) ? 'Disabled' : 'Enabled')
+
 // Resolve the supported built-in role display names to IDs; other values are treated as role IDs or GUIDs.
 var builtInRoleNames = {
   Contributor: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', 'b24988ac-6180-42a0-ab88-20f7382dd24c')
@@ -157,9 +161,7 @@ resource keyVault 'Microsoft.KeyVault/vaults@2026-05-15' = {
     }
     tenantId: subscription().tenantId
     networkAcls: varNetworkAcls
-    publicNetworkAccess: !empty(publicNetworkAccess)
-      ? publicNetworkAccess
-      : (!empty(privateEndpoints) ? 'Disabled' : 'Enabled')
+    publicNetworkAccess: effectivePublicNetworkAccess
   }
 }
 
@@ -280,8 +282,20 @@ type networkAclsType = {
   subnetIds: string[]?
 }
 
+// **********************************
+// Assertions
+// **********************************
+
 assert lockBehaviorMatchesInput = lock == null
   ? !keyVaultLockEnabled && keyVaultLockProperties.level == 'None' && keyVaultLockProperties.notes == 'Cannot delete or modify the resource or child resources.'
   : keyVaultLockEnabled == (lock.?kind != 'None') && keyVaultLockProperties.level == lock.?kind && keyVaultLockProperties.notes == (lock.?notes ?? (lock.?kind == 'CanNotDelete'
       ? 'Cannot delete resource or child resources.'
       : 'Cannot delete or modify the resource or child resources.'))
+
+assert networkAclsDefaultActionMatchesInput = varNetworkAcls.defaultAction == networkAcls.defaultAction
+assert networkAclsBypassMatchesInput = varNetworkAcls.bypass == (networkAcls.?bypass ?? 'None')
+assert networkAclIpRuleCountMatchesInput = length(varNetworkAcls.ipRules) == length(networkAcls.?ipAllowlist ?? [])
+assert networkAclSubnetRuleCountMatchesInput = length(varNetworkAcls.virtualNetworkRules) == length(networkAcls.?subnetIds ?? [])
+assert publicNetworkAccessMatchesInput = effectivePublicNetworkAccess == (!empty(publicNetworkAccess)
+  ? publicNetworkAccess
+  : (!empty(privateEndpoints) ? 'Disabled' : 'Enabled'))

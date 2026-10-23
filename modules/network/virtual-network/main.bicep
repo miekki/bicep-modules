@@ -173,6 +173,10 @@ output subnetResourceIds array = [
   for subnet in subnets: az.resourceId('Microsoft.Network/virtualNetworks/subnets', name, subnet.name)
 ]
 
+// **********************************
+// Assertions
+// **********************************
+
 assert virtualNetworkNameMatchesInput = virtualNetwork.name == name
 assert virtualNetworkIdMatchesName = virtualNetwork.id == az.resourceId('Microsoft.Network/virtualNetworks', name)
 assert addressPrefixesMatchInput = virtualNetworkProperties.addressSpace.addressPrefixes == addressPrefixes

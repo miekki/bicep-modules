@@ -35,3 +35,30 @@ test kv_fullParameters '../main.bicep' = {
     }
   }
 }
+
+test kv_customConfiguration '../main.bicep' = {
+  params: {
+    name: 'kv-custom'
+    location: 'uksouth'
+    tags: {
+      env: 'test'
+    }
+    softDeleteRetentionInDays: 30
+    enablePurgeProtection: false
+    enableRbacAuthorization: true
+    skuName: 'premium'
+    skuFamily: 'A'
+    networkAcls: {
+      defaultAction: 'Allow'
+      bypass: 'None'
+      ipAllowlist: [
+        '192.0.2.10'
+        '198.51.100.0/24'
+      ]
+      subnetIds: [
+        '/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg-test/providers/Microsoft.Network/virtualNetworks/vnet-test/subnets/subnet-test'
+      ]
+    }
+    publicNetworkAccess: 'Disabled'
+  }
+}
