@@ -3,6 +3,8 @@ metadata description = 'Deploys an Azure Key Vault with configurable authorizati
 metadata owner = 'MM'
 
 @description('Required. Name of Key Vault.')
+@minLength(3)
+@maxLength(24)
 param name string
 
 @description('Required. Location for all resources.')
@@ -10,6 +12,8 @@ param location string
 
 @description('Required. Tags to apply to the Key Vault and, unless overridden, its private endpoints.')
 param tags object
+
+param secrets secretType?
 
 @description('Optional. Specifies whether soft delete should be enabled for the Key Vault. The default is true.')
 param enableSoftDelete bool = true
@@ -61,6 +65,7 @@ param roleAssignments roleAssignmentType[]?
 // **********************************
 // variables
 // **********************************
+
 var varNetworkAclsIpRules = [for ip in networkAcls.?ipAllowlist ?? []: { value: ip }]
 
 var varNetworkAclsVirtualNetworkRules = [for subnet in networkAcls.?subnetIds ?? []: { id: subnet }]
@@ -165,6 +170,23 @@ resource keyVault 'Microsoft.KeyVault/vaults@2026-05-15' = {
   }
 }
 
+module keyVault_secrets '../keyvault-secrets/main.bicep' = [
+  for (secret, index) in (secrets ?? []): {
+    name: '${uniqueString(deployment().name, location)}-KeyVault-Secret-${index}'
+    params: {
+      name: secret.name
+      value: secret.value
+      keyVaultName: keyVault.name
+      enabled: secret.?attributes.?enabled
+      expiryDateInSeconds: secret.?attributes.?exp
+      notBeforeDateInSecounds: secret.?attributes.?nbf
+      contentType: secret.?contentType
+      tags: secret.?tags ?? tags
+      roleAssignments: secret.?roleAssignments
+    }
+  }
+]
+
 module keyVault_privateEndpoints '../../network/private-endpoint/main.bicep' = [
   for (privateEndpoint, index) in (privateEndpoints ?? []): {
     name: '${uniqueString(deployment().name, location)}-keyVault-PrivateEndpoint-${index}'
@@ -215,6 +237,12 @@ module keyVault_privateEndpoints '../../network/private-endpoint/main.bicep' = [
       ipConfigurations: privateEndpoint.?ipConfigurations
       applicationSecurityGroupResourceIds: privateEndpoint.?applicationSecurityGroupResourceIds
       customNetworkInterfaceName: privateEndpoint.?customNetworkInterfaceName
+      //Private DNS zone in this same resource group
+      privateDnsZoneName: privateEndpoint.?privateDnsZoneName
+      privateDnsARecordName: !empty(privateEndpoint.?privateDnsZoneName) ? keyVault.name : null
+      numberOfIps: 1
+      // Existing Private DNS zone in this same or other resource group
+      privateDnsZoneId: privateEndpoint.?privateDnsZoneId
     }
   }
 ]
@@ -251,6 +279,7 @@ resource keyVault_roleAssignments 'Microsoft.Authorization/roleAssignments@2022-
     scope: keyVault
   }
 ]
+
 // **********************************
 // Outputs
 // **********************************
@@ -281,6 +310,37 @@ type networkAclsType = {
   @description('Sets the virtual network rules.')
   subnetIds: string[]?
 }
+
+@export()
+@description('The type for a secret output.')
+type secretType = {
+  @description('Required. The name of the secret.')
+  name: string
+
+  @description('Optional. Resource tags.')
+  tags: object?
+
+  @description('Optional. Contains attributes of the secret.')
+  attributes: {
+    @description('Optional. Defines whether the secret is enabled or disabled.')
+    enabled: bool?
+
+    @description('Optional. Defines when the secret will become invalid. Defined in seconds since 1970-01-01T00:00:00Z.')
+    exp: int?
+
+    @description('Optional. If set, defines the date from which onwards the secret becomes valid. Defined in seconds since 1970-01-01T00:00:00Z.')
+    nbf: int?
+  }?
+  @description('Optional. The content type of the secret.')
+  contentType: string?
+
+  @description('Required. The value of the secret. NOTE: "value" will never be returned from the service, as APIs using this model are is intended for internal use in ARM deployments. Users should use the data-plane REST service for interaction with vault secrets.')
+  @secure()
+  value: string
+
+  @description('Optional. Array of role assignments to create.')
+  roleAssignments: roleAssignmentType[]?
+}[]?
 
 // **********************************
 // Assertions

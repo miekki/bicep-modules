@@ -76,23 +76,17 @@ type privateEndpointIpConfigurationType = {
 @export()
 @description('An AVM-aligned type for a private endpoint. To be used if the private endpoint\'s default service / groupId can be assumed (i.e., for services that only have one Private Endpoint type like \'vault\' for key vault).')
 type privateEndpointSingleServiceType = {
+  @description('Required. Resource ID of the subnet where the endpoint needs to be created.')
+  subnetResourceId: string
+
   @description('Optional. The name of the Private Endpoint.')
   name: string?
 
   @description('Optional. The location to deploy the Private Endpoint to.')
   location: string?
 
-  @description('Optional. The name of the private link connection to create.')
-  privateLinkServiceConnectionName: string?
-
   @description('Optional. The subresource to deploy the Private Endpoint for. For example "vault" for a Key Vault Private Endpoint.')
   service: string?
-
-  @description('Required. Resource ID of the subnet where the endpoint needs to be created.')
-  subnetResourceId: string
-
-  @description('Optional. The resource ID of the Resource Group the Private Endpoint will be created in. If not specified, the Resource Group of the provided Virtual Network Subnet is used.')
-  resourceGroupResourceId: string?
 
   @description('Optional. The private DNS Zone Group to configure for the Private Endpoint.')
   privateDnsZoneGroup: privateEndpointPrivateDnsZoneGroupType?
@@ -124,6 +118,18 @@ type privateEndpointSingleServiceType = {
 
   @description('Optional. Tags to be applied on all resources/Resource Groups in this deployment.')
   tags: object?
+
+  @description('Optional. The name of the private link connection to create.')
+  privateLinkServiceConnectionName: string?
+
+  @description('Optional. The resource ID of the Resource Group the Private Endpoint will be created in. If not specified, the Resource Group of the provided Virtual Network Subnet is used.')
+  resourceGroupResourceId: string?
+
+  @description('Optional. The name of the private DNS zone to assosiate with private endpoint.')
+  privateDnsZoneName: string?
+
+  @description('Optional. ID of the prvate DNS Zone. Use this if teh PDZ is in another resource group.')
+  privateDnsZoneId: string?
 }
 
 @export()

@@ -141,9 +141,50 @@ module kv 'br:mmbicepmoduleregistry.azurecr.io/keyvault:1.0.0' = {
 
 ### Example 2
 
-Deploy a Key Vault with an IP allowlist, a private endpoint with a private DNS zone group, and a role assignment granting a principal the Key Vault Secrets User role.
+Deploy a Key Vault with a private endpoint with a private DNS zone group, and a role assignment granting a principal the Key Vault Secrets User role.
 
 ```bicep
+module vnet 'br:mmbicepmoduleregistry.azurecr.io/virtual-network:1.0.0' = {
+  name: '${uniqueString(deployment().name, 'uksouth')}-vnet'
+  params: {
+    name: 'az-vnet-01'
+    location: 'uksouth'
+    tags: {
+      environment: 'production'
+    }
+    addressPrefixes: [
+      '10.0.0.0/16'
+    ]
+    subnets: [
+      {
+        name: 'EndpointSubnet'
+        addressPrefix: '10.0.1.0/24'
+      }
+    ]
+  }
+}
+
+module kvPrivateDnsZone 'br:mmbicepmoduleregistry.azurecr.io/private-dns-zone:1.0.0' = {
+  name: '${uniqueString(deployment().name, 'uksouth')}-pep'
+  params: {
+    name: 'private.vaultcore.azure.net'
+    location: 'global'
+    tags: {
+      environment: 'production'
+    }
+    virtualNetworkLinks: [
+      {
+        registrationEnabled: false
+        virtualNetworkResourceId: vnet.outputs.resourceId
+      }
+    ]
+  }
+}
+
+param baseTime string = utcNow('u')
+// Set the expiry date to 1 year from today
+var secretsExpiryDate = dateTimeToEpoch(dateTimeAdd(baseTime, 'P1Y'))
+
 module kv 'br:mmbicepmoduleregistry.azurecr.io/keyvault:1.0.0' = {
   name: '${uniqueString(deployment().name, 'uksouth')}-kv'
   params: {
@@ -152,20 +193,35 @@ module kv 'br:mmbicepmoduleregistry.azurecr.io/keyvault:1.0.0' = {
     tags: {
       environment: 'production'
     }
-    networkAcls: {
-      defaultAction: 'Deny'
-      ipAllowlist: ['192.0.2.0/24']
-    }
+    secrets: [
+      {
+        name: 'My Secret 1'
+        value: 'My Secret value 1'
+        tags: tags
+      }
+      {
+        name: 'My Secret 2'
+        value: 'My Secret value 2'
+        tags: tags
+        attributes: {
+          enabled: true
+          exp: secretsExpiryDate
+        }
+      }
+    ]
     privateEndpoints: [
       {
-        subnetResourceId: '/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/network-rg/providers/Microsoft.Network/virtualNetworks/vnet/subnets/private-endpoints'
+        subnetResourceId: vnet.outputs.subnetResourceIds[0]
+        privateDnsZoneName: kvPrivateDnsZone.outputs.name
         privateDnsZoneGroup: {
           privateDnsZoneGroupConfigs: [
             {
-              privateDnsZoneResourceId: '/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/network-rg/providers/Microsoft.Network/privateDnsZones/privatelink.vaultcore.azure.net'
+              name: 'privateDnsZone'
+              privateDnsZoneResourceId: kvPrivateDnsZone.outputs.resourceId
             }
           ]
         }
+        privateLinkServiceConnectionName: 'az-kv-01-pls'
       }
     ]
     roleAssignments: [
