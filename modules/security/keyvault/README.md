@@ -234,3 +234,120 @@ module kv 'br:mmbicepmoduleregistry.azurecr.io/keyvault:1.0.0' = {
   }
 }
 ```
+
+### Example 3
+
+This is deployments this same resources what in previus example but vnet and private endpoint lives in another resource gorup then the application.
+
+```bicep
+resource rg 'Microsoft.Resources/resourceGroups@2025-04-01' = {
+  name: 'my-app-rg'
+  location: 'uksouth'
+  tags: {
+      environment: 'production'
+    }
+}
+
+resource vnet_rg 'Microsoft.Resources/resourceGroups@2025-04-01' = {
+  name: 'my-app-vnet-rg'
+  location: 'uksouth'
+  tags: {
+      environment: 'production'
+    }
+}
+
+module vnet 'br:mmbicepmoduleregistry.azurecr.io/virtual-network:1.0.0' = {
+  name: '${uniqueString(deployment().name, 'uksouth')}-vnet'
+  scope: vnet_rg
+  params: {
+    name: 'az-vnet-01'
+    location: 'uksouth'
+    tags: {
+      environment: 'production'
+    }
+    addressPrefixes: [
+      '10.0.0.0/16'
+    ]
+    subnets: [
+      {
+        name: 'EndpointSubnet'
+        addressPrefix: '10.0.1.0/24'
+      }
+    ]
+  }
+}
+
+module kvPrivateDnsZone 'br:mmbicepmoduleregistry.azurecr.io/private-dns-zone:1.0.0' = {
+  name: '${uniqueString(deployment().name, 'uksouth')}-pep'
+  scope: vnet_rg
+  params: {
+    name: 'private.vaultcore.azure.net'
+    location: 'global'
+    tags: {
+      environment: 'production'
+    }
+    virtualNetworkLinks: [
+      {
+        registrationEnabled: false
+        virtualNetworkResourceId: vnet.outputs.resourceId
+      }
+    ]
+  }
+}
+
+param baseTime string = utcNow('u')
+// Set the expiry date to 1 year from today
+var secretsExpiryDate = dateTimeToEpoch(dateTimeAdd(baseTime, 'P1Y'))
+
+module kv 'br:mmbicepmoduleregistry.azurecr.io/keyvault:1.0.0' = {
+  name: '${uniqueString(deployment().name, 'uksouth')}-kv'
+  scope: rg
+  params: {
+    name: 'az-kv-01'
+    location: 'uksouth'
+    tags: {
+      environment: 'production'
+    }
+    secrets: [
+      {
+        name: 'My Secret 1'
+        value: 'My Secret value 1'
+        tags: tags
+      }
+      {
+        name: 'My Secret 2'
+        value: 'My Secret value 2'
+        tags: tags
+        attributes: {
+          enabled: true
+          exp: secretsExpiryDate
+        }
+      }
+    ]
+    privateEndpoints: [
+      {
+        subnetResourceId: vnet.outputs.subnetResourceIds[0]
+        // We need to use the ZoneId not ZoneName to point to resource in anothere resource group
+        // privateDnsZoneName: kvPrivateDnsZone.outputs.name
+        privateDnsZoneId: kvPrivateDnsZone.outputs.resourceId
+        privateDnsZoneGroup: {
+          privateDnsZoneGroupConfigs: [
+            {
+              name: 'privateDnsZone'
+              privateDnsZoneResourceId: kvPrivateDnsZone.outputs.resourceId
+            }
+          ]
+        }
+        privateLinkServiceConnectionName: 'az-kv-01-pls'
+      }
+    ]
+    roleAssignments: [
+      {
+        roleDefinitionIdOrName: 'Key Vault Secrets User'
+        principalId: '00000000-0000-0000-0000-000000000000'
+        principalType: 'User'
+      }
+    ]
+  }
+}
+```
