@@ -1,4 +1,4 @@
-// key vault with monimal required parameters
+// key vault with minimal required parameters
 test kv_requiredParameters '../main.bicep' = {
   params: {
     name: 'kv-minimal'
@@ -9,6 +9,7 @@ test kv_requiredParameters '../main.bicep' = {
   }
 }
 
+// key vault with full parameters
 test kv_fullParameters '../main.bicep' = {
   params: {
     name: 'kv-full'
