@@ -1,0 +1,27 @@
+name: module-virtual-network
+concurrency:
+  group: ${{ github.workflow }}
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - "modules/network/network-interface-get-ip/**"
+
+permissions:
+  id-token: write
+  contents: write
+
+jobs:
+  call-shared-workflow:
+    name: Run
+    uses: ./.github/workflows/template-module.yml
+    with:
+      module_name: network-interface-get-ip
+      module_file_path: modules/network/network-interface-get-ip/main.bicep
+      module_baseline_file_path: modules/network/network-interface-get-ip/metadata.json
+      release_base_sha: ${{ github.event.before }}
+      module_parameters: name=test-vnet id='00000000-0000-0000-0000-000000000000'
+    secrets: inherit
