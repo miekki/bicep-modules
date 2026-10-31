@@ -23,5 +23,5 @@ jobs:
       module_file_path: modules/security/keyvault/main.bicep
       module_baseline_file_path: modules/security/keyvault/metadata.json
       release_base_sha: ${{ github.event.before }}
-      module_parameters: name=test-keyvault tags='{"env":"dev"}' location=uksouth workspaceId=1
+      module_parameters: name=test-keyvault tags='{"env":"dev"}' location=uksouth
     secrets: inherit

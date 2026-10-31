@@ -1,0 +1,31 @@
+# Below are some examples on how to use bicep modules for this module
+# Please login using az cli and set up destination subscripton
+
+# az login
+az account show
+
+# **************************************************
+# 1. Deploy module using requred parameters only. 
+#
+# - deploy resource group 
+# - deploy keyvault
+# - add secrest to the key vault
+
+export location="uksouth"
+export stackName="keyvault-requried-params"
+export templateFile=modules/security/keyvault/examples/requaried-parameters/main.bicep
+az stack sub create --name $stackName --location $location --template-file $templateFile --deny-settings-mode None --action-on-unmanage deleteAll
+
+
+# **************************************************
+# 2. Deploy module using all availbale paramaters. 
+#
+# - deploy resource group 
+# - deploy keyvault
+# - deploy private endoind
+# - set role assignmnets 
+
+export location="uksouth"
+export stackName="keyvault-full-params"
+export templateFile=modules/security/keyvault/examples/full-parameters/main.bicep
+az stack sub create --name $stackName --location $location --template-file $templateFile --deny-settings-mode None --action-on-unmanage deleteAll
