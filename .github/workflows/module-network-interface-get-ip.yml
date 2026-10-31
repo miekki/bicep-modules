@@ -1,4 +1,4 @@
-name: module-virtual-network
+name: module-network-interface-get-ip
 concurrency:
   group: ${{ github.workflow }}
 
