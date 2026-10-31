@@ -1,15 +1,23 @@
-@description('Name of the existing Key Vault used by the test deployment.')
-param keyVaultName string = 'test-keyvault'
-
-@description('Generates a disposable test value; never use this fixture for a real secret.')
-@secure()
-param secretValue string = newGuid()
-
-module secret '../main.bicep' = {
-  name: '${uniqueString(deployment().name, keyVaultName)}-secret'
+// key vault secrets with required parameters
+test kv_secrets_requiredParameters '../main.bicep' = {
   params: {
-    keyVaultName: keyVaultName
-    secretName: 'psrule-test-secret'
-    secretValue: secretValue
+    keyVaultName: 'my-kv'
+    name: 'kv-secrets-name'
+    value: 'kv secrets value'
+  }
+}
+
+// key vault secrets with full parameters
+test kv_secrets_fullParameters '../main.bicep' = {
+  params: {
+    keyVaultName: 'my-kv'
+    name: 'kv-secrets-full-name'
+    value: 'kv full secrets name'
+    tags: {
+      env: 'dev'
+    }
+    enabled: true
+    expiryDateInSeconds: 1
+    notBeforeDateInSecounds: 12
   }
 }
