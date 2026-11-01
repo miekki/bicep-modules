@@ -7,9 +7,11 @@ const { ContainerRegistryClient } = require("@azure/container-registry");
 const { DefaultAzureCredential } = require("@azure/identity");
 require("dotenv").config();
 
-async function getSubdirNames(fs, dir) {
+async function getSubdirNames(fs, dir, excludedFolderNames = []) {
   var files = await fs.readdir(dir, { withFileTypes: true });
-  return files.filter((x) => x.isDirectory()).map((x) => x.name);
+  return files
+    .filter((x) => x.isDirectory() && !excludedFolderNames.includes(x.name))
+    .map((x) => x.name);
 }
 
 async function getModuleDescription(
@@ -137,7 +139,9 @@ async function generateModuleIndexData({ require, github, context, core }) {
 
   for (const moduleGroup of await getSubdirNames(fs, "modules")) {
     const moduleGroupPath = `modules/${moduleGroup}`;
-    const moduleNames = await getSubdirNames(fs, moduleGroupPath);
+    const moduleNames = await getSubdirNames(fs, moduleGroupPath, [
+      "internal-modules",
+    ]);
 
     for (const moduleName of moduleNames) {
       const modulePath = `${moduleGroupPath}/${moduleName}`;

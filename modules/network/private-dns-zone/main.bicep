@@ -68,7 +68,7 @@ resource privateDnsZone 'Microsoft.Network/privateDnsZones@2024-06-01' = {
   tags: tags
 }
 
-module privateDnsZone_A '../private-dns-zone-a-record/main.bicep' = [
+module privateDnsZone_A '../internal-modules/private-dns-zone-a-record/main.bicep' = [
   for (aRecord, index) in (a ?? []): {
     name: '${uniqueString(deployment().name, location)}-PrivateDnsZone-ARecord-${index}'
     params: {
@@ -82,7 +82,7 @@ module privateDnsZone_A '../private-dns-zone-a-record/main.bicep' = [
   }
 ]
 
-module privateDnsZone_virtualNetworkLinks '../private-dns-zone-virtual-network-link/main.bicep' = [
+module privateDnsZone_virtualNetworkLinks '../internal-modules/private-dns-zone-virtual-network-link/main.bicep' = [
   for (virtualNetworkLink, index) in (virtualNetworkLinks ?? []): {
     name: '${uniqueString(deployment().name, location)}-PrivateDnsZone-VNetLink-${index}'
     params: {

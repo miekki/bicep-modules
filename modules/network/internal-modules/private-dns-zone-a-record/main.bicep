@@ -20,7 +20,7 @@ param metadata resourceInput<'Microsoft.Network/privateDnsZones/A@2024-06-01'>.p
 @description('Optional. The TTL (time-to-live) of the records in the record set.')
 param ttl int = 3600
 
-import { roleAssignmentType } from '../../common-types/main.bicep'
+import { roleAssignmentType } from '../../../common-types/main.bicep'
 @sys.description('Optional. Array of role assignments to create.')
 param roleAssignments roleAssignmentType[]?
 
