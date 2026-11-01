@@ -49,6 +49,7 @@ module privateDnsZone '../../../../../modules/network/private-dns-zone/main.bice
         name: 'hub-vnet-link'
         virtualNetworkResourceId: vnet.outputs.resourceId
         registrationEnabled: false
+        resolutionPolicy: 'NxDomainRedirect'
       }
     ]
     a: [

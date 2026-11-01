@@ -20,6 +20,9 @@ param location string = 'global'
 @description('Optional. Is auto-registration of virtual machine records in the virtual network in the Private DNS zone enabled?.')
 param registrationEnabled bool = false
 
+@description('Optional. The resolution policy for the virtual network link.')
+param resolutionPolicy resourceInput<'Microsoft.Network/privateDnsZones/virtualNetworkLinks@2024-06-01'>.properties.resolutionPolicy?
+
 // **********************************
 // Resources
 // **********************************
@@ -28,18 +31,25 @@ resource privateDnsZone 'Microsoft.Network/privateDnsZones@2024-06-01' existing 
   name: privateDnsZoneName
 }
 
+var virtualNetworkLinkProperties = union(
+  {
+    registrationEnabled: registrationEnabled
+    virtualNetwork: {
+      id: virtualNetworkResourceId
+    }
+  },
+  !empty(resolutionPolicy) ? { resolutionPolicy: resolutionPolicy } : {}
+)
+
 resource virtualNetworkLink 'Microsoft.Network/privateDnsZones/virtualNetworkLinks@2024-06-01' = {
   name: name
   parent: privateDnsZone
   location: location
   tags: tags
-  properties: {
-    registrationEnabled: registrationEnabled
-    virtualNetwork: {
-      id: virtualNetworkResourceId
-    }
-  }
+  properties: virtualNetworkLinkProperties
 }
+
+assert resolutionPolicyMatchesInput = virtualNetworkLinkProperties.?resolutionPolicy == resolutionPolicy
 
 // **********************************
 // Outputs

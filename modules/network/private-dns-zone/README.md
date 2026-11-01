@@ -29,7 +29,7 @@ The module targets the stable `Microsoft.Network/privateDnsZones@2024-06-01` API
 | `location` | `string` | No | Region for the link resource; defaults to `'global'`. |
 | `registrationEnabled` | `bool` | No | Whether automatic registration for the linked virtual network is enabled. |
 | `tags` | `object` | No | Tags applied to the virtual network link. |
-| `resolutionPolicy` | `'Default' \| 'NxDomainRedirect'` | No | Fallback resolution policy for the private DNS zone. |
+| `resolutionPolicy` | `'Default' \| 'NxDomainRedirect'` | No | Optional fallback resolution policy applied to the virtual network link when specified. |
 
 ### Parameter: `a`
 

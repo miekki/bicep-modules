@@ -97,6 +97,7 @@ module privateDnsZone_virtualNetworkLinks '../internal-modules/private-dns-zone-
       virtualNetworkResourceId: virtualNetworkLink.virtualNetworkResourceId
       location: virtualNetworkLink.?location ?? 'global'
       registrationEnabled: virtualNetworkLink.?registrationEnabled ?? false
+      resolutionPolicy: virtualNetworkLink.?resolutionPolicy
       tags: virtualNetworkLink.?tags ?? tags
     }
   }
