@@ -1,65 +1,56 @@
-@description('Optional. The location to deploy resources to.')
-param location string = resourceGroup().location
-
-@description('Optional. The resource ID of the Log Analytics workspace for diagnostic settings.')
-param workspaceId string = resourceId('Microsoft.OperationalInsights/workspaces', 'test-workspace')
-
-var uniqueName = 'appconfig-${uniqueString(resourceGroup().id, deployment().name, location)}'
-var secondaryLocation = location == 'westus2' ? 'eastus2' : 'westus2'
-
-var tags = {
-  environment: 'test'
-}
-
-var keyValueTestTags = union(tags, {
-  psRuleException: 'key-values-require-local-auth'
-})
-
-var diagnosticSettings = {
-  workspaceId: workspaceId
-  logs: [
-    {
-      category: null
-      categoryGroup: 'audit'
-      enabled: true
+test minimumConfiguration_defaults '../main.bicep' = {
+  params: {
+    name: 'appconfig-unit-test-minimum'
+    location: 'uksouth'
+    tags: {
+      environment: 'test'
     }
-  ]
-}
-
-var replicaLocations = [
-  {
-    name: 'secondary'
-    replicaLocation: secondaryLocation
-  }
-]
-
-module minimumConfiguration '../main.bicep' = {
-  name: '${uniqueString(deployment().name, location)}-minimum'
-  params: {
-    name: uniqueName
-    location: location
-    tags: tags
-    diagnosticSettings: diagnosticSettings
-    replicaLocations: replicaLocations
   }
 }
 
-module configurationWithKeyValues '../main.bicep' = {
-  name: '${uniqueString(deployment().name, location)}-key-values'
+test configurationWithOptionalSettings '../main.bicep' = {
   params: {
-    name: '${uniqueName}-kv'
-    location: location
-    tags: keyValueTestTags
-    // disableLocalAuth: false
-    diagnosticSettings: diagnosticSettings
-    replicaLocations: replicaLocations
-    keyValues: [
+    name: 'appconfig-unit-test-optional-settings'
+    location: 'uksouth'
+    tags: {
+      environment: 'test'
+    }
+    diagnosticSettings: {
+      workspaceId: '/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/test/providers/Microsoft.OperationalInsights/workspaces/test'
+      logs: [
+        {
+          categoryGroup: 'audit'
+          enabled: true
+        }
+      ]
+    }
+    replicaLocations: [
       {
-        name: 'test-key'
-        value: 'test-value'
-        contentType: 'text/plain'
-        tags: tags
+        name: 'secondary'
+        replicaLocation: 'eastus2'
       }
     ]
+  }
+}
+
+test freeSkuDefaults '../main.bicep' = {
+  params: {
+    name: 'appconfig-unit-test-free'
+    location: 'uksouth'
+    tags: {
+      environment: 'test'
+    }
+    sku: 'Free'
+  }
+}
+
+test explicitPublicNetworkAccess '../main.bicep' = {
+  params: {
+    name: 'appconfig-unit-test-public-access'
+    location: 'uksouth'
+    tags: {
+      environment: 'test'
+    }
+    publicNetworkAccess: 'Disabled'
   }
 }

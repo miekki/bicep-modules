@@ -1,0 +1,30 @@
+name: module-app-configuration-key-value
+concurrency:
+  group: ${{ github.workflow }}
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - "modules/config/app-configuration-key-value/**"
+
+permissions:
+  id-token: write
+  contents: write
+
+jobs:
+  call-shared-workflow:
+    name: Run
+    uses: ./.github/workflows/template-module.yml
+    permissions:
+      id-token: write
+      contents: write
+    with:
+      module_name: app-configuration-key-value
+      module_file_path: modules/config/app-configuration-key-value/main.bicep
+      module_baseline_file_path: modules/config/app-configuration-key-value/metadata.json
+      release_base_sha: ${{ github.event.before }}
+      module_parameters: appConfigurationName=test-app-config name=key1 value='sample value'
+    secrets: inherit

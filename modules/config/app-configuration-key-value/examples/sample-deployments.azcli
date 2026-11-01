@@ -1,0 +1,17 @@
+# Log in and select the target subscription before deployment.
+az login
+az account show
+
+# Deploy a key-value with only the required parameters.
+export location="uksouth"
+export stackName="appconfiguration-keyvalue-required-params"
+export templateFile=modules/config/app-configuration-key-value/examples/required-parameters/main.bicep
+
+az stack sub create --name $stackName --location $location --template-file $templateFile --deny-settings-mode None --action-on-unmanage deleteAll
+
+# Deploy a key-value with all module parameters.
+export location="uksouth"
+export stackName="appconfiguration-keyvalue-full-params"
+export templateFile=modules/config/app-configuration-key-value/examples/full-parameters/main.bicep
+
+az stack sub create --name $stackName --location $location --template-file $templateFile --deny-settings-mode None --action-on-unmanage deleteAll

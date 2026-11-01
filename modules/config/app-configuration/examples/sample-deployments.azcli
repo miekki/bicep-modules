@@ -1,0 +1,17 @@
+# Log in and select the target subscription before deployment.
+az login
+az account show
+
+# Deploy the store with only its required parameters.
+export location="uksouth"
+export stackName="appconfiguration-required-params"
+export templateFile=modules/config/app-configuration/examples/required-parameters/main.bicep
+
+az stack sub create --name $stackName --location $location --template-file $templateFile --deny-settings-mode None --action-on-unmanage deleteAll
+
+# Deploy the store with all parameters, including diagnostics and a replica.
+export location="uksouth"
+export stackName="appconfiguration-full-params"
+export templateFile=modules/config/app-configuration/examples/full-parameters/main.bicep
+
+az stack sub create --name $stackName --location $location --template-file $templateFile --deny-settings-mode None --action-on-unmanage deleteAll
