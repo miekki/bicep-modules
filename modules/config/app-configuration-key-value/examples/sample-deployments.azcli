@@ -1,0 +1,30 @@
+# Log in and select the target subscription before deployment.
+az login
+az account show
+
+export location="uksouth"
+export resourceGroupName="rg-appconfiguration-key-value-samples"
+export appConfigurationName="appconfig-keyvalue-sample"
+
+az group create --name "$resourceGroupName" --location "$location"
+az appconfig create \
+  --name "$appConfigurationName" \
+  --resource-group "$resourceGroupName" \
+  --location "$location" \
+  --sku Standard
+
+# Deploy a key-value with only the required parameters.
+az deployment group create \
+  --resource-group "$resourceGroupName" \
+  --name "appconfiguration-keyvalue-required-parameters" \
+  --template-file "modules/config/app-configuration-key-value/examples/required-parameters/main.bicep" \
+  --parameters appConfigurationName="$appConfigurationName" name="sample-key" value="sample value"
+
+# Deploy a key-value with all module parameters.
+az deployment group create \
+  --resource-group "$resourceGroupName" \
+  --name "appconfiguration-keyvalue-full-parameters" \
+  --template-file "modules/config/app-configuration-key-value/examples/full-parameters/main.bicep" \
+  --parameters appConfigurationName="$appConfigurationName" \
+    name="sample-key-with-metadata" value="sample value" contentType="text/plain" \
+    tags='{"environment":"sample","owner":"platform"}'

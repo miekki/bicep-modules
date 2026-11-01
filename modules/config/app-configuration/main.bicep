@@ -145,6 +145,12 @@ var formattedRoleAssignments = [
   })
 ]
 
+var effectiveEnablePurgeProtection = sku == 'Free' || sku == 'Developer' ? false : enablePurgeProtection
+var effectiveSoftDeleteRetentionInDays = sku == 'Free' || sku == 'Developer' ? 0 : softDeleteRetentionInDays
+var effectivePublicNetworkAccess = !empty(publicNetworkAccess)
+  ? any(publicNetworkAccess)
+  : (!empty(privateEndpoints) ? 'Disabled' : 'Enabled')
+
 // **********************************
 // Resources
 // **********************************
@@ -160,11 +166,9 @@ resource configurationStore 'Microsoft.AppConfiguration/configurationStores@2025
   properties: {
     createMode: createMode
     disableLocalAuth: disableLocalAuth
-    enablePurgeProtection: sku == 'Free' || sku == 'Developer' ? false : enablePurgeProtection
-    publicNetworkAccess: !empty(publicNetworkAccess)
-      ? any(publicNetworkAccess)
-      : (!empty(privateEndpoints) ? 'Disabled' : 'Enabled')
-    softDeleteRetentionInDays: sku == 'Free' || sku == 'Developer' ? 0 : softDeleteRetentionInDays
+    enablePurgeProtection: effectiveEnablePurgeProtection
+    publicNetworkAccess: effectivePublicNetworkAccess
+    softDeleteRetentionInDays: effectiveSoftDeleteRetentionInDays
     dataPlaneProxy: !empty(dataPlaneProxy)
       ? {
           authenticationMode: dataPlaneProxy.?authenticationMode ?? 'Pass-through'
@@ -188,8 +192,10 @@ resource configurationStore_diagnosticSettings 'Microsoft.Insights/diagnosticSet
   name: 'appconfig-diagnostics'
   scope: configurationStore
   properties: {
-    workspaceId: diagnosticSettings!.workspaceId
-    logs: diagnosticSettings!.logs
+    // The resource is conditional; this fallback only supports static evaluation when diagnostics are omitted.
+    #disable-next-line use-resource-id-functions
+    workspaceId: diagnosticSettings.?workspaceId ?? resourceId('Microsoft.OperationalInsights/workspaces', 'unused-workspace')
+    logs: diagnosticSettings.?logs ?? []
   }
 }
 
@@ -373,3 +379,19 @@ type diagnosticSettingsType = {
     enabled: bool
   }[]
 }
+
+// **********************************
+// Assertions
+// **********************************
+
+assert purgeProtectionIsDisabledForFreeOrDeveloper = (sku == 'Free' || sku == 'Developer')
+  ? effectiveEnablePurgeProtection == false
+  : effectiveEnablePurgeProtection == enablePurgeProtection
+
+assert softDeleteRetentionIsZeroForFreeOrDeveloper = (sku == 'Free' || sku == 'Developer')
+  ? effectiveSoftDeleteRetentionInDays == 0
+  : effectiveSoftDeleteRetentionInDays == softDeleteRetentionInDays
+
+assert publicNetworkAccessMatchesInputOrPrivateEndpointDefault = effectivePublicNetworkAccess == (!empty(publicNetworkAccess)
+  ? publicNetworkAccess
+  : (!empty(privateEndpoints) ? 'Disabled' : 'Enabled'))

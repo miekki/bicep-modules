@@ -1,0 +1,32 @@
+# Log in and select the target subscription before deployment.
+az login
+az account show
+
+export location="uksouth"
+export resourceGroupName="rg-appconfiguration-samples"
+
+# Create the resource group and workspace required by the full-parameters example.
+az group create --name "$resourceGroupName" --location "$location"
+az monitor log-analytics workspace create \
+  --resource-group "$resourceGroupName" \
+  --workspace-name "law-appconfiguration-samples" \
+  --location "$location"
+export workspaceId="$(az monitor log-analytics workspace show \
+  --resource-group "$resourceGroupName" \
+  --workspace-name "law-appconfiguration-samples" \
+  --query id \
+  --output tsv)"
+
+# Deploy the store with only its required parameters.
+az deployment sub create \
+  --name "appconfiguration-required-parameters" \
+  --location "$location" \
+  --template-file "modules/config/app-configuration/examples/required-parameters/main.bicep" \
+  --parameters resourceGroupName="$resourceGroupName" location="$location"
+
+# Deploy the store with all parameters, including diagnostics and a replica.
+az deployment sub create \
+  --name "appconfiguration-full-parameters" \
+  --location "$location" \
+  --template-file "modules/config/app-configuration/examples/full-parameters/main.bicep" \
+  --parameters resourceGroupName="$resourceGroupName" location="$location" workspaceId="$workspaceId"
