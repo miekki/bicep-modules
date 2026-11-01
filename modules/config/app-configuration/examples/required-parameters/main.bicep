@@ -1,26 +1,27 @@
 targetScope = 'subscription'
 
-@description('The resource group to contain the App Configuration store.')
-param resourceGroupName string = 'rg-appconfiguration-samples'
+param uniqueStr string = substring(uniqueString(subscription().id, utcNow()), 1, 3)
 
-@description('The Azure region for the resource group and store.')
-param location string = 'uksouth'
+var companyName = 'mm'
+var projectName = 'test-bicep'
+var environmentName = 'dev'
+var name = '${companyName}-${projectName}-${environmentName}'
+var tags = { environment: environmentName }
+var storeName = '${name}-${uniqueStr}-${abbrs.appConfigurationConfigurationStores}'
 
-var tags = {
-  environment: 'sample'
-}
+#disable-next-line no-hardcoded-location
+var location string = 'uksouth'
+var abbrs = loadJsonContent('../../../../abbreviations.json')
 
-var storeName = 'appconfig-${uniqueString(subscription().id)}'
-
-resource resourceGroup 'Microsoft.Resources/resourceGroups@2025-04-01' = {
-  name: resourceGroupName
+resource rg 'Microsoft.Resources/resourceGroups@2025-04-01' = {
+  name: '${name}-${abbrs.resourcesResourceGroups}'
   location: location
   tags: tags
 }
 
 module appConfiguration '../../main.bicep' = {
   name: 'appConfigurationRequiredParameters'
-  scope: resourceGroup
+  scope: rg
   params: {
     name: storeName
     location: location

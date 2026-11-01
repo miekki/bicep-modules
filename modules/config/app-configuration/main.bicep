@@ -194,7 +194,10 @@ resource configurationStore_diagnosticSettings 'Microsoft.Insights/diagnosticSet
   properties: {
     // The resource is conditional; this fallback only supports static evaluation when diagnostics are omitted.
     #disable-next-line use-resource-id-functions
-    workspaceId: diagnosticSettings.?workspaceId ?? resourceId('Microsoft.OperationalInsights/workspaces', 'unused-workspace')
+    workspaceId: diagnosticSettings.?workspaceId ?? resourceId(
+      'Microsoft.OperationalInsights/workspaces',
+      'unused-workspace'
+    )
     logs: diagnosticSettings.?logs ?? []
   }
 }

@@ -169,24 +169,4 @@ Each `properties` object has required `groupId`, `memberName`, and
 
 ## Examples
 
-The minimal example uses the three required parameters:
-
-```bicep
-module appConfiguration 'modules/config/app-configuration/main.bicep' = {
-  name: 'appConfiguration'
-  params: {
-    name: 'appconfig-example'
-    location: 'uksouth'
-    tags: {
-      environment: 'sample'
-    }
-  }
-}
-```
-
-See the [required-parameters example](examples/required-parameters/main.bicep),
-[full-parameters example](examples/full-parameters/main.bicep), and
-[sample deployment commands](examples/sample-deployments.azcli) for complete,
-deployable examples. The full example expects an existing Log Analytics
-workspace. For private access, configure `privateEndpoints` and set
-`publicNetworkAccess` to `Disabled`.
+To see examples on how to use this module please check [sample-deployments.azcli](./examples/sample-deployments.azcli)
