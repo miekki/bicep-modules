@@ -6,8 +6,8 @@ on:
   workflow_run:
     workflows:
       - module-app-configuration
+      - module-app-configuration-key-value
       - module-appservice
-      - module-keyvault-access-policy
       - module-keyvault-secrets
       - module-keyvault
       - module-sqlserver
