@@ -13,7 +13,7 @@ param tags object
 @description('Required. Resource ID of the subnet where the endpoint needs to be created.')
 param subnetResourceId string
 
-import { lockType } from '../../common-types/main.bicep'
+import { lockType } from '../../../common-types/main.bicep'
 @description('Optional. The lock settings of the service.')
 param lock lockType?
 
@@ -29,7 +29,7 @@ param ipConfigurations resourceInput<'Microsoft.Network/privateEndpoints@2025-05
 @description('Optional. The private DNS zone group to configure for the private endpoint.')
 param privateDnsZoneGroup privateDnsZoneGroupType?
 
-import { roleAssignmentType } from '../../common-types/main.bicep'
+import { roleAssignmentType } from '../../../common-types/main.bicep'
 @description('Optional. Array of role assignments to create.')
 param roleAssignments roleAssignmentType[]?
 

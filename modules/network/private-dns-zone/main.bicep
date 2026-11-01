@@ -62,15 +62,21 @@ var formattedRoleAssignments = [
 // Resources
 // **********************************
 
-resource privateDnsZone 'Microsoft.Network/privateDnsZones@2024-06-01' = {
+var privateDnsZoneProperties = {
   name: name
   location: location
   tags: tags
 }
 
+resource privateDnsZone 'Microsoft.Network/privateDnsZones@2024-06-01' = {
+  name: privateDnsZoneProperties.name
+  location: privateDnsZoneProperties.location
+  tags: privateDnsZoneProperties.tags
+}
+
 module privateDnsZone_A '../internal-modules/private-dns-zone-a-record/main.bicep' = [
   for (aRecord, index) in (a ?? []): {
-    name: '${uniqueString(deployment().name, location)}-PrivateDnsZone-ARecord-${index}'
+    name: '${uniqueString(privateDnsZone.id, location)}-PrivateDnsZone-ARecord-${index}'
     params: {
       privateDnsZoneName: privateDnsZone.name
       name: aRecord.name
@@ -84,7 +90,7 @@ module privateDnsZone_A '../internal-modules/private-dns-zone-a-record/main.bice
 
 module privateDnsZone_virtualNetworkLinks '../internal-modules/private-dns-zone-virtual-network-link/main.bicep' = [
   for (virtualNetworkLink, index) in (virtualNetworkLinks ?? []): {
-    name: '${uniqueString(deployment().name, location)}-PrivateDnsZone-VNetLink-${index}'
+    name: '${uniqueString(privateDnsZone.id, location)}-PrivateDnsZone-VNetLink-${index}'
     params: {
       privateDnsZoneName: privateDnsZone.name
       name: virtualNetworkLink.?name ?? '${last(split(virtualNetworkLink.virtualNetworkResourceId, '/'))}-vnetlink'
@@ -138,6 +144,19 @@ output name string = privateDnsZone.name
 
 @description('The resource ID of the private DNS zone.')
 output resourceId string = privateDnsZone.id
+
+// **********************************
+// Assertions
+// **********************************
+
+assert privateDnsZoneNameMatchesInput = privateDnsZoneProperties.name == name
+assert privateDnsZoneLocationMatchesInput = privateDnsZoneProperties.location == location
+assert privateDnsZoneTagsMatchInput = privateDnsZoneProperties.tags == tags
+assert lockBehaviorMatchesInput = lock == null
+  ? !privateDnsZoneLockEnabled && privateDnsZoneLockProperties.level == 'None' && privateDnsZoneLockProperties.notes == 'Cannot delete or modify the resource or child resources.'
+  : privateDnsZoneLockEnabled == (lock.?kind != 'None') && privateDnsZoneLockProperties.level == lock.?kind && privateDnsZoneLockProperties.notes == (lock.?notes ?? (lock.?kind == 'CanNotDelete'
+      ? 'Cannot delete resource or child resources.'
+      : 'Cannot delete or modify the resource or child resources.'))
 
 // **********************************
 // Types

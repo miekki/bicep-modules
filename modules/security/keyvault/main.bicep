@@ -187,7 +187,7 @@ module keyVault_secrets '../keyvault-secrets/main.bicep' = [
   }
 ]
 
-module keyVault_privateEndpoints '../../network/private-endpoint/main.bicep' = [
+module keyVault_privateEndpoints '../../network/internal-modules/private-endpoint/main.bicep' = [
   for (privateEndpoint, index) in (privateEndpoints ?? []): {
     name: '${uniqueString(deployment().name, location)}-keyVault-PrivateEndpoint-${index}'
     scope: resourceGroup(
