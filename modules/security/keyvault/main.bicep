@@ -2,6 +2,13 @@ metadata name = 'Azure Key Vault.'
 metadata description = 'Deploys an Azure Key Vault with configurable authorization, network access, private endpoints, role assignments, and resource locks.'
 metadata owner = 'MM'
 
+import {
+  lockType
+  privateEndpointOutputType
+  privateEndpointSingleServiceType
+  roleAssignmentType
+} from '../../common-types/main.bicep'
+
 @description('Required. Name of Key Vault.')
 @minLength(3)
 @maxLength(24)
@@ -50,15 +57,12 @@ param networkAcls networkAclsType = {
 ])
 param publicNetworkAccess string = ''
 
-import { lockType } from '../../common-types/main.bicep'
 @description('Optional. Management lock for the Key Vault. Use CanNotDelete or ReadOnly to apply a lock; omit it or use None for no lock.')
 param lock lockType?
 
-import { privateEndpointSingleServiceType } from '../../common-types/main.bicep'
 @description('Optional. Private endpoints to create for the Key Vault. Each endpoint requires a subnet resource ID and can include a private DNS zone group. Public network access is disabled by default when one or more endpoints are configured.')
 param privateEndpoints privateEndpointSingleServiceType[]?
 
-import { roleAssignmentType } from '../../common-types/main.bicep'
 @description('Optional. Role assignments to create at the Key Vault scope. Supply a supported built-in role name, role definition GUID, or full role definition resource ID.')
 param roleAssignments roleAssignmentType[]?
 
@@ -292,6 +296,17 @@ output name string = keyVault.name
 
 @description('The URI of the key vault.')
 output uri string = keyVault.properties.vaultUri
+
+@description('The private endpoints of the key vault.')
+output privateEndpoints privateEndpointOutputType[] = [
+  for (item, index) in (privateEndpoints ?? []): {
+    name: keyVault_privateEndpoints[index].outputs.name
+    resourceId: keyVault_privateEndpoints[index].outputs.resourceId
+    groupId: keyVault_privateEndpoints[index].outputs.?groupId!
+    customDnsConfigs: keyVault_privateEndpoints[index].outputs.customDnsConfigs
+    networkInterfaceResourceIds: keyVault_privateEndpoints[index].outputs.networkInterfaceResourceIds
+  }
+]
 
 // **********************************
 // Types

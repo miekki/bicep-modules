@@ -185,6 +185,34 @@ type privateEndpointMultiServiceType = {
   tags: object?
 }
 
+// =============================== //
+//   Private Endpoints - Outputs   //
+// =============================== //
+
+@export()
+type privateEndpointOutputType = {
+  @description('The name of the private endpoint.')
+  name: string
+
+  @description('The resource ID of the private endpoint.')
+  resourceId: string
+
+  @description('The group Id for the private endpoint Group.')
+  groupId: string?
+
+  @description('The custom DNS configurations of the private endpoint.')
+  customDnsConfigs: {
+    @description('FQDN that resolves to private endpoint IP address.')
+    fqdn: string?
+
+    @description('A list of private IP addresses of the private endpoint.')
+    ipAddresses: string[]
+  }[]
+
+  @description('The IDs of the network interfaces associated with the private endpoint.')
+  networkInterfaceResourceIds: string[]
+}
+
 // ========= //
 //   Locks   //
 // ========= //
@@ -200,4 +228,18 @@ type lockType = {
 
   @description('Optional. Specify the notes of the lock.')
   notes: string?
+}
+
+// ====================== //
+//   Managed Identities   //
+// ====================== //
+
+@export()
+@description('An AVM-aligned type for a managed identity configuration. To be used if both a system-assigned & user-assigned identities are supported by the resource provider.')
+type managedIdentityAllType = {
+  @description('Optional. Enables system assigned managed identity on the resource.')
+  systemAssigned: bool?
+
+  @description('Optional. The resource ID(s) to assign to the resource. Required if a user assigned identity is used for encryption.')
+  userAssignedResourceIds: string[]?
 }

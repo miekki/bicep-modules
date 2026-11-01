@@ -2,6 +2,14 @@ metadata name = 'App Configuration Stores'
 metadata description = 'This module deploys an App Configuration Store.'
 metadata owner = 'MM'
 
+import {
+  lockType
+  managedIdentityAllType
+  privateEndpointOutputType
+  privateEndpointSingleServiceType
+  roleAssignmentType
+} from '../../common-types/main.bicep'
+
 @description('Required. Name of the Azure App Configuration.')
 param name string
 
@@ -10,10 +18,6 @@ param location string
 
 @description('Required. Tags of the resource.')
 param tags object
-
-import { managedIdentityAllType } from 'br/public:avm/utl/types/avm-common-types:0.5.1'
-@description('Optional. The managed identity definition for this resource.')
-param managedIdentities managedIdentityAllType?
 
 @allowed([
   'Free'
@@ -58,20 +62,24 @@ param replicaLocations replicaLocationType[]?
 @description('Optional. Diagnostic settings to record interactions with data or the settings of the App Configuration Store.')
 param diagnosticSettings diagnosticSettingsType?
 
-import { lockType } from 'br/public:avm/utl/types/avm-common-types:0.6.0'
-@description('Optional. The lock settings of the service.')
-param lock lockType?
-
-import { roleAssignmentType } from 'br/public:avm/utl/types/avm-common-types:0.5.1'
-@description('Optional. Array of role assignments to create.')
-param roleAssignments roleAssignmentType[]?
-
 @description('Optional. Property specifying the configuration of data plane proxy for Azure Resource Manager (ARM).')
 param dataPlaneProxy dataPlaneProxyType?
 
-import { privateEndpointSingleServiceType } from 'br/public:avm/utl/types/avm-common-types:0.6.1'
+@description('Optional. The managed identity definition for this resource.')
+param managedIdentities managedIdentityAllType?
+
+@description('Optional. The lock settings of the service.')
+param lock lockType?
+
 @description('Optional. Configuration details for private endpoints. For security reasons, it is recommended to use private endpoints whenever possible.')
 param privateEndpoints privateEndpointSingleServiceType[]?
+
+@description('Optional. Array of role assignments to create.')
+param roleAssignments roleAssignmentType[]?
+
+// **********************************
+// variables
+// **********************************
 
 var formattedUserAssignedIdentities = reduce(
   map((managedIdentities.?userAssignedResourceIds ?? []), (id) => { '${id}': {} }),
@@ -137,6 +145,10 @@ var formattedRoleAssignments = [
   })
 ]
 
+// **********************************
+// Resources
+// **********************************
+
 resource configurationStore 'Microsoft.AppConfiguration/configurationStores@2025-08-01-preview' = {
   name: name
   location: location
@@ -181,7 +193,7 @@ resource configurationStore_diagnosticSettings 'Microsoft.Insights/diagnosticSet
   }
 }
 
-module configurationStore_keyValues 'key-value/main.bicep' = [
+module configurationStore_keyValues '../app-configuration-key-value/main.bicep' = [
   for (keyValue, index) in (keyValues ?? []): {
     name: '${uniqueString(deployment().name, location)}-AppConfig-KeyValues-${index}'
     params: {
@@ -194,39 +206,8 @@ module configurationStore_keyValues 'key-value/main.bicep' = [
   }
 ]
 
-resource configurationStore_lock 'Microsoft.Authorization/locks@2020-05-01' = if (!empty(lock ?? {}) && lock.?kind != 'None') {
-  name: lock.?name ?? 'lock-${name}'
-  properties: {
-    level: lock.?kind ?? ''
-    notes: lock.?notes ?? (lock.?kind == 'CanNotDelete'
-      ? 'Cannot delete resource or child resources.'
-      : 'Cannot delete or modify the resource or child resources.')
-  }
-  scope: configurationStore
-}
-
-resource configurationStore_roleAssignments 'Microsoft.Authorization/roleAssignments@2022-04-01' = [
-  for (roleAssignment, index) in (formattedRoleAssignments ?? []): {
-    name: roleAssignment.?name ?? guid(
-      configurationStore.id,
-      roleAssignment.principalId,
-      roleAssignment.roleDefinitionId
-    )
-    properties: {
-      roleDefinitionId: roleAssignment.roleDefinitionId
-      principalId: roleAssignment.principalId
-      description: roleAssignment.?description
-      principalType: roleAssignment.?principalType
-      condition: roleAssignment.?condition
-      conditionVersion: !empty(roleAssignment.?condition) ? (roleAssignment.?conditionVersion ?? '2.0') : null // Must only be set if condtion is set
-      delegatedManagedIdentityResourceId: roleAssignment.?delegatedManagedIdentityResourceId
-    }
-    scope: configurationStore
-  }
-]
-
 @batchSize(1)
-module configurationStore_privateEndpoints 'br/public:avm/res/network/private-endpoint:0.11.0' = [
+module configurationStore_privateEndpoints '../../network/internal-modules/private-endpoint/main.bicep' = [
   for (privateEndpoint, index) in (privateEndpoints ?? []): {
     name: '${uniqueString(deployment().name, location)}-configStore-PrivateEndpoint-${index}'
     scope: resourceGroup(
@@ -276,15 +257,62 @@ module configurationStore_privateEndpoints 'br/public:avm/res/network/private-en
       ipConfigurations: privateEndpoint.?ipConfigurations
       applicationSecurityGroupResourceIds: privateEndpoint.?applicationSecurityGroupResourceIds
       customNetworkInterfaceName: privateEndpoint.?customNetworkInterfaceName
+      //Private DNS zone in this same resource group
+      privateDnsZoneName: privateEndpoint.?privateDnsZoneName
+      privateDnsARecordName: !empty(privateEndpoint.?privateDnsZoneName) ? configurationStore.name : null
+      numberOfIps: 1
+      // Existing Private DNS zone in this same or other resource group
+      privateDnsZoneId: privateEndpoint.?privateDnsZoneId
     }
   }
 ]
 
-@description('The name of the app configuration.')
-output name string = configurationStore.name
+var configurationStoreLockName = lock.?name ?? '${name}-${lock.?kind ?? 'lock'}-lock'
+
+var configurationStoreLockProperties = {
+  level: lock.?kind ?? 'None'
+  notes: lock.?notes ?? (lock.?kind == 'CanNotDelete'
+    ? 'Cannot delete resource or child resources.'
+    : 'Cannot delete or modify the resource or child resources.')
+}
+
+var configurationStoreLockEnabled = lock.?kind != null && lock.?kind != 'None'
+
+resource configurationStore_lock 'Microsoft.Authorization/locks@2020-05-01' = if (configurationStoreLockEnabled) {
+  name: configurationStoreLockName
+  properties: configurationStoreLockProperties
+  scope: configurationStore
+}
+
+resource configurationStore_roleAssignments 'Microsoft.Authorization/roleAssignments@2022-04-01' = [
+  for (roleAssignment, index) in (formattedRoleAssignments ?? []): {
+    name: roleAssignment.?name ?? guid(
+      configurationStore.id,
+      roleAssignment.principalId,
+      roleAssignment.roleDefinitionId
+    )
+    properties: {
+      roleDefinitionId: roleAssignment.roleDefinitionId
+      principalId: roleAssignment.principalId
+      description: roleAssignment.?description
+      principalType: roleAssignment.?principalType
+      condition: roleAssignment.?condition
+      conditionVersion: !empty(roleAssignment.?condition) ? (roleAssignment.?conditionVersion ?? '2.0') : null // Must only be set if condtion is set
+      delegatedManagedIdentityResourceId: roleAssignment.?delegatedManagedIdentityResourceId
+    }
+    scope: configurationStore
+  }
+]
+
+// **********************************
+// Outputs
+// **********************************
 
 @description('The resource ID of the app configuration.')
 output resourceId string = configurationStore.id
+
+@description('The name of the app configuration.')
+output name string = configurationStore.name
 
 @description('The principal ID of the system assigned identity.')
 output systemAssignedMIPrincipalId string? = configurationStore.?identity.?principalId
@@ -303,9 +331,9 @@ output privateEndpoints privateEndpointOutputType[] = [
   }
 ]
 
-// =============== //
-//   Definitions   //
-// =============== //
+// **********************************
+// Types
+// **********************************
 
 @export()
 @description('The type for the data plane proxy.')
@@ -315,30 +343,6 @@ type dataPlaneProxyType = {
 
   @description('Required. The data plane proxy private link delegation. This property manages if a request from delegated Azure Resource Manager (ARM) private link is allowed when the data plane resource requires private link.')
   privateLinkDelegation: 'Disabled' | 'Enabled'
-}
-
-@export()
-type privateEndpointOutputType = {
-  @description('The name of the private endpoint.')
-  name: string
-
-  @description('The resource ID of the private endpoint.')
-  resourceId: string
-
-  @description('The group Id for the private endpoint Group.')
-  groupId: string?
-
-  @description('The custom DNS configurations of the private endpoint.')
-  customDnsConfigs: {
-    @description('FQDN that resolves to private endpoint IP address.')
-    fqdn: string?
-
-    @description('A list of private IP addresses of the private endpoint.')
-    ipAddresses: string[]
-  }[]
-
-  @description('The IDs of the network interfaces associated with the private endpoint.')
-  networkInterfaceResourceIds: string[]
 }
 
 @export()
