@@ -1,0 +1,27 @@
+name: module-private-dns-zone
+concurrency:
+  group: ${{ github.workflow }}
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - "modules/network/private-dns-zone/**"
+
+permissions:
+  id-token: write
+  contents: write
+
+jobs:
+  call-shared-workflow:
+    name: Run
+    uses: ./.github/workflows/template-module.yml
+    with:
+      module_name: private-dns-zone
+      module_file_path: modules/network/private-dns-zone/main.bicep
+      module_baseline_file_path: modules/network/private-dns-zone/metadata.json
+      release_base_sha: ${{ github.event.before }}
+      module_parameters: name=test-private-dns-zone.local tags='{"env":"dev"}'
+    secrets: inherit

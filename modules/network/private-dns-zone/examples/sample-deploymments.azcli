@@ -1,0 +1,30 @@
+# Below are some examples on how to use bicep modules for this module
+# Please login using az cli and set up destination subscripton
+
+# az login
+az account show
+
+# **************************************************
+# 1. Deploy module using requred parameters only. 
+#
+# - deploy resource group 
+# - deploy private dns zone
+
+export location="uksouth"
+export stackName="private-dns-zone-requried-params"
+export templateFile=modules/network/private-dns-zone/examples/requaried-parameters/main.bicep
+az stack sub create --name $stackName --location $location --template-file $templateFile --deny-settings-mode None --action-on-unmanage deleteAll
+
+
+# **************************************************
+# 2. Deploy module using all availbale paramaters. 
+#
+# - deploy resource group 
+# - deploy private dns zone
+# - deploy vnet and subnets
+# - add the link between vnet and private dns zone
+
+export location="uksouth"
+export stackName="private-dns-zone-full-params"
+export templateFile=modules/network/private-dns-zone/examples/full-parameters/main.bicep
+az stack sub create --name $stackName --location $location --template-file $templateFile --deny-settings-mode None --action-on-unmanage deleteAll
