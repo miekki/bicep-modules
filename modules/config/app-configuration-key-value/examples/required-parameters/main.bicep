@@ -1,19 +1,40 @@
-targetScope = 'resourceGroup'
+targetScope = 'subscription'
 
-@description('Name of the existing App Configuration store.')
-param appConfigurationName string
+param uniqueStr string = substring(uniqueString(subscription().id, utcNow()), 1, 3)
 
-@description('Name of the key-value to create.')
-param name string = 'sample-key'
+var companyName = 'mm'
+var projectName = 'test-bicep'
+var environmentName = 'dev'
+var name = '${companyName}-${projectName}-${environmentName}'
+var tags = { environment: environmentName }
+var storeName = '${name}-${uniqueStr}-${abbrs.appConfigurationConfigurationStores}'
 
-@description('Value of the key-value.')
-param value string = 'sample value'
+#disable-next-line no-hardcoded-location
+var location string = 'uksouth'
+var abbrs = loadJsonContent('../../../../abbreviations.json')
 
-module appConfigurationKeyValue '../../main.bicep' = {
-  name: 'appConfigurationKeyValueRequiredParameters'
+resource rg 'Microsoft.Resources/resourceGroups@2025-04-01' = {
+  name: '${name}-${abbrs.resourcesResourceGroups}'
+  location: location
+  tags: tags
+}
+
+module appConfiguration '../../../app-configuration/main.bicep' = {
+  name: 'appConfigurationRequiredParameters'
+  scope: rg
   params: {
-    appConfigurationName: appConfigurationName
-    name: name
-    value: value
+    name: storeName
+    location: location
+    tags: tags
+  }
+}
+
+module appConfigurationKeyValue '../../../app-configuration-key-value/main.bicep' = {
+  name: 'appConfigurationKeyValueRequiredParameters'
+  scope: rg
+  params: {
+    appConfigurationName: appConfiguration.outputs.name
+    name: 'key1'
+    value: 'sample value'
   }
 }

@@ -2,29 +2,16 @@
 az login
 az account show
 
-export location="uksouth"
-export resourceGroupName="rg-appconfiguration-key-value-samples"
-export appConfigurationName="appconfig-keyvalue-sample"
-
-az group create --name "$resourceGroupName" --location "$location"
-az appconfig create \
-  --name "$appConfigurationName" \
-  --resource-group "$resourceGroupName" \
-  --location "$location" \
-  --sku Standard
-
 # Deploy a key-value with only the required parameters.
-az deployment group create \
-  --resource-group "$resourceGroupName" \
-  --name "appconfiguration-keyvalue-required-parameters" \
-  --template-file "modules/config/app-configuration-key-value/examples/required-parameters/main.bicep" \
-  --parameters appConfigurationName="$appConfigurationName" name="sample-key" value="sample value"
+export location="uksouth"
+export stackName="appconfiguration-keyvalue-required-params"
+export templateFile=modules/config/app-configuration-key-value/examples/required-parameters/main.bicep
+
+az stack sub create --name $stackName --location $location --template-file $templateFile --deny-settings-mode None --action-on-unmanage deleteAll
 
 # Deploy a key-value with all module parameters.
-az deployment group create \
-  --resource-group "$resourceGroupName" \
-  --name "appconfiguration-keyvalue-full-parameters" \
-  --template-file "modules/config/app-configuration-key-value/examples/full-parameters/main.bicep" \
-  --parameters appConfigurationName="$appConfigurationName" \
-    name="sample-key-with-metadata" value="sample value" contentType="text/plain" \
-    tags='{"environment":"sample","owner":"platform"}'
+export location="uksouth"
+export stackName="appconfiguration-keyvalue-full-params"
+export templateFile=modules/config/app-configuration-key-value/examples/full-parameters/main.bicep
+
+az stack sub create --name $stackName --location $location --template-file $templateFile --deny-settings-mode None --action-on-unmanage deleteAll

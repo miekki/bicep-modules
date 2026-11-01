@@ -30,21 +30,4 @@ ARM, the store must allow local authentication while the deployment runs.
 
 ## Examples
 
-The minimal example provides the existing store name, key name, and value:
-
-```bicep
-module keyValue 'modules/config/app-configuration-key-value/main.bicep' = {
-  name: 'appConfigurationKeyValue'
-  params: {
-    appConfigurationName: 'appconfig-example'
-    name: 'feature:enabled'
-    value: 'true'
-  }
-}
-```
-
-See the [required-parameters example](examples/required-parameters/main.bicep),
-[full-parameters example](examples/full-parameters/main.bicep), and
-[sample deployment commands](examples/sample-deployments.azcli). The sample
-commands create the parent App Configuration store before deploying a
-key-value.
+To see examples on how to use this module please check [sample-deployments.azcli](./examples/sample-deployments.azcli)
