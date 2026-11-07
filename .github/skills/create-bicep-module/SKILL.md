@@ -1,16 +1,15 @@
 ---
-name: Create Bicep module
+name: create-bicep-module
 description: "Use when adding a reusable Azure Bicep module to this registry, including its tests, examples, documentation, and release workflow."
+disable-model-invocation: true
 argument-hint: "Describe the Azure resource, desired behavior, and any required security or deployment constraints"
-agent: agent
 ---
-
 Create a complete, reusable Azure Bicep module for this repository from the requirements supplied with this prompt.
 
 ## Before implementation
 
-1. Read [the project Copilot instructions](../copilot-instructions.md) and inspect the closest existing public module, its test, examples, README, metadata, changelog, and GitHub workflow.
-2. Use [the Key Vault module](../../modules/security/keyvault/main.bicep) and [the Key Vault secrets module](../../modules/security/keyvault-secrets/main.bicep) as security-domain references, not as defaults for unrelated resources:
+1. Read [the project Copilot instructions](../../copilot-instructions.md) and inspect the closest existing public module, its test, examples, README, metadata, changelog, and GitHub workflow.
+2. Use [the Key Vault module](../../../modules/security/keyvault/main.bicep) and [the Key Vault secrets module](../../../modules/security/keyvault-secrets/main.bicep) as security-domain references, not as defaults for unrelated resources:
    - The Key Vault module owns a vault and composes secret and private-endpoint modules.
    - The secrets module targets an existing vault; its secret value is secure and must not be exposed in outputs.
 3. Check `modules/common-types/`, `bicepconfig.json`, `ps-rule.yaml`, and the shared module workflow before introducing types or validation patterns.
@@ -25,7 +24,7 @@ Create the module under `modules/<domain>/<module-name>/` using the repository's
 - `test/main.test.bicep`: exercise the minimum configuration and meaningful optional/security configurations using the repository's deployment-test patterns.
 - `examples/required-parameters/main.bicep` and `examples/full-parameters/main.bicep`: provide valid, self-contained usage examples. Build resource and resource-group names with `var` declarations. Load `modules/abbreviations.json` using the correct relative path and use its abbreviation for resource types that have one, following neighboring examples. Include a deployment sample only when the module needs a larger composition to explain its use.
 - `examples/sample-deployments.azcli`: include Azure CLI commands to deploy the required- and full-parameter examples using `az stack <scope> create`, following the Key Vault sample. Match the stack scope to each example's `targetScope` (for example, `az stack sub create` for subscription templates). Quote shell variables and set `--action-on-unmanage detachAll` so unmanaging the stack does not delete example resources. Do not use `deleteAll` or add destructive cleanup commands to reusable samples.
-- `README.md`: document behavior, prerequisites, every parameter (type, required status, default, description), outputs, and working examples. Keep it synchronized with `main.bicep` and follow [the Key Vault README](../../modules/security/keyvault/README.md) for the parameter table layout. Link to `examples/sample-deployments.azcli` in the Examples section.
+- `README.md`: document behavior, prerequisites, every parameter (type, required status, default, description), outputs, and working examples. Keep it synchronized with `main.bicep` and follow [the Key Vault README](../../../modules/security/keyvault/README.md) for the parameter table layout. Link to `examples/sample-deployments.azcli` in the Examples section.
   - Link parameter names to their detail sections. Keep the type column plain text (for example, link `networkAcls`, not `networkAclsType`).
   - Document each custom parameter type and its nested fields in detail tables. Use `### Parameter: \`<name>\`` headings for detail sections, including custom types, to follow the repository's existing README convention.
   - In custom-type tables, link a field name to its detail section when that field has one; keep type names unlinked. Use the same name-only link convention for nested configuration fields.

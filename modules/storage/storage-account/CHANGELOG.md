@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Add optional named Queue and Table resources to the Storage Account module.
 - Rename the network ACL resource access rule field to `resourceId` to match
   the Storage API type and avoid BCP037 warnings. The test fixture covers this
   input shape.
@@ -19,6 +20,8 @@
 - [Storage Account API reference](https://learn.microsoft.com/azure/templates/microsoft.storage/storageaccounts)
 - [Blob service API reference](https://learn.microsoft.com/azure/templates/microsoft.storage/storageaccounts/blobservices)
 - [Blob container API reference](https://learn.microsoft.com/azure/templates/microsoft.storage/storageaccounts/blobservices/containers)
+- [Queue API reference](https://learn.microsoft.com/azure/templates/microsoft.storage/storageaccounts/queueservices/queues)
+- [Table API reference](https://learn.microsoft.com/azure/templates/microsoft.storage/storageaccounts/tableservices/tables)
 - [Storage Account API change log](https://learn.microsoft.com/azure/templates/microsoft.storage/change-log/storageaccounts)
 - [Blob service API change log](https://learn.microsoft.com/azure/templates/microsoft.storage/change-log/storageaccounts/blobservices)
 - [Blob container API change log](https://learn.microsoft.com/azure/templates/microsoft.storage/change-log/storageaccounts/blobservices/containers)
