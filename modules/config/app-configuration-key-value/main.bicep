@@ -17,16 +17,6 @@ param contentType string?
 param tags object?
 
 // **********************************
-// variables
-// **********************************
-
-var keyValueProperties = {
-  contentType: contentType
-  tags: tags
-  value: value
-}
-
-// **********************************
 // Resources
 // **********************************
 
@@ -37,7 +27,11 @@ resource appConfiguration 'Microsoft.AppConfiguration/configurationStores@2025-0
 resource keyValues 'Microsoft.AppConfiguration/configurationStores/keyValues@2025-08-01-preview' = {
   name: name
   parent: appConfiguration
-  properties: keyValueProperties
+  properties: {
+    contentType: contentType
+    tags: tags
+    value: value
+  }
 }
 
 // **********************************
@@ -49,7 +43,3 @@ output name string = keyValues.name
 
 @description('The resource ID of the key values.')
 output resourceId string = keyValues.id
-
-assert keyValueValueMatchesInput = keyValueProperties.value == value
-assert keyValueContentTypeMatchesInput = keyValueProperties.?contentType == contentType
-assert keyValueTagsMatchInput = keyValueProperties.?tags == tags

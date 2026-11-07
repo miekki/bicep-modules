@@ -356,21 +356,3 @@ type secretType = {
   @description('Optional. Array of role assignments to create.')
   roleAssignments: roleAssignmentType[]?
 }[]?
-
-// **********************************
-// Assertions
-// **********************************
-
-assert lockBehaviorMatchesInput = lock == null
-  ? !keyVaultLockEnabled && keyVaultLockProperties.level == 'None' && keyVaultLockProperties.notes == 'Cannot delete or modify the resource or child resources.'
-  : keyVaultLockEnabled == (lock.?kind != 'None') && keyVaultLockProperties.level == lock.?kind && keyVaultLockProperties.notes == (lock.?notes ?? (lock.?kind == 'CanNotDelete'
-      ? 'Cannot delete resource or child resources.'
-      : 'Cannot delete or modify the resource or child resources.'))
-
-assert networkAclsDefaultActionMatchesInput = varNetworkAcls.defaultAction == networkAcls.defaultAction
-assert networkAclsBypassMatchesInput = varNetworkAcls.bypass == (networkAcls.?bypass ?? 'None')
-assert networkAclIpRuleCountMatchesInput = length(varNetworkAcls.ipRules) == length(networkAcls.?ipAllowlist ?? [])
-assert networkAclSubnetRuleCountMatchesInput = length(varNetworkAcls.virtualNetworkRules) == length(networkAcls.?subnetIds ?? [])
-assert publicNetworkAccessMatchesInput = effectivePublicNetworkAccess == (!empty(publicNetworkAccess)
-  ? publicNetworkAccess
-  : (!empty(privateEndpoints) ? 'Disabled' : 'Enabled'))

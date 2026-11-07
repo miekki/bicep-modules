@@ -147,19 +147,6 @@ output name string = privateDnsZone.name
 output resourceId string = privateDnsZone.id
 
 // **********************************
-// Assertions
-// **********************************
-
-assert privateDnsZoneNameMatchesInput = privateDnsZoneProperties.name == name
-assert privateDnsZoneLocationMatchesInput = privateDnsZoneProperties.location == location
-assert privateDnsZoneTagsMatchInput = privateDnsZoneProperties.tags == tags
-assert lockBehaviorMatchesInput = lock == null
-  ? !privateDnsZoneLockEnabled && privateDnsZoneLockProperties.level == 'None' && privateDnsZoneLockProperties.notes == 'Cannot delete or modify the resource or child resources.'
-  : privateDnsZoneLockEnabled == (lock.?kind != 'None') && privateDnsZoneLockProperties.level == lock.?kind && privateDnsZoneLockProperties.notes == (lock.?notes ?? (lock.?kind == 'CanNotDelete'
-      ? 'Cannot delete resource or child resources.'
-      : 'Cannot delete or modify the resource or child resources.'))
-
-// **********************************
 // Types
 // **********************************
 

@@ -137,7 +137,3 @@ output secretUri string = secret.properties.secretUri
 
 @description('The uri with version of the secret.')
 output secretUriWithVersion string = secret.properties.secretUriWithVersion
-
-// **********************************
-// Assertions
-// **********************************

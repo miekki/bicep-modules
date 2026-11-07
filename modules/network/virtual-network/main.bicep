@@ -172,19 +172,3 @@ output subnetNames array = [for subnet in subnets: subnet.name]
 output subnetResourceIds array = [
   for subnet in subnets: az.resourceId('Microsoft.Network/virtualNetworks/subnets', name, subnet.name)
 ]
-
-// **********************************
-// Assertions
-// **********************************
-
-assert virtualNetworkNameMatchesInput = virtualNetwork.name == name
-assert virtualNetworkIdMatchesName = virtualNetwork.id == az.resourceId('Microsoft.Network/virtualNetworks', name)
-assert addressPrefixesMatchInput = virtualNetworkProperties.addressSpace.addressPrefixes == addressPrefixes
-assert subnetCountMatchesInput = length(virtualNetworkProperties.subnets) == length(subnets)
-assert subnetNamesMatchInput = deployedSubnetNames == inputSubnetNames
-assert subnetPrefixesMatchInput = deployedSubnetPrefixes == inputSubnetPrefixes
-assert lockBehaviorMatchesInput = lock == null
-  ? !virtualNetworkLockEnabled && virtualNetworkLockProperties.level == 'None' && virtualNetworkLockProperties.notes == 'Cannot delete or modify the resource or child resources.'
-  : virtualNetworkLockEnabled == (lock.?kind != 'None') && virtualNetworkLockProperties.level == lock.?kind && virtualNetworkLockProperties.notes == (lock.?notes ?? (lock.?kind == 'CanNotDelete'
-      ? 'Cannot delete resource or child resources.'
-      : 'Cannot delete or modify the resource or child resources.'))

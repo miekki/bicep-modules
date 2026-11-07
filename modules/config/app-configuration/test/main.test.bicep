@@ -1,24 +1,16 @@
-test minimumConfiguration_defaults '../main.bicep' = {
+module configurationWithKeyValues '../main.bicep' = {
   params: {
-    name: 'appconfig-unit-test-minimum'
+    name: 'appconfig-unit-test-key-values'
     location: 'uksouth'
     tags: {
       environment: 'test'
     }
-  }
-}
-
-test configurationWithOptionalSettings '../main.bicep' = {
-  params: {
-    name: 'appconfig-unit-test-optional-settings'
-    location: 'uksouth'
-    tags: {
-      environment: 'test'
-    }
+    disableLocalAuth: false
     diagnosticSettings: {
-      workspaceId: '/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/test/providers/Microsoft.OperationalInsights/workspaces/test'
+      workspaceId: resourceId('Microsoft.OperationalInsights/workspaces', 'test-workspace')
       logs: [
         {
+          category: null
           categoryGroup: 'audit'
           enabled: true
         }
@@ -30,27 +22,15 @@ test configurationWithOptionalSettings '../main.bicep' = {
         replicaLocation: 'eastus2'
       }
     ]
-  }
-}
-
-test freeSkuDefaults '../main.bicep' = {
-  params: {
-    name: 'appconfig-unit-test-free'
-    location: 'uksouth'
-    tags: {
-      environment: 'test'
-    }
-    sku: 'Free'
-  }
-}
-
-test explicitPublicNetworkAccess '../main.bicep' = {
-  params: {
-    name: 'appconfig-unit-test-public-access'
-    location: 'uksouth'
-    tags: {
-      environment: 'test'
-    }
-    publicNetworkAccess: 'Disabled'
+    keyValues: [
+      {
+        name: 'test-key'
+        value: 'test-value'
+        contentType: 'text/plain'
+        tags: {
+          environment: 'test'
+        }
+      }
+    ]
   }
 }

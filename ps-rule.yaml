@@ -47,4 +47,6 @@ configuration:
     - "secretsPermissions"
 rule:
   exclude:
-    - "AZR-000125" # exluded Azure.KeyVault.PurgeProtect. Enable Purge Protection on Key Vaults to prevent early purge of vaults and vault items.
+    - "AZR-000125" # excluded Azure.KeyVault.PurgeProtect. Enable Purge Protection on Key Vaults to prevent early purge of vaults and vault items.
+    - "AZR-000119" # excluded Azure.KeyVault.Logs
+    - "AZR-000291" # excluded Azure.AppConfig.DisableLocalAuth

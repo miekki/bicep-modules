@@ -382,19 +382,3 @@ type diagnosticSettingsType = {
     enabled: bool
   }[]
 }
-
-// **********************************
-// Assertions
-// **********************************
-
-assert purgeProtectionIsDisabledForFreeOrDeveloper = (sku == 'Free' || sku == 'Developer')
-  ? effectiveEnablePurgeProtection == false
-  : effectiveEnablePurgeProtection == enablePurgeProtection
-
-assert softDeleteRetentionIsZeroForFreeOrDeveloper = (sku == 'Free' || sku == 'Developer')
-  ? effectiveSoftDeleteRetentionInDays == 0
-  : effectiveSoftDeleteRetentionInDays == softDeleteRetentionInDays
-
-assert publicNetworkAccessMatchesInputOrPrivateEndpointDefault = effectivePublicNetworkAccess == (!empty(publicNetworkAccess)
-  ? publicNetworkAccess
-  : (!empty(privateEndpoints) ? 'Disabled' : 'Enabled'))

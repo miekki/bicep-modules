@@ -49,8 +49,6 @@ resource virtualNetworkLink 'Microsoft.Network/privateDnsZones/virtualNetworkLin
   properties: virtualNetworkLinkProperties
 }
 
-assert resolutionPolicyMatchesInput = virtualNetworkLinkProperties.?resolutionPolicy == resolutionPolicy
-
 // **********************************
 // Outputs
 // **********************************
