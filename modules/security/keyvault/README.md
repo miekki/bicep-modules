@@ -122,4 +122,6 @@ When private endpoints are configured, public network access is disabled unless 
 
 ## Examples
 
-To see examples on how to use this module please check [sample-deployments.azcli](./examples/sample-deployments.azcli)
+To see examples on how to use this module please check [sample-deployments.azcli](./examples/sample-deployments.azcli):
+- [Required parameters](./examples/required-parameters/main.bicep)
+- [Full parameters, including a private endpoint](./examples/full-parameters/main.bicep)

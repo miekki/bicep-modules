@@ -12,8 +12,8 @@ az account show
 # - add secrest to the key vault
 
 export location="uksouth"
-export stackName="keyvault-requried-params"
-export templateFile=modules/security/keyvault/examples/requaried-parameters/main.bicep
+export stackName="keyvault-required-params"
+export templateFile=modules/security/keyvault/examples/required-parameters/main.bicep
 az stack sub create --name $stackName --location $location --template-file $templateFile --deny-settings-mode None --action-on-unmanage deleteAll
 
 

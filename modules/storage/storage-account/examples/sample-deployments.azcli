@@ -1,0 +1,33 @@
+# Log in and select the target subscription before deployment.
+az login
+az account show
+
+export location="uksouth"
+
+# Deploy the Storage Account with only its required parameters. The template
+# creates a dedicated resource group.
+export stackName="storage-account-required-params"
+export templateFile="modules/storage/storage-account/examples/required-parameters/main.bicep"
+
+az stack sub create \
+  --name "$stackName" \
+  --location "$location" \
+  --template-file "$templateFile" \
+  --deny-settings-mode None \
+  --action-on-unmanage detachAll
+
+# Deploy the Storage Account with all parameters, including a VNet, Blob
+# private DNS zone, Blob container, and private endpoint. The template creates
+# a separate resource group for these resources. Set this to an existing
+# principal's object ID before deployment.
+export roleAssignmentPrincipalId="<principal-object-id>"
+export stackName="storage-account-full-params"
+export templateFile="modules/storage/storage-account/examples/full-parameters/main.bicep"
+
+az stack sub create \
+  --name "$stackName" \
+  --location "$location" \
+  --template-file "$templateFile" \
+  --parameters roleAssignmentPrincipalId="$roleAssignmentPrincipalId" \
+  --deny-settings-mode None \
+  --action-on-unmanage detachAll

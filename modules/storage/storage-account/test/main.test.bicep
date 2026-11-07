@@ -13,7 +13,10 @@ var names = {
   }
   test2: {
     storage: take('st2${uniqueStoragename}', maxNameLen)
-    containers: [ 'test2container1', 'test2container2' ]
+    containers: ['test2container1', 'test2container2']
+  }
+  test3: {
+    storage: take('st3${uniqueStoragename}', maxNameLen)
   }
 }
 var my_tags = {
@@ -57,6 +60,23 @@ module test2 '../main.bicep' = {
         properties: {
           publicAccess: 'None'
         }
+      }
+    ]
+  }
+}
+
+// TEST 3 - storage with a private endpoint
+module test3 '../main.bicep' = {
+  name: 'test3'
+  params: {
+    location: location
+    name: names.test3.storage
+    tags: my_tags
+    privateEndpoints: [
+      {
+        service: 'blob'
+        subnetResourceId: resourceId('Microsoft.Network/virtualNetworks/subnets', 'test-vnet', 'private-endpoints')
+        location: location
       }
     ]
   }
