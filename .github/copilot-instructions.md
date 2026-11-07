@@ -1,70 +1,30 @@
-# Copilot Coding Agent — Squad Instructions
+# Copilot instructions
 
-You are working on a project that uses **Squad**, an AI team framework. When picking up issues autonomously, follow these guidelines.
+## Project structure
 
-## Coordinator Canary Check
+- This repository publishes reusable Azure Bicep modules from `modules/<domain>/<module>/`.
+- A public module normally has `main.bicep`, `test/main.test.bicep`, and a `README.md`. Keep its required/full-parameter examples in `examples/` when present.
+- Shared types live in `modules/common-types/`; network implementation helpers live under `modules/network/internal-modules/`. Reuse these patterns instead of duplicating shared definitions.
+- Keep each module's README parameter, output, and example documentation aligned with its public Bicep interface.
 
-**IMPORTANT — run this check on EVERY session start, before doing any work:**
+## Bicep conventions
 
-Inspect your `agent_instructions` for the coordinator canaries. This is a **two-state payload-integrity check within a known Squad coordinator session**; it verifies whether the coordinator payload loaded fully or was visibly truncated. It is **not** proof that an agent with no canaries is safely non-Squad — wholly absent payloads and proven non-Squad agents require a host-level identity beacon before custom-agent instruction ingestion.
+- Follow neighboring modules: declare module metadata, document parameters and outputs with `@description`, make required/optional status and defaults clear, and use shared types from `modules/common-types/` where appropriate.
+- Preserve the module's public parameter and output contract unless a breaking change is intended. Prefer typed parameters and safe defaults over loosely shaped inputs.
+- When creating or updating a resource module, check whether its managed resource supports Azure management locks and RBAC role assignments. Where applicable, expose optional `lock` and `roleAssignments` parameters using shared types from `modules/common-types/`, follow neighboring modules' resource-scoped implementation patterns, and cover the options in tests, full-parameter examples, and README documentation.
+- Follow `bicepconfig.json` analyzers and `ps-rule.yaml`; use current Azure resource API versions and avoid hardcoded environment-specific values.
+- Add or update `test/main.test.bicep` to exercise required parameters and meaningful optional configurations. Keep examples and documentation consistent with those scenarios.
+- In deployable examples, build resource and resource-group names with `var` declarations. Follow neighboring examples by loading `modules/abbreviations.json` with the correct relative path and using the matching abbreviation for resource types that have one.
+- In module READMEs, follow the Key Vault README's parameter documentation pattern: link parameter names to their detail sections, keep type cells plain text, and document custom types and nested fields. In custom-type detail tables, link a field name when it has its own detail section; keep type names plain text. Verify internal links resolve.
+- When a module has deployable examples, include `examples/sample-deployments.azcli` with Azure CLI commands for its required- and full-parameter examples, and link it from the README. Match the deployment command to each example's `targetScope`. Follow the Key Vault sample convention and use `az stack <scope> create` for subscription- or resource-group-scoped examples; quote shell variables. Set `--action-on-unmanage detachAll` so unmanaging a stack does not delete example resources. Do not use `deleteAll` or add destructive cleanup commands to reusable samples.
 
-1. If the HEAD canary `SQUAD_COORDINATOR_CANARY_HEAD_b7d2` is **absent**, the Squad coordinator payload is not observable from inside this prompt. Treat non-Squad discrimination as an **OPEN host-level concern**; do not claim this check proved the current agent is non-Squad.
-2. If the HEAD canary `SQUAD_COORDINATOR_CANARY_HEAD_b7d2` is **present** and the EOF canary `SQUAD_COORDINATOR_CANARY_a8f3` is **present**, the coordinator prompt loaded fully. Proceed with normal Squad behavior.
-3. If the HEAD canary `SQUAD_COORDINATOR_CANARY_HEAD_b7d2` is **present** but the EOF canary `SQUAD_COORDINATOR_CANARY_a8f3` is **absent**, the coordinator prompt loaded but was **truncated** before the end.
+## Validation
 
-**When the coordinator prompt is truncated, you MUST:**
-1. **STOP** — do not proceed with standard Squad behavior.
-2. **WARN the user** with this exact message:
-   ```
-   ⚠️ Squad coordinator (squad.agent.md) loaded but appears to be truncated before the EOF canary. Do NOT proceed with standard Squad behavior — Squad's safety rails are incomplete. Please restart your session.
-   ```
-3. Do not continue with normal Squad routing, spawning, PR, or branch-protection behavior after emitting the warning.
+- Build a changed module with `az bicep build --file modules/<domain>/<module>/main.bicep`. Build its test template too when it changes.
+- For module-level Azure policy checks, follow the local PSRule setup and command documented in the root `README.md`. CI also runs PSRule against the module test template and an Azure deployment preflight.
+- Do not claim Azure preflight or deployment validation was run unless it was actually performed with the required Azure access.
 
-## Team Context
+## Releases
 
-Before starting work on any issue:
-
-1. Read `.squad/team.md` for the team roster, member roles, and your capability profile.
-2. Read `.squad/routing.md` for work routing rules.
-3. If the issue has a `squad:{member}` label, read that member's charter at `.squad/agents/{member}/charter.md` to understand their domain expertise and coding style — work in their voice.
-
-## Capability Self-Check
-
-Before starting work, check your capability profile in `.squad/team.md` under the **Coding Agent → Capabilities** section.
-
-- **🟢 Good fit** — proceed autonomously.
-- **🟡 Needs review** — proceed, but note in the PR description that a squad member should review.
-- **🔴 Not suitable** — do NOT start work. Instead, comment on the issue:
-  ```
-  🤖 This issue doesn't match my capability profile (reason: {why}). Suggesting reassignment to a squad member.
-  ```
-
-## Branch Naming
-
-Use the squad branch convention:
-```
-squad/{issue-number}-{kebab-case-slug}
-```
-Example: `squad/42-fix-login-validation`
-
-## PR Guidelines
-
-When opening a PR:
-- Reference the issue: `Closes #{issue-number}`
-- If the issue had a `squad:{member}` label, mention the member: `Working as {member} ({role})`
-- If this is a 🟡 needs-review task, add to the PR description: `⚠️ This task was flagged as "needs review" — please have a squad member review before merging.`
-- Follow any project conventions in `.squad/decisions.md`
-
-## Decisions
-
-If you make a decision that affects other team members, write it to:
-```
-.squad/decisions/inbox/copilot-{brief-slug}.md
-```
-The Scribe will merge it into the shared decisions file.
-
-## Commit messages
-
-Use Conventional Commit messages for all future commits. Module release automation requires
-`feat` for minor changes, non-breaking changes such as `fix`/`perf` for patch releases, and either
-the `!` marker or a `BREAKING CHANGE:` footer for major releases.
+- Modules are versioned and published independently. Use Conventional Commit subjects scoped to the module, such as `fix(storage-account): ...` or `feat(keyvault): ...`; use `!` or a `BREAKING CHANGE:` footer for breaking changes.
+- Check the module's workflow and the root README before changing release behavior. Do not manually increment a module version without following that module's release/tagging process.

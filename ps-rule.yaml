@@ -41,7 +41,7 @@ configuration:
   AZURE_BICEP_PARAMS_FILE_EXPANSION: true
   AZURE_BICEP_FILE_EXPANSION: true
   AZURE_BICEP_CHECK_TOOL: true
-  PSRULE_AZURE_BICEP_PATH: "/Users/maciej/.azure/bin/bicep"
+  PSRULE_AZURE_BICEP_PATH: "~/.azure/bin/bicep"
   PSRULE_AZURE_BICEP_USE_AZURE_CLI: "true"
   AZURE_DEPLOYMENT_NONSENSITIVE_PARAMETER_NAMES:
     - "secretsPermissions"
