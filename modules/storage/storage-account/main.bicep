@@ -1,5 +1,5 @@
 metadata name = 'Storage Account'
-metadata description = 'Deploys an Azure Storage Account with secure defaults, blob containers, network rules, and optional private endpoints.'
+metadata description = 'Deploys an Azure Storage Account with secure defaults, Blob containers, Queues, Tables, network rules, and optional private endpoints.'
 metadata owner = 'miekki'
 
 import {
@@ -78,6 +78,12 @@ param blobServiceProperties blobServicePropertiesType = {
 
 @description('Optional. Array of blob containers to be created for blobServices of Storage Account.')
 param blobContainers blobContainerType[] = []
+
+@description('Optional. Array of queues to be created for the Queue service of the Storage Account.')
+param queues queueType[] = []
+
+@description('Optional. Array of tables to be created for the Table service of the Storage Account.')
+param tables tableType[] = []
 
 @description('Optional. Configuration for network access rules.')
 param networkAcls networkAclsType = {
@@ -255,6 +261,34 @@ resource blobContainer 'Microsoft.Storage/storageAccounts/blobServices/container
     name: container.name
     parent: blobService
     properties: container.?properties ?? {}
+  }
+]
+
+resource queueService 'Microsoft.Storage/storageAccounts/queueServices@2026-09-01' = if (!empty(queues)) {
+  name: 'default'
+  parent: storageAccount
+}
+
+resource queue 'Microsoft.Storage/storageAccounts/queueServices/queues@2026-09-01' = [
+  for item in queues: if (!empty(queues)) {
+    name: item.name
+    parent: queueService
+    properties: {}
+  }
+]
+
+resource tableService 'Microsoft.Storage/storageAccounts/tableServices@2026-09-01' = if (!empty(tables)) {
+  name: 'default'
+  parent: storageAccount
+}
+
+resource table 'Microsoft.Storage/storageAccounts/tableServices/tables@2026-09-01' = [
+  for item in tables: if (!empty(tables)) {
+    name: item.name
+    parent: tableService
+    properties: {
+      signedIdentifiers: []
+    }
   }
 ]
 
@@ -443,6 +477,20 @@ type blobContainerPropertiesType = {
   defaultEncryptionScope: string?
   denyEncryptionScopeOverride: bool?
   publicAccess: ('Blob' | 'Container' | 'None')?
+}
+
+type queueType = {
+  @minLength(3)
+  @maxLength(63)
+  @description('Queue name. Use 3-63 lowercase letters, numbers, or hyphens; start with a letter or number.')
+  name: string
+}
+
+type tableType = {
+  @minLength(3)
+  @maxLength(63)
+  @description('Table name. Use 3-63 alphanumeric characters and start with a letter.')
+  name: string
 }
 
 type networkAclsType = {

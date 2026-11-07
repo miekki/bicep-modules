@@ -86,6 +86,22 @@ module storageAccount '../../main.bicep' = {
         }
       }
     ]
+    queues: [
+      {
+        name: 'application-events'
+      }
+      {
+        name: 'background-jobs'
+      }
+    ]
+    tables: [
+      {
+        name: 'ApplicationSettings'
+      }
+      {
+        name: 'JobStatus'
+      }
+    ]
     networkAcls: {
       defaultAction: 'Deny'
       bypass: 'None'
@@ -101,6 +117,14 @@ module storageAccount '../../main.bicep' = {
     roleAssignments: [
       {
         roleDefinitionIdOrName: 'Storage Blob Data Reader'
+        principalId: roleAssignmentPrincipalId
+      }
+      {
+        roleDefinitionIdOrName: 'Storage Queue Data Reader'
+        principalId: roleAssignmentPrincipalId
+      }
+      {
+        roleDefinitionIdOrName: 'Storage Table Data Reader'
         principalId: roleAssignmentPrincipalId
       }
     ]

@@ -1,8 +1,8 @@
 # Storage Account
 
 This module deploys an Azure Storage Account, its Blob service, and optional
-Blob containers. It applies secure defaults, supports Storage network ACLs, and
-can create private endpoints for Storage subresources.
+Blob containers, Queues, and Tables. It applies secure defaults, supports
+Storage network ACLs, and can create private endpoints for Storage subresources.
 
 ## Details
 
@@ -40,6 +40,8 @@ can create private endpoints for Storage subresources.
 | `allowBlobPublicAccess` | `bool` | No | `false` | Controls whether containers and blobs can allow anonymous public access. |
 | [`blobServiceProperties`](#parameter-blobserviceproperties) | `blobServicePropertiesType` | No | Enabled 90-day Blob and container soft-delete policies | Blob service settings, including retention, versioning, change feed, CORS, and restore policy. |
 | [`blobContainers`](#parameter-blobcontainers) | `blobContainerType[]` | No | `[]` | Blob containers to create. Each item requires a `name` and can include container properties. |
+| [`queues`](#parameter-queues) | `queueType[]` | No | `[]` | Queues to create. Each item requires a `name`; the Queue service is created when this array is nonempty. |
+| [`tables`](#parameter-tables) | `tableType[]` | No | `[]` | Tables to create. Each item requires a `name`; the Table service is created when this array is nonempty. |
 | [`networkAcls`](#parameter-networkacls) | `networkAclsType` | No | `defaultAction: 'Deny'`; `bypass: 'AzureServices'` | Network rules: `defaultAction`, `bypass`, `ipAllowlist`, `subnetIds`, and `resourceAccessRules`. |
 | `publicNetworkAccess` | `string?` | No | `null` | Set to `Enabled`, `Disabled`, or `SecuredByPerimeter`. When omitted, public access is disabled if private endpoints are configured and enabled otherwise. Network ACLs still apply when public network access is enabled. |
 | [`privateEndpoints`](#parameter-privateendpoints) | `privateEndpointSingleServiceType[]?` | No | `null` | Private endpoints to create. Each requires `subnetResourceId`; `service` defaults to `blob`. Items also support endpoint naming/location, private DNS configuration, manual approval, tags, locks, role assignments, and network interface options. |
@@ -116,6 +118,22 @@ Type: `blobContainerType`.
 | `defaultEncryptionScope` | `string?` | No | Default encryption scope for blobs in the container. |
 | `denyEncryptionScopeOverride` | `bool?` | No | Whether clients are prevented from overriding the default encryption scope. |
 | `publicAccess` | `('Blob' \| 'Container' \| 'None')?` | No | Anonymous access level for the container. The account-level `allowBlobPublicAccess` setting must also permit public access. |
+
+### Parameter: `queues`
+
+Type: `queueType`.
+
+| Name | Type | Required | Description |
+| :--- | :--- | :------: | :---------- |
+| `name` | `string` | Yes | Queue name: 3–63 lowercase letters, numbers, or hyphens; starts with a letter or number. |
+
+### Parameter: `tables`
+
+Type: `tableType`.
+
+| Name | Type | Required | Description |
+| :--- | :--- | :------: | :---------- |
+| `name` | `string` | Yes | Table name: 3–63 alphanumeric characters; starts with a letter. |
 
 ### Parameter: `networkAcls`
 
@@ -274,4 +292,4 @@ group for their resources. Use the [sample deployment commands](./examples/sampl
 to deploy them:
 
 - [Required parameters](./examples/required-parameters/main.bicep)
-- [Full parameters, including a management lock, role assignment, and private endpoint](./examples/full-parameters/main.bicep) (requires the object ID of an existing principal for the role assignment)
+- [Full parameters, including queues, tables, a management lock, role assignment, and private endpoint](./examples/full-parameters/main.bicep) (requires the object ID of an existing principal for the role assignment)

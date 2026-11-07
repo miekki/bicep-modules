@@ -110,11 +110,6 @@ var virtualNetworkProperties = {
   subnets: virtualNetworkSubnets
 }
 
-var inputSubnetNames = [for subnet in subnets: subnet.name]
-var inputSubnetPrefixes = [for subnet in subnets: subnet.addressPrefix]
-var deployedSubnetNames = [for subnet in virtualNetworkSubnets: subnet.name]
-var deployedSubnetPrefixes = [for subnet in virtualNetworkSubnets: subnet.properties.addressPrefix]
-
 resource virtualNetwork 'Microsoft.Network/virtualNetworks@2026-01-01' = {
   name: name
   location: location

@@ -14,6 +14,8 @@ var names = {
   test2: {
     storage: take('st2${uniqueStoragename}', maxNameLen)
     containers: ['test2container1', 'test2container2']
+    queues: ['test2queue1', 'test2queue2']
+    tables: ['Test2Table1', 'Test2Table2']
   }
   test3: {
     storage: take('st3${uniqueStoragename}', maxNameLen)
@@ -60,6 +62,22 @@ module test2 '../main.bicep' = {
         properties: {
           publicAccess: 'None'
         }
+      }
+    ]
+    queues: [
+      {
+        name: names.test2.queues[0]
+      }
+      {
+        name: names.test2.queues[1]
+      }
+    ]
+    tables: [
+      {
+        name: names.test2.tables[0]
+      }
+      {
+        name: names.test2.tables[1]
       }
     ]
   }
